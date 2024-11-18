@@ -28,11 +28,16 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     
+    #Internal
+    'accounts',
+    
     #External
     'tailwind',
     'theme',
     'django_browser_reload'
 ]
+
+AUTH_USER_MODEL = 'accounts.CustomUser'
 
 TAILWIND_APP_NAME = 'theme'
 
@@ -116,6 +121,9 @@ USE_I18N = True
 
 USE_TZ = True
 
+
+LOGIN_REDIRECT_URL = '/'
+LOGOUT_REDIRECT_URL = '/accounts/login/'
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
