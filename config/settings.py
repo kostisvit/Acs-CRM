@@ -31,11 +31,13 @@ INSTALLED_APPS = [
     #Internal
     'accounts',
     'pages',
+    'organization',
     
     #External
     'tailwind',
     'theme',
-    'django_browser_reload'
+    'django_browser_reload',
+    'django_extensions',
 ]
 
 AUTH_USER_MODEL = 'accounts.CustomUser'
