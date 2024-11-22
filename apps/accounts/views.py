@@ -1,7 +1,8 @@
 from django.shortcuts import render
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login, logout
 from django.shortcuts import render, redirect
 from .forms import EmailAuthenticationForm
+from .password_change import password_change
 
 # Login user function
 def custom_login_view(request):
@@ -20,3 +21,10 @@ def custom_login_view(request):
     else:
         form = EmailAuthenticationForm()
     return render(request, 'apps/accounts/login.html', {'form': form})
+
+
+
+# Logout user function
+def custom_logout(request):
+    logout(request)
+    return redirect('login')
