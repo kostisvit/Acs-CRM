@@ -38,9 +38,10 @@ INSTALLED_APPS = [
     'theme',
     'django_browser_reload',
     'django_extensions',
+    'import_export',
 ]
 
-AUTH_USER_MODEL = 'accounts.CustomUser'
+AUTH_USER_MODEL = 'accounts.User'
 
 TAILWIND_APP_NAME = 'theme'
 
@@ -127,7 +128,7 @@ USE_TZ = True
 
 
 LOGIN_REDIRECT_URL = '/'
-LOGOUT_REDIRECT_URL = '/accounts/login/'
+LOGOUT_REDIRECT_URL = 'login/'
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
