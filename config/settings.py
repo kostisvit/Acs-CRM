@@ -32,6 +32,7 @@ INSTALLED_APPS = [
     'accounts',
     'pages',
     'organization',
+    'foreas',
     
     #External
     'tailwind',
@@ -39,6 +40,7 @@ INSTALLED_APPS = [
     'django_browser_reload',
     'django_extensions',
     'import_export',
+    'django_filters',
 ]
 
 AUTH_USER_MODEL = 'accounts.User'
