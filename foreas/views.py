@@ -6,7 +6,8 @@ from .filters import PelatisFilter
 
 class ForeasListView(LoginRequiredMixin,FilterView):
     model = Dhmos
-    context_object_name = 'pelates_list'
+    context_object_name = 'foreas_list'
     template_name = 'apps/foreas/foreas.html'
     filterset_class = PelatisFilter
     ordering = ['name']
+    paginate_by = 10

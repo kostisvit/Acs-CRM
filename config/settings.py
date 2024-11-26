@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'django_extensions',
     'import_export',
     'django_filters',
+    'widget_tweaks',
 ]
 
 AUTH_USER_MODEL = 'accounts.User'

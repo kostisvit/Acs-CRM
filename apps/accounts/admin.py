@@ -5,7 +5,7 @@ from import_export.admin import ImportExportModelAdmin
 from django.contrib.auth.hashers import make_password
 from .forms import UserCreationForm
 
-class UserAdmin(UserAdmin):
+class CustomUserAdmin(ImportExportModelAdmin):
 
     
 
@@ -44,4 +44,4 @@ class UserAdmin(UserAdmin):
         return super().get_queryset(request)
 
 
-admin.site.register(User,UserAdmin)
+admin.site.register(User,CustomUserAdmin)

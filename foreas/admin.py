@@ -37,4 +37,27 @@ class DhmosAdmin(ImportExportModelAdmin):
 
 
 
+class EmployeeAdmin(ImportExportModelAdmin):
+    list_display = ('dhmos', 'lastname', 'firstname','tmhma', 'phone', 'email', 'is_visible')
+    list_filter = ['is_visible', 'tmhma', 'dhmos']
+    search_fields = ['lastname']
+    actions = ['make_visible', 'make_unvisible']
+
+    def make_visible(modeladmin, request, queryset):
+        queryset.update(is_visible=True)
+    make_visible.short_description = "Ενεργοποίηση υπαλλήλου"
+
+    def make_unvisible(modeladmin, request, queryset):
+        queryset.update(is_visible=False)
+    make_unvisible.short_description = "Απενεργοποίηση υπαλλήλου"
+
 admin.site.register(Dhmos, DhmosAdmin)
+admin.site.register(Employee, EmployeeAdmin)
+
+
+
+
+# admin.site.unregister(Group)
+admin.site.site_header = "Μαζιώτης Σταύρος & ΣΙΑ ΕΕ"
+admin.site.site_title = "Μαζιώτης Σταύρος & ΣΙΑ ΕΕ"
+admin.site.index_title = "ACS Services"
