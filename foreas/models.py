@@ -2,6 +2,29 @@ from django.db import models
 from django.urls import reverse
 from .model_choices import *
 
+class VisibilityManager(models.Manager):
+    """
+    Custom manager to handle visibility filters.
+    """
+
+    def get_queryset(self) -> models.QuerySet:
+        """
+        Override the default queryset to include all records.
+        """
+        return super().get_queryset()
+
+    def visible(self) -> models.QuerySet:
+        """
+        Return only records where is_visible=True.
+        """
+        return self.get_queryset().filter(is_visible=True)
+
+    def invisible(self) -> models.QuerySet:
+        """
+        Return only records where is_visible=False.
+        """
+        return self.get_queryset().filter(is_visible=False)
+
 
 class Dhmos(models.Model):
     name = models.CharField(max_length=100, verbose_name='Πελάτης', blank=False)
@@ -20,17 +43,21 @@ class Dhmos(models.Model):
         verbose_name_plural = 'ACS Φορέας'
         ordering = ['name']
 
+    # Custom managers
+    objects = VisibilityManager()  # Filters only active objects
+
     def __str__(self):
         return self.name
 
-    def get_absolute_url(self):
-        return reverse('pelatis_update', args=[str(self.id)])
+    def delete(self, *args, **kwargs):
+        """Soft delete the object by marking it as visible=false."""
+        self.is_visible = False
+        self.save()
 
-    def get_absolute_url_delete(self):
-        return reverse('delete_pelatis', args=[str(self.id)])
-    
-    def get_admin_url_history(self):
-        return reverse('admin:%s_%s_history' % (self._meta.app_label, self._meta.model_name),args=[self.id])
+    def restore(self, *args, **kwargs):
+        """Soft delete the object by marking it as visible=true."""
+        self.is_visible = True
+        self.save()
 
 
 
@@ -53,8 +80,12 @@ class Employee(models.Model):
     def __str__(self):
         return (self.lastname) + " " + (self.firstname)
 
-    def get_absolute_url(self):
-        return reverse('epafi_update', args=[str(self.id)])
+    def delete(self, *args, **kwargs):
+        """Soft delete the object by marking it as visible=false."""
+        self.is_visible = False
+        self.save()
 
-    def get_absolute_url_delete(self):
-        return reverse('delete_epafi', args=[str(self.id)])
+    def restore(self, *args, **kwargs):
+        """Soft delete the object by marking it as visible=true."""
+        self.is_visible = True
+        self.save()

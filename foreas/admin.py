@@ -5,35 +5,37 @@ from .models import *
 
 class DhmosAdmin(ImportExportModelAdmin):
     list_display = ('id','name', 'phone', 'address', 'city', 'teamviewer', 'fax', 'email', 'is_visible')
-    list_filter = ['name', 'is_visible']
+    list_filter = ['is_visible']
     list_editable = ['is_visible']
     search_fields = ['name', ]
-    actions = ['make_visible', 'make_unvisible']
+    actions = ['restore_selected', 'soft_delete_selected']
     history_list_display = ["changed_fields","list_changes"]
 
-    def changed_fields(self, obj):
-        if obj.prev_record:
-            delta = obj.diff_against(obj.prev_record)
-            return delta.changed_fields
-        return None
+    def get_queryset(self, request):
+        """
+        Override get_queryset to include all records (even soft-deleted ones).
+        """
+        return Dhmos.all_objects.all()
 
-    def list_changes(self, obj):
-        fields = ""
-        if obj.prev_record:
-            delta = obj.diff_against(obj.prev_record)
+    def restore_selected(self, request, queryset):
+        """
+        Action to restore selected soft-deleted dhmoi.
+        """
+        for obj in queryset:
+            obj.restore()
+        self.message_user(request, f"{queryset.count()} Δήμος(s) restored.")
 
-            for change in delta.changes:
-                fields += str("<strong>{}</strong> changed from <span style='background-color:#ff6347'>{}</span> to <span style='background-color:#009933; font-weight:bold;'>{}</span> . <br/>".format(change.field, change.old, change.new))
-            return format_html(fields)
-        return None
+    restore_selected.short_description = "Ενεργοποίηση επιλεγμένων Φορέων"
 
-    def make_visible(modeladmin, request, queryset):
-        queryset.update(is_visible=True)
-    make_visible.short_description = "Ενεργοποίηση πελάτη"
+    def soft_delete_selected(self, request, queryset):
+        """
+        Action to soft-delete selected dhmoi.
+        """
+        for obj in queryset:
+            obj.delete()
+        self.message_user(request, f"{queryset.count()} Δήμος(s) soft-deleted.")
 
-    def make_unvisible(modeladmin, request, queryset):
-        queryset.update(is_visible=False)
-    make_unvisible.short_description = "Απενεργοποίηση πελάτη"
+    soft_delete_selected.short_description = "Απενεργοποίηση επιλεγμένων Φορέων"
 
 
 
