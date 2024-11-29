@@ -57,8 +57,14 @@
                         <input type="text" value="{{employee.phone }}" class="w-full bg-transparent border-none text-center text-sm rounded-md" id="phone-{{ employee.id }}"></td>
                     <td class="px-4 py-2" data-label="Τηλέφωνο">
                         <input type="text" value="{{employee.cellphone }}" class="w-full bg-transparent border-none text-center text-sm rounded-md" id="cellphone-{{ employee.id }}"></td>
-                    <td class="px-4 py-2" data-label="Email">
-                        <input type="text" value="{{employee.email }}" class="w-full bg-transparent border-none text-center text-sm rounded-md" id="email-{{ employee.id }}"></td>
+                        <td class="px-4 py-2" data-label="Email">
+                            <input 
+                                type="text" 
+                                value="{{ employee.email }}" 
+                                class="w-full bg-transparent border-none text-center text-sm rounded-md overflow-visible" 
+                                id="email-{{ employee.id }}"
+                                style="width: auto; white-space: nowrap; overflow: visible;">
+                        </td>
                     <td class="px-4 py-2" data-label="Email">
                         <input type="text" value="{{employee.secondary_email }}" class="w-full bg-transparent border-none text-center text-sm rounded-md" id="secondary_email-{{ employee.id }}"></td>
                     <td class="px-4 py-2 text-green-500 font-bold" data-label="Κατάσταση">
@@ -99,6 +105,7 @@
             {% endif %}</p>
         </div>
     {% endfor %}
+</div>
 </div>
 <!--End Cards-->
 <!-- Centered Pagination Controls -->

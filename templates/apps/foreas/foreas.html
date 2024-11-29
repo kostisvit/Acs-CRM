@@ -64,9 +64,11 @@
                         <input type="checkbox" class="form-checkbox h-5 w-5 text-green-600" id="is_visible-{{ dhmos.id }}" 
                             {% if dhmos.is_visible %} checked {% endif %}></td>
                     <td class="px-4 py-2" data-label="Ενέργειες">
+                        <div class="flex space-x-2">
                         <a href="{% url 'soft_delete_dhmos' dhmos.pk %}" class="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-lg dark:bg-red-600 dark:hover:bg-red-700 focus:outline-none dark:focus:ring-red-800" onclick="return confirm('Είστε σίγουροι για την απενεργοποίηση του Φορέα;');">Del</a>
                         <button onclick="saveChanges({{ dhmos.id }})" 
                         class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded-lg dark:bg-indigo-600 dark:hover:bg-indigo-700 focus:outline-none dark:focus:ring-indigo-800">Save</button>
+                    </div>
                     </td>
                 </tr>
 

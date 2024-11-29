@@ -79,7 +79,7 @@ class EpafiListView(LoginRequiredMixin, FilterView):
     template_name = 'apps/foreas/contact.html'
     filterset_class = EpafiFilter
     ordering = ['lastname']
-    paginate_by = 10
+    paginate_by = 9
 
     def get_queryset(self):
         """
