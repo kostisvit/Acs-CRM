@@ -87,3 +87,23 @@ class EpafiListView(LoginRequiredMixin, FilterView):
         """
         return Employee.objects.visible()
 
+
+#Διόρθωση εγγραφών πελατών
+@login_required
+def edit_contact(request, employee_id):
+    if request.method == 'POST':
+        data = json.loads(request.body)
+        employee = get_object_or_404(Employee, id=employee_id)
+        employee.firstname = data.get('firstname')
+        employee.lastname = data.get('lastname')
+        employee.tmhma = data.get('tmhma')
+        employee.phone = data.get('phone')
+        employee.cellphone = data.get('cellphone')
+        employee.email = data.get('email')
+        employee.secondary_email = data.get('secondary_email')
+        
+        employee.is_visible = data.get('is_visible')
+        employee.save()
+        return JsonResponse({'status': 'success'})
+
+    return JsonResponse({'status': 'failed'}, status=400)
