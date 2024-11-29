@@ -80,6 +80,9 @@ class Employee(models.Model):
     def __str__(self):
         return (self.lastname) + " " + (self.firstname)
 
+    # Custom managers
+    objects = VisibilityManager()  # Filters only active objects
+
     def delete(self, *args, **kwargs):
         """Soft delete the object by marking it as visible=false."""
         self.is_visible = False

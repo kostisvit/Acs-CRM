@@ -1,8 +1,10 @@
 {% extends '_base.html' %}
 {% load widget_tweaks %}
+{% load custom_filters %}
 {% load i18n %}
 
 {% block content %}
+
 <!--Filter Form-->
 <form method="get" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mt-3">
     {% csrf_token %}
@@ -12,5 +14,130 @@
 <!--End Filter Form-->
 
 <div class="divider divider-primary"></div>
+
+<!--Buttons-->
+<div class="">
+    <a href="#" class="px-4 py-2.5 text-sm font-medium text-white transition-all duration-200 bg-indigo-600 hover:bg-indigo-700  rounded-lg group" title="Νέα εγγραφή" title="Export">Νέα εγγραφή</a>
+</div>
+<!--End Buttons-->
+
+
+<!--Φορέας Λίστα-->
+<div class="relative overflow-x-auto shadow-md sm:rounded-lg mt-5">
+    <div class="hidden sm:block">
+        <table class="w-full text-sm text-center rtl:text-right text-gray-500 dark:text-white">
+            <thead class="text-xs odd:bg-white odd:dark:bg-gray-900 even:bg-gray-50 even:dark:bg-gray-800 border-b">
+                <tr>
+                    <th colspan="10" class="text-center text-2xl font-bold">Πελάτες</th>
+                </tr>
+                <tr>
+                    <th scope="col" class="px-4 py-2">Φορέας</th>
+                    <th scope="col" class="px-4 py-2">Επώνυμο</th>
+                    <th scope="col" class="px-4 py-2">Όνομα</th>
+                    <th scope="col" class="px-4 py-2">Τμήμα</th>
+                    <th scope="col" class="px-4 py-2">Τηλέφωνο</th>
+                    <th scope="col" class="px-4 py-2">Κινητό</th>
+                    <th scope="col" class="px-4 py-2">Email</th>
+                    <th scope="col" class="px-4 py-2">2ο Email</th>
+                    <th scope="col" class="px-4 py-2">Κατάσταση</th>
+                    <th scope="col" class="px-4 py-2">Ενέργειες</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for employee in epafi_list %}
+                <tr class="odd:bg-white odd:dark:bg-gray-900 even:bg-gray-50 even:dark:bg-gray-800 border-b ">
+                    <td class="px-4 py-2 border-b" data-label="Φορέας">
+                        <input type="text" value="{{employee.dhmos }}" class="w-full bg-transparent border-none text-center text-sm rounded-md" id="name-{{ dhmos.id }}"></td>
+                    <td class="px-4 py-2" data-label="Διεύθυνση">
+                        <input type="text" value="{{employee.lastname }}" class="w-full bg-transparent border-none text-center text-sm rounded-md" id="address-{{ dhmos.id }}"></td>
+                    <td class="px-4 py-2" data-label="Διεύθυνση">
+                        <input type="text" value="{{employee.firstname }}" class="w-full bg-transparent border-none text-center text-sm rounded-md" id="address-{{ dhmos.id }}"></td>
+                    <td class="px-4 py-2" data-label="Πόλη">
+                        <input type="text" value="{{employee.get_tmhma_display }}" class="w-full bg-transparent border-none text-center text-sm rounded-md" id="city-{{ dhmos.id }}"></td>
+                    <td class="px-4 py-2" data-label="Τηλέφωνο">
+                        <input type="text" value="{{employee.phone }}" class="w-full bg-transparent border-none text-center text-sm rounded-md" id="phone-{{ dhmos.id }}"></td>
+                    <td class="px-4 py-2" data-label="Τηλέφωνο">
+                        <input type="text" value="{{employee.cellphone }}" class="w-full bg-transparent border-none text-center text-sm rounded-md" id="phone-{{ dhmos.id }}"></td>
+                    <td class="px-4 py-2" data-label="Email">
+                        <input type="text" value="{{employee.email }}" class="w-full bg-transparent border-none text-center text-sm rounded-md" id="email-{{ dhmos.id }}"></td>
+                    <td class="px-4 py-2" data-label="Email">
+                        <input type="text" value="{{employee.secondary_email }}" class="w-full bg-transparent border-none text-center text-sm rounded-md" id="email-{{ dhmos.id }}"></td>
+                    <td class="px-4 py-2 text-green-500 font-bold" data-label="Κατάσταση">
+                        <input type="checkbox" class="form-checkbox h-5 w-5 text-green-600" id="is_visible-{{ dhmos.id }}" 
+                            {% if employee.is_visible %} checked {% endif %}></td>
+                        <td class="px-4 py-2" data-label="Ενέργειες">
+                            <div class="flex space-x-2">
+                                <a href="#" 
+                                    class="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-lg dark:bg-red-600 dark:hover:bg-red-700 focus:outline-none dark:focus:ring-red-800" 
+                                    onclick="return confirm('Είστε σίγουροι για την απενεργοποίηση του Φορέα;');">Del</a>
+                                <button onclick="saveChanges({{ dhmos.id }})" 
+                                        class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded-lg dark:bg-indigo-600 dark:hover:bg-indigo-700 focus:outline-none dark:focus:ring-indigo-800">Save</button>
+                            </div>
+                        </td>
+                </tr>
+
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+<!-- Cards for smaller screens -->
+<div class="block sm:hidden space-y-4">
+    {% for employee in epafi_list %}
+        <div class="border p-4 rounded-lg shadow-md bg-white">
+            <p><span class="font-bold text-gray-700 mr-2">Φορέας:</span>{{dhmos.name|title|default_if_none:""}}</p>
+            <p><span class="font-bold text-gray-700 mr-2">Επώνυμο:</span> {{dhmos.address}}</p>
+            <p><span class="font-bold text-gray-700 mr-2">Όνομα:</span> {{dhmos.city}}</p>
+            <p><span class="font-bold text-gray-700 mr-2">Τμήμα:</span>{{dhmos.phone}}</p>
+            <p><span class="font-bold text-gray-700 mr-2">Τηλέφωνο:</span>{{dhmos.email}}</p>
+            <p><span class="font-bold text-gray-700 mr-2">Κινητό:</span>{{dhmos.website| remove_protocol}}</p>
+            <p><span class="font-bold text-gray-700 mr-2">Email:</span>{{dhmos.email}}</p>
+            <p><span class="font-bold text-gray-700 mr-2">2ο Email:</span>{{dhmos.email}}</p>
+            <p><span class="font-bold text-gray-700 mr-2"></span> 
+            {% if employee.is_visible == True %}
+                <td class="px-4 py-2 text-green-500 font-bold" data-label="Κατάσταση">Online</td>
+            {% else %}
+                <td class="px-4 py-2 text-red-600 font-bold">Offline
+            {% endif %}</p>
+        </div>
+    {% endfor %}
+</div>
+<!--End Cards-->
+<!-- Centered Pagination Controls -->
+<div class="flex justify-center items-center mt-6 space-x-2">
+    <!-- Previous Page Link -->
+    {% if page_obj.has_previous %}
+        <a href="?{% for key, value in request.GET.items %}{% if key != 'page' %}{{ key }}={{ value|urlencode }}&{% endif %}{% endfor %}page={{ page_obj.previous_page_number }}" 
+           class="px-4 py-2 bg-gray-200 text-gray-700 rounded hover:bg-gray-300 font-medium">
+           Previous
+        </a>
+    {% else %}
+        <span class="px-4 py-2 bg-gray-100 text-gray-400 rounded font-medium">Previous</span>
+    {% endif %}
+
+    <!-- Page Numbers -->
+    {% for num in page_obj.paginator.page_range %}
+        {% if page_obj.number == num %}
+            <span class="px-4 py-2 bg-blue-700 text-white rounded font-medium">{{ num }}</span>
+        {% else %}
+            <a href="?{% for key, value in request.GET.items %}{% if key != 'page' %}{{ key }}={{ value|urlencode }}&{% endif %}{% endfor %}page={{ num }}" 
+               class="px-4 py-2 bg-gray-200 text-gray-700 rounded hover:bg-gray-300 font-medium">
+               {{ num }}
+            </a>
+        {% endif %}
+    {% endfor %}
+
+    <!-- Next Page Link -->
+    {% if page_obj.has_next %}
+        <a href="?{% for key, value in request.GET.items %}{% if key != 'page' %}{{ key }}={{ value|urlencode }}&{% endif %}{% endfor %}page={{ page_obj.next_page_number }}" 
+           class="px-4 py-2 bg-gray-200 text-gray-700 rounded hover:bg-gray-300 font-medium">
+           Next
+        </a>
+    {% else %}
+        <span class="px-4 py-2 bg-gray-100 text-gray-400 rounded font-medium">Next</span>
+    {% endif %}
+</div>
+
+
+<!--End Center pagination Controlss-->
 
 {% endblock %}

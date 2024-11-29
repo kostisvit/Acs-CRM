@@ -79,3 +79,11 @@ class EpafiListView(LoginRequiredMixin, FilterView):
     template_name = 'apps/foreas/contact.html'
     filterset_class = EpafiFilter
     ordering = ['lastname']
+    paginate_by = 10
+
+    def get_queryset(self):
+        """
+        Use the custom manager to filter inactive records (is_visible=False).
+        """
+        return Employee.objects.visible()
+
