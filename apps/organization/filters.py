@@ -1,5 +1,5 @@
 import django_filters
-from .models import Dhmos, Employee
+from .models import Organization, Employee
 from django import forms
 from django.utils.translation import gettext_lazy as _
 
@@ -28,7 +28,7 @@ class PelatisFilter(django_filters.FilterSet):
         }))
 
     class Meta:
-        model = Dhmos
+        model = Organization
         fields = ['name', 'phone','email']
 
 
@@ -38,8 +38,8 @@ class EpafiFilter(django_filters.FilterSet):
         (False, 'Offline'),
     )
     
-    dhmos = django_filters.ModelChoiceFilter(
-        queryset=Dhmos.objects.filter(is_visible=True),
+    organization = django_filters.ModelChoiceFilter(
+        queryset=Organization.objects.filter(is_visible=True),
         label=False,
         empty_label="Επιλέξτε Οργανισμό...",
         widget=forms.Select(attrs={
@@ -71,7 +71,7 @@ class EpafiFilter(django_filters.FilterSet):
 
     class Meta:
         model = Employee
-        fields = ['dhmos', 'firstname', 'lastname']
+        fields = ['organization', 'firstname', 'lastname']
 
     def __init__(self, *args, **kwargs):
         super(EpafiFilter, self).__init__(*args, **kwargs)

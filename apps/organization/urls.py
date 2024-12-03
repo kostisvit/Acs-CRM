@@ -1,19 +1,16 @@
-from django.urls import path
 from . import views
-# from .charts import *
-# from . import export
-
+from django.urls import path
 #class based views
-from .views import ForeasListView,ForeasListViewVisibleFalse,EpafiListView
+from .views import OrganizationListView,OrganizationListViewVisibleFalse,EpafiListView
 # from .delete_records import AithmaDeleteView,ForeasDeleteView,ContactDeleteView,ErgasiaDeleteView,AdeiaDeleteView,ServiceDeleteView,SellCornfirmDelete,TrainingDeleteView,HardwareDeleteView
 # from .search import HomePageSearchListView
 # from .update_records import AdeiaUpdateView
 
 urlpatterns = [
 
-    path('acs-services/foreas', ForeasListView.as_view(), name='pelatis'),
-    path('acs-services/foreas-in-active', ForeasListViewVisibleFalse.as_view(), name='in_active_pelatis'),
-    path('acs-services/edit/<int:dhmos_id>/',views.edit_forea, name='edit_forea'),
+    path('acs-services/foreas', OrganizationListView.as_view(), name='pelatis'),
+    path('acs-services/foreas-in-active', OrganizationListViewVisibleFalse.as_view(), name='in_active_pelatis'),
+    path('acs-services/edit/<int:organization_id>/',views.edit_forea, name='edit_forea'),
     path('acs-services/delete/<int:pk>/', views.soft_delete_dhmos, name='soft_delete_dhmos'),
     path('acs-services/restore/<int:pk>/', views.restore_dhmos, name='restore_dhmos'),
     path('acs-services/contacts/', EpafiListView.as_view(), name='contact'),

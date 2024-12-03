@@ -32,7 +32,6 @@ INSTALLED_APPS = [
     'accounts',
     'pages',
     'organization',
-    'foreas',
     
     #External
     'tailwind',
