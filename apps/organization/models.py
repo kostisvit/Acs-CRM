@@ -103,11 +103,10 @@ class Ergasies(models.Model):
     jobtype = models.CharField(max_length=100, choices=job_choice,verbose_name='Τύπος Εργασίας', default='TeamViewer')
     info = models.TextField(max_length=1000, verbose_name='Περιγραφή')
     text = models.TextField(max_length=1000, verbose_name='Σημειώσεις', blank=True)
-    employee1 = models.ForeignKey('accounts.User', max_length=100, verbose_name='Υπάλληλος',on_delete=models.CASCADE, default='-')  # delete kai
+    employee= models.ForeignKey('accounts.User', max_length=100, verbose_name='Υπάλληλος',on_delete=models.CASCADE, default='-')  # delete kai
     time = models.FloatField(verbose_name='Διάρκεια')
     name = models.CharField(max_length=100, verbose_name='Υπάλληλος Επικοιν.',null=True, help_text='Επώνυμο-Όνομα', blank=True)
     ticketid = models.CharField(max_length=50, verbose_name='Αίτημα OTS', blank=True)
-    employee = models.PositiveIntegerField(verbose_name='Υπάλληλος')
     
     class Meta:
         indexes = [models.Index(fields=['importdate', 'employee'])]

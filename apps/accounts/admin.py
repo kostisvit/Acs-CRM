@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
-from .models import User,Company
+from .models import User,Company,Adeia
 from import_export.admin import ImportExportModelAdmin
 from django.contrib.auth.hashers import make_password
 from .forms import UserCreationForm
@@ -12,9 +12,9 @@ class CustomUserAdmin(ImportExportModelAdmin):
     list_filter = ('is_staff', 'is_active')
     readonly_fields = ()
     fieldsets = (
-        (None, {'fields': ('email', 'password')}),
+        (None, {'fields': ('email', 'password','company')}),
         ('Personal info', {'fields': ('first_name', 'last_name', 'phone_number')}),
-        ('Permissions', {'fields': ('is_staff', 'is_active','is_company_owner','groups', 'user_permissions')}),
+        ('Permissions', {'fields': ('is_staff', 'is_active','groups', 'user_permissions')}),
         ('Important dates', {'fields': ('last_login',)}),
     )
     add_fieldsets = (
@@ -47,6 +47,13 @@ class CompanyAdmin(admin.ModelAdmin):
 
 
 
+class AdeiesAdmin(ImportExportModelAdmin):
+    date_hierarchy = 'createddate'
+    list_display = ('acs_employee', 'adeiatype', 'startdate','enddate', 'days', 'createddate')
+    search_fields = ['acs_employee']
+    list_filter = ['acs_employee', 'createddate']
+
 
 admin.site.register(Company,CompanyAdmin)
 admin.site.register(User,CustomUserAdmin)
+admin.site.register(Adeia, AdeiesAdmin)
