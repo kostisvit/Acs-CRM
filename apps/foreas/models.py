@@ -1,6 +1,8 @@
 from django.db import models
 from django.urls import reverse
 from .model_choices import *
+import datetime
+from django.db.models import Sum
 
 class VisibilityManager(models.Manager):
     """
@@ -92,3 +94,45 @@ class Employee(models.Model):
         """Soft delete the object by marking it as visible=true."""
         self.is_visible = True
         self.save()
+
+
+class Ergasies(models.Model):
+    dhmos = models.ForeignKey('Dhmos', on_delete=models.CASCADE, verbose_name='Πελάτης', default='-')
+    importdate = models.DateField(default=datetime.date.today, verbose_name='Ημ. Κατ.', db_index=True)
+    app = models.CharField(max_length=100, choices=app_choice,verbose_name='Εφαρμογή', blank=True)
+    jobtype = models.CharField(max_length=100, choices=job_choice,verbose_name='Τύπος Εργασίας', default='TeamViewer')
+    info = models.TextField(max_length=1000, verbose_name='Περιγραφή')
+    text = models.TextField(max_length=1000, verbose_name='Σημειώσεις', blank=True)
+    employee1 = models.ForeignKey('accounts.User', max_length=100, verbose_name='Υπάλληλος',on_delete=models.CASCADE, default='-')  # delete kai
+    time = models.FloatField(verbose_name='Διάρκεια')
+    name = models.CharField(max_length=100, verbose_name='Υπάλληλος Επικοιν.',null=True, help_text='Επώνυμο-Όνομα', blank=True)
+    ticketid = models.CharField(max_length=50, verbose_name='Αίτημα OTS', blank=True)
+    employee = models.PositiveIntegerField(verbose_name='Υπάλληλος')
+    
+    class Meta:
+        indexes = [models.Index(fields=['importdate', 'employee'])]
+        verbose_name = 'ACS Εργασίες Φορέα'
+        verbose_name_plural = 'ACS Εργασίες Φορέα'
+        ordering = ['importdate']
+    
+    def __str__(self):
+        return str(self.id)
+    
+    def total_work_time(self):  # Ώρες εργασίας ανα χρήστη
+        today = datetime.date.today()
+        return Ergasies.objects.all().filter(importdate__year=today.year, employee=self.employee).aggregate(time_all=Sum('time')).get('time_all')
+
+    def get_symbasi(self):
+        return ",".join([str(p) for p in self.symbasi.all()])
+
+    def get_absolute_url(self):
+        return reverse('ergasia_update', args=[str(self.id)])
+    
+    def get_absolute_url_copy_paste(self):
+        return reverse('ergasia_copy_paste', args=[str(self.id)])
+
+    def get_absolute_url_delete(self):
+        return reverse('delete_ergasia', args=[str(self.id)])
+
+    def get_admin_url_history(self):
+        return reverse('admin:%s_%s_history' % (self._meta.app_label, self._meta.model_name),args=[self.id])

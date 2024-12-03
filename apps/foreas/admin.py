@@ -2,6 +2,9 @@ from django.contrib import admin
 from import_export.admin import ImportExportModelAdmin
 from django.utils.html import format_html
 from .models import *
+from import_export import fields, resources
+from import_export.widgets import ForeignKeyWidget
+from accounts.models import User
 
 class DhmosAdmin(ImportExportModelAdmin):
     list_display = ('id','name', 'phone', 'address', 'city', 'teamviewer', 'fax', 'email', 'is_visible')
@@ -15,7 +18,7 @@ class DhmosAdmin(ImportExportModelAdmin):
         """
         Override get_queryset to include all records (even soft-deleted ones).
         """
-        return Dhmos.all_objects.all()
+        return Dhmos.objects.all()
 
     def restore_selected(self, request, queryset):
         """
@@ -53,9 +56,36 @@ class EmployeeAdmin(ImportExportModelAdmin):
         queryset.update(is_visible=False)
     make_unvisible.short_description = "Απενεργοποίηση υπαλλήλου"
 
+
+
+class ErgasiesResource(resources.ModelResource):
+    dhmos = fields.Field(attribute='dhmos',widget=ForeignKeyWidget(Dhmos, 'name'))
+    employee = fields.Field(attribute='employee',widget=ForeignKeyWidget(User, 'username'))
+    jobtype = fields.Field(attribute='jobtype')
+
+    class Meta:
+        model = Ergasies
+        exclude = ('text', 'ticketid')
+        export_order = ('id','dhmos', 'importdate', 'app', 'employee','jobtype', 'info', 'name', 'time')
+        
+
+
+class ErgasiesAdmin(ImportExportModelAdmin):
+    date_hierarchy = 'importdate'
+    list_display = ('dhmos', 'importdate','app','employee','jobtype', 'info','name','time','ticketid')
+    search_fields = ['dhmos','info' ]
+    list_filter = ['employee', 'dhmos', 'jobtype', 'app']
+    list_select_related = ['employee','dhmos']
+    ordering = ['importdate']
+    resource_class = ErgasiesResource
+    history_list_display = ["changed_fields","list_changes"]
+
+
+
+
 admin.site.register(Dhmos, DhmosAdmin)
 admin.site.register(Employee, EmployeeAdmin)
-
+admin.site.register(Ergasies, ErgasiesAdmin)
 
 
 

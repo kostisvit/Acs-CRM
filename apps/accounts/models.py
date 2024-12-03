@@ -3,7 +3,32 @@
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
 from django.db import models
 from django.utils.translation import gettext_lazy as _
-from organization.models import Organization
+from django_extensions.db.models import TimeStampedModel
+
+class Company(TimeStampedModel):
+    company_owner_name = models.CharField(max_length=255)
+    company_title = models.CharField(max_length=255)
+    company_title_alias = models.CharField(max_length=255, unique=True)
+    company_address = models.CharField(max_length=255)
+    company_city = models.CharField(max_length=100)
+    company_postal_code = models.CharField(max_length=20)
+    company_country = models.CharField(max_length=100)
+    company_phone_number_1 = models.CharField(max_length=255)
+    company_phone_number_2 = models.CharField(max_length=255)
+    company_email = models.EmailField(max_length=254)
+    company_is_active = models.BooleanField(default=True)
+    
+    
+    
+    class Meta:
+        ordering = ['company_title']
+        verbose_name = _('Εταιρεία')
+        verbose_name_plural = _('Εταιρεία')
+    
+    def __str__(self):
+        return f"{self.company_title}"
+
+
 
 class CustomUserManager(BaseUserManager):
     def create_user(self, email, password=None, **extra_fields):
@@ -28,29 +53,13 @@ class CustomUserManager(BaseUserManager):
 
 
 class User(AbstractBaseUser, PermissionsMixin):
-    class Gender(models.TextChoices):
-        MALE = 'M', _('Male')
-        FEMALE = 'F', _('Female')
-        OTHER = 'O', _('Other')
-    organization = models.ForeignKey(Organization, on_delete=models.SET_NULL, null=True, blank=True)
+    company = models.ManyToManyField(Company, related_name="users")
     email = models.EmailField(unique=True)
     first_name = models.CharField(max_length=30, blank=True)
     last_name = models.CharField(max_length=30, blank=True)
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
-    is_active = models.BooleanField(default=True)
-    is_company_owner = models.BooleanField(default=False)
-    date_of_birth = models.DateField(null=True, blank=True)
     phone_number = models.CharField(max_length=15, unique=True,null=True, blank=True)
-    address = models.CharField(max_length=255,null=True, blank=True)
-    city = models.CharField(max_length=100,null=True, blank=True)
-    postal_code = models.CharField(max_length=20,null=True, blank=True)
-    country = models.CharField(max_length=100,null=True, blank=True)
-    gender = models.CharField(
-        max_length=1,
-        choices=Gender.choices,
-        default=Gender.OTHER,
-    )
     first_login = models.BooleanField(default=True)
 
     objects = CustomUserManager()
@@ -60,4 +69,5 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     def __str__(self):
         return self.email
+
 

@@ -1,29 +1,26 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
-from .models import User
+from .models import User,Company
 from import_export.admin import ImportExportModelAdmin
 from django.contrib.auth.hashers import make_password
 from .forms import UserCreationForm
 
 class CustomUserAdmin(ImportExportModelAdmin):
-
-    
-
     model = User
     add_form = UserCreationForm
-    list_display = ('id','email', 'first_name', 'last_name', 'is_staff', 'is_active','gender','is_company_owner')
+    list_display = ('id','email', 'first_name', 'last_name', 'is_staff', 'is_active')
     list_filter = ('is_staff', 'is_active')
     readonly_fields = ()
     fieldsets = (
         (None, {'fields': ('email', 'password')}),
-        ('Personal info', {'fields': ('organization','first_name', 'last_name', 'date_of_birth','phone_number','postal_code','address','city','country','gender')}),
+        ('Personal info', {'fields': ('first_name', 'last_name', 'phone_number')}),
         ('Permissions', {'fields': ('is_staff', 'is_active','is_company_owner','groups', 'user_permissions')}),
         ('Important dates', {'fields': ('last_login',)}),
     )
     add_fieldsets = (
         (None, {
             'classes': ('wide',),
-            'fields': ('organization','first_name', 'last_name', 'email',  'is_staff','is_active','is_company_owner','date_of_birth','phone_number','address','city','country','gender','postal_code','groups', 'user_permissions')}
+            'fields': ('first_name', 'last_name', 'email',  'is_staff','is_active','phone_number','groups', 'user_permissions')}
         ),
     )
     search_fields = ('email',)
@@ -44,4 +41,12 @@ class CustomUserAdmin(ImportExportModelAdmin):
         return super().get_queryset(request)
 
 
+class CompanyAdmin(admin.ModelAdmin):
+    list_display = ('id','company_title','company_title_alias','company_owner_name','company_address','company_city','company_postal_code','company_country','company_phone_number_1','company_phone_number_2','company_email','company_is_active','created','modified')
+    list_filter = ('company_title','company_owner_name')
+
+
+
+
+admin.site.register(Company,CompanyAdmin)
 admin.site.register(User,CustomUserAdmin)
