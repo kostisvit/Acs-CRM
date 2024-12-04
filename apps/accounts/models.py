@@ -78,41 +78,64 @@ class User(AbstractBaseUser, PermissionsMixin):
 
 
 
-class Adeia(models.Model):
+class Adeia(TimeStampedModel):
     acs_employee = models.ForeignKey('User', max_length=100, verbose_name='Υπάλληλος', on_delete=models.CASCADE)
     adeiatype = models.CharField(max_length=1,choices=AdeiaChoices.choices,default=AdeiaChoices.KANONIKI, verbose_name='Τύπος Άδειας')
     startdate = models.DateField(default=datetime.date.today, verbose_name='Από')
     enddate = models.DateField(default=datetime.date.today, verbose_name='Έως')
-    createddate = models.DateField(default=datetime.date.today, verbose_name='Ημ. Δημουργίας')
+    #createddate = models.DateField(default=datetime.date.today, verbose_name='Ημ. Δημουργίας')
     days = models.IntegerField(verbose_name='Ημέρες', null=False, blank=False, default='0')
 
     class Meta:
-        indexes = [models.Index(fields=['createddate', 'acs_employee'])]
+        indexes = [models.Index(fields=['created', 'acs_employee'])]
         verbose_name = 'ACS Άδειες'
         verbose_name_plural = 'ACS Άδειες'
 
-    def total(self):  # Προσθέτει τις μέρες άδειας του τρέχοντος έτους
-        today = datetime.date.today()
-        return self.__class__.objects.all().filter(createddate__year=today.year, acs_employee=self.acs_employee).exclude(Q(adeiatype='2') | Q(adeiatype='4')).aggregate(
-            sum_all=Sum('days')).get('sum_all') or 0
+    # def total(self):  # Προσθέτει τις μέρες άδειας του τρέχοντος έτους
+    #     today = datetime.date.today()
+    #     return self.__class__.objects.all().filter(createddate__year=today.year, acs_employee=self.acs_employee).exclude(Q(adeiatype='2') | Q(adeiatype='4')).aggregate(
+    #         sum_all=Sum('days')).get('sum_all') or 0
 
-    def anarotiki_total(self):
-        today = datetime.date.today()
-        return self.__class__.objects.all().filter(createddate__year=today.year, acs_employee=self.acs_employee, adeiatype='2').aggregate(
-            sum_all=Sum('days')).get('sum_all')
+    # def anarotiki_total(self):
+    #     today = datetime.date.today()
+    #     return self.__class__.objects.all().filter(createddate__year=today.year, acs_employee=self.acs_employee, adeiatype='2').aggregate(
+    #         sum_all=Sum('days')).get('sum_all')
 
-    def goniki_total(self):
-        today = datetime.date.today()
-        return self.__class__.objects.all().filter(createddate__year=today.year, acs_employee=self.acs_employee, adeiatype='4').aggregate(
-            sum_all=Sum('days')).get('sum_all')
+    # def goniki_total(self):
+    #     today = datetime.date.today()
+    #     return self.__class__.objects.all().filter(createddate__year=today.year, acs_employee=self.acs_employee, adeiatype='4').aggregate(
+    #         sum_all=Sum('days')).get('sum_all')
 
-    def kanoniki_total(self):
-        today = datetime.date.today()
-        return self.__class__.objects.all().filter(createddate__year=today.year, acs_employee=self.acs_employee, adeiatype='1').aggregate(
-            sum_all=Sum('days')).get('sum_all')
+    # def kanoniki_total(self):
+    #     today = datetime.date.today()
+    #     return self.__class__.objects.all().filter(createddate__year=today.year, acs_employee=self.acs_employee, adeiatype='1').aggregate(
+    #         sum_all=Sum('days')).get('sum_all')
 
     def get_absolute_url(self):
         return reverse('adeia_update', args=[str(self.id)])
 
     def get_absolute_url_delete(self):
         return reverse('delete_adeia', args=[str(self.id)])
+
+
+
+class Training(TimeStampedModel):
+    company = models.CharField(max_length=100, choices=TrainingChoice.choices, verbose_name='Φορέας', default='OTS')
+    place = models.CharField(max_length=100, choices=training_place, verbose_name='Χώρος', default='-')
+    importdate = models.DateField(default=datetime.date.today, verbose_name='Καταχώρηση')
+    training_type = models.CharField(max_length=100, choices=training_choice, verbose_name='Εκαπίδευση', blank=False, default='Εκπαίδευση')
+    app = models.CharField(max_length=100, choices=app_choice,verbose_name='Εφαρμογή', blank=True)
+    time = models.FloatField(verbose_name='Διάρκεια')
+    acs_employee = models.ForeignKey('User', max_length=100, verbose_name='Υπάλληλος', on_delete=models.CASCADE)
+    info = models.TextField(max_length=500, verbose_name='Περιγραφή', null=True, blank=True)
+
+    class Meta:
+        indexes = [models.Index(fields=['importdate', 'acs_employee'])]
+        verbose_name = 'ACS Εκπαιδεύσεις'
+        verbose_name_plural = 'ACS Εκπαιδεύσεις'
+
+    def get_absolute_url(self):
+        return reverse('training_update', args=[str(self.id)])
+
+    def get_absolute_url_delete(self):
+        return reverse('delete_training', args=[str(self.id)])

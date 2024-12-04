@@ -87,13 +87,10 @@ polisi_choice = (
     ('CLOSED', 'CLOSED')
 )
 
-foreas_choice = (
-    ('OTS', 'OTS'),
-    ('Interlei', 'Interlei'),
-    ('ACS', 'ACS')
-
-)
-
+class TrainingChoice(models.TextChoices):
+    OTS = '1', 'OTS'
+    ACS = '2', 'ACS'
+    
 training_choice = (
     ('Εκπαίδευση', 'Εκπαίδευση'),
 )

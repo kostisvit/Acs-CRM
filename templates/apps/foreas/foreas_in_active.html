@@ -46,25 +46,25 @@
                 </tr>
             </thead>
             <tbody>
-                {% for dhmos in foreas_list %}
+                {% for organization in foreas_list %}
                 <tr class="odd:bg-white odd:dark:bg-gray-900 even:bg-gray-50 even:dark:bg-gray-800 border-b ">
                     <td class="px-4 py-2 border-b" data-label="Φορέας">
-                        <input type="text" value="{{dhmos.name }}" class="w-full bg-transparent border-none text-center text-sm rounded-md" id="name-{{ dhmos.id }}"></td>
+                        <input type="text" value="{{organization.name }}" class="w-full bg-transparent border-none text-center text-sm rounded-md" id="name-{{ dhmos.id }}"></td>
                     <td class="px-4 py-2" data-label="Διεύθυνση">
-                        <input type="text" value="{{dhmos.address }}" class="w-full bg-transparent border-none text-center text-sm rounded-md" id="address-{{ dhmos.id }}"></td>
+                        <input type="text" value="{{organization.address }}" class="w-full bg-transparent border-none text-center text-sm rounded-md" id="address-{{ dhmos.id }}"></td>
                     <td class="px-4 py-2" data-label="Πόλη">
-                        <input type="text" value="{{dhmos.city }}" class="w-full bg-transparent border-none text-center text-sm rounded-md" id="city-{{ dhmos.id }}"></td>
+                        <input type="text" value="{{organization.city }}" class="w-full bg-transparent border-none text-center text-sm rounded-md" id="city-{{ dhmos.id }}"></td>
                     <td class="px-4 py-2" data-label="Τηλέφωνο">
-                        <input type="text" value="{{dhmos.phone }}" class="w-full bg-transparent border-none text-center text-sm rounded-md" id="phone-{{ dhmos.id }}"></td>
+                        <input type="text" value="{{organization.phone }}" class="w-full bg-transparent border-none text-center text-sm rounded-md" id="phone-{{ dhmos.id }}"></td>
                     <td class="px-4 py-2" data-label="Email">
-                        <input type="text" value="{{dhmos.email }}" class="w-full bg-transparent border-none text-center text-sm rounded-md" id="email-{{ dhmos.id }}"></td>
+                        <input type="text" value="{{organization.email }}" class="w-full bg-transparent border-none text-center text-sm rounded-md" id="email-{{ dhmos.id }}"></td>
                     <td class="px-4 py-2" data-label="Ιστιότοπος">
-                        <input type="text" value="{{dhmos.website | remove_protocol }}" class="w-full bg-transparent border-none text-center text-sm rounded-md" id="website-{{ dhmos.id }}"></td>
+                        <input type="text" value="{{organization.website | remove_protocol }}" class="w-full bg-transparent border-none text-center text-sm rounded-md" id="website-{{ dhmos.id }}"></td>
                     <td class="px-4 py-2 text-green-500 font-bold" data-label="Κατάσταση">
-                        <input type="checkbox" class="form-checkbox h-5 w-5 text-green-600" id="is_visible-{{ dhmos.id }}" 
-                            {% if dhmos.is_visible %} checked {% endif %}></td>
+                        <input type="checkbox" class="form-checkbox h-5 w-5 text-green-600" id="is_visible-{{ organization.id }}" 
+                            {% if organization.is_visible %} checked {% endif %}></td>
                     <td class="px-4 py-2" data-label="Ενέργειες">
-                        <a href="{% url 'restore_dhmos' dhmos.pk %}" class="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-lg dark:bg-green-600 dark:hover:bg-green-700 focus:outline-none dark:focus:ring-green-800" onclick="return confirm('Είστε σίγουροι για την ενεργοποίηση του Φορέα;');">Restore</a>
+                        <a href="{% url 'restore_organization' organization.pk %}" class="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-lg dark:bg-green-600 dark:hover:bg-green-700 focus:outline-none dark:focus:ring-green-800" onclick="return confirm('Είστε σίγουροι για την ενεργοποίηση του Φορέα;');">Restore</a>
                         
                     </td>
                 </tr>
@@ -75,16 +75,16 @@
     </div>
 <!-- Cards for smaller screens -->
 <div class="block sm:hidden space-y-4">
-    {% for dhmos in foreas_list %}
+    {% for organization in foreas_list %}
         <div class="border p-4 rounded-lg shadow-md bg-white">
-            <p><span class="font-bold text-gray-700 mr-2">Φορέας:</span>{{dhmos.name|title|default_if_none:""}}</p>
-            <p><span class="font-bold text-gray-700 mr-2">Διεύθυνση:</span> {{dhmos.address}}</p>
-            <p><span class="font-bold text-gray-700 mr-2">Πόλη:</span> {{dhmos.city}}</p>
-            <p><span class="font-bold text-gray-700 mr-2">Τηλέφωνο:</span>{{dhmos.phone}}</p>
-            <p><span class="font-bold text-gray-700 mr-2">Email:</span>{{dhmos.email}}</p>
-            <p><span class="font-bold text-gray-700 mr-2">Ιστιότοπος:</span>{{dhmos.website| remove_protocol}}</p>
+            <p><span class="font-bold text-gray-700 mr-2">Φορέας:</span>{{organization.name|title|default_if_none:""}}</p>
+            <p><span class="font-bold text-gray-700 mr-2">Διεύθυνση:</span> {{organization.address}}</p>
+            <p><span class="font-bold text-gray-700 mr-2">Πόλη:</span> {{organization.city}}</p>
+            <p><span class="font-bold text-gray-700 mr-2">Τηλέφωνο:</span>{{organization.phone}}</p>
+            <p><span class="font-bold text-gray-700 mr-2">Email:</span>{{organization.email}}</p>
+            <p><span class="font-bold text-gray-700 mr-2">Ιστιότοπος:</span>{{organization.website| remove_protocol}}</p>
             <p><span class="font-bold text-gray-700 mr-2"></span> 
-            {% if dhmos.is_visible == True %}
+            {% if organization.is_visible == True %}
                 <td class="px-4 py-2 text-green-500 font-bold" data-label="Κατάσταση">Online</td>
             {% else %}
                 <td class="px-4 py-2 text-red-600 font-bold">Offline
@@ -128,16 +128,16 @@
 <!--End Center pagination Controlss-->
 
 <script>
-    function saveChanges(dhmosId) {
-        const name = document.getElementById(`name-${dhmosId}`).value;
-        const address = document.getElementById(`address-${dhmosId}`).value;
-        const city = document.getElementById(`city-${dhmosId}`).value;
-        const phone = document.getElementById(`phone-${dhmosId}`).value;
-        const email = document.getElementById(`email-${dhmosId}`).value;
-        const website = document.getElementById(`website-${dhmosId}`).value;
-        const isVisible = document.getElementById(`is_visible-${dhmosId}`).checked;
+    function saveChanges(organizationId) {
+        const name = document.getElementById(`name-${organizationId}`).value;
+        const address = document.getElementById(`address-${organizationId}`).value;
+        const city = document.getElementById(`city-${organizationId}`).value;
+        const phone = document.getElementById(`phone-${organizationId}`).value;
+        const email = document.getElementById(`email-${organizationId}`).value;
+        const website = document.getElementById(`website-${organizationId}`).value;
+        const isVisible = document.getElementById(`is_visible-${organizationId}`).checked;
 
-        fetch(`/acs-services/edit/${dhmosId}/`, {
+        fetch(`/acs-services/edit/${organizationId}/`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

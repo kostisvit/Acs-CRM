@@ -1,8 +1,11 @@
 import django_filters
-from .models import Organization, Employee
+from django.contrib.auth import get_user_model
+from .models import Organization, Employee, Ergasies
 from django import forms
 from django.utils.translation import gettext_lazy as _
+from .model_choices import *
 
+User = get_user_model()
 
 class PelatisFilter(django_filters.FilterSet):
     name = django_filters.CharFilter(field_name='name',
@@ -75,5 +78,21 @@ class EpafiFilter(django_filters.FilterSet):
 
     def __init__(self, *args, **kwargs):
         super(EpafiFilter, self).__init__(*args, **kwargs)
+        if self.data == {}:
+            self.queryset = self.queryset.none()
+
+
+class TaskFilter(django_filters.FilterSet):
+    organiztion = django_filters.ModelChoiceFilter(queryset=Organization.objects.filter(is_visible=True),label=_(u'Φορέας'))
+    jobtype = django_filters.ChoiceFilter(choices=JobChoice.choices, label=_(u'Τύπος'))
+    #app = django_filters.ChoiceFilter(choices=app_choice, label=_(u'Εφαρμογή'))
+    employee = django_filters.ModelChoiceFilter(queryset=User.objects.filter(is_active=True), label=_(u'Υπάλληλος'))
+    importdate = django_filters.DateFromToRangeFilter(label=_(u'Ημ. Καταχώρησης'),widget=django_filters.widgets.RangeWidget(attrs={'placeholder': 'dd/mm/yyyy','type': 'date'}))
+    class Meta:
+        model = Ergasies
+        fields = ['organiztion', 'app', 'employee', 'jobtype', 'importdate']
+
+    def __init__(self, *args, **kwargs):
+        super(TaskFilter, self).__init__(*args, **kwargs)
         if self.data == {}:
             self.queryset = self.queryset.none()

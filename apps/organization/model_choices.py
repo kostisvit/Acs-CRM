@@ -1,3 +1,5 @@
+from django.db import models
+
 type_choice = (
     ('laptop', 'Laptop'),
     ('desktop', 'Desktop'),
@@ -22,19 +24,12 @@ tmhma_choice = (
     ('15', 'Ειδικός Συνεργάτης')
 )
 
-job_choice = (
-    ('TeamViewer', 'TeamViewer'),
-    ('Επίσκεψη', 'Επίσκεψη'),
-    ('Γραφείο', 'Γραφείο'),
-    ('Webinar-Zoom', 'Webinar-Zoom')
-)
+class JobChoice(models.TextChoices):
+    Temaviewer = '1', 'TeamViewer'
+    Episkepsi = '2', 'Επίσκεψη'
+    Office = '3', 'Γραφείο'
+    Webinar_Zoom = '4', 'Webinar-Zoom'
 
-adeia_choice = (
-    ('1', 'Κανονική'),
-    ('2', 'Αναρρωτική'),
-    ('3', 'Εορταστική'),
-    ('4', 'Γονική')
-)
 
 app_choice = (
     ('ΤΑΠ', 'ΤΑΠ'),

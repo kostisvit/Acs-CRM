@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
-from .models import User,Company,Adeia
+from .models import User,Company,Adeia, Training
 from import_export.admin import ImportExportModelAdmin
 from django.contrib.auth.hashers import make_password
 from .forms import UserCreationForm
@@ -12,7 +12,7 @@ class CustomUserAdmin(ImportExportModelAdmin):
     list_filter = ('is_staff', 'is_active')
     readonly_fields = ()
     fieldsets = (
-        (None, {'fields': ('email', 'password','company')}),
+        (None, {'fields': ('email','company')}),
         ('Personal info', {'fields': ('first_name', 'last_name', 'phone_number')}),
         ('Permissions', {'fields': ('is_staff', 'is_active','groups', 'user_permissions')}),
         ('Important dates', {'fields': ('last_login',)}),
@@ -48,10 +48,16 @@ class CompanyAdmin(admin.ModelAdmin):
 
 
 class AdeiesAdmin(ImportExportModelAdmin):
-    date_hierarchy = 'createddate'
-    list_display = ('acs_employee', 'adeiatype', 'startdate','enddate', 'days', 'createddate')
+    date_hierarchy = 'created'
+    list_display = ('acs_employee', 'adeiatype', 'startdate','enddate', 'days', 'created')
     search_fields = ['acs_employee']
-    list_filter = ['acs_employee', 'createddate']
+    list_filter = ['acs_employee', 'created']
+    
+
+
+class TrainingAdmin(ImportExportModelAdmin):
+    list_display = ('foreas', 'importdate', 'place', 'training_type', 'app', 'time', 'employee', 'created_at', 'updated_at')
+    list_filter = ['employee','foreas','training_type']
 
 
 admin.site.register(Company,CompanyAdmin)

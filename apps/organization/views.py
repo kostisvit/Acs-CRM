@@ -2,12 +2,13 @@ from django.shortcuts import render
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.decorators import login_required
 from django_filters.views import FilterView
-from .models import Organization, Employee
-from .filters import PelatisFilter, EpafiFilter
+from .models import Organization, Employee, Ergasies
+from .filters import PelatisFilter, EpafiFilter, TaskFilter
 from django.shortcuts import render, get_object_or_404,redirect
 from django.http import JsonResponse
 import json
 
+##################################################################################
 
 #Λίστα πελατών
 class OrganizationListView(LoginRequiredMixin,FilterView):
@@ -58,16 +59,16 @@ def edit_forea(request, organization_id):
     return JsonResponse({'status': 'failed'}, status=400)
 
 
-def soft_delete_dhmos(request, pk):
+def soft_delete_organization(request, pk):
     """Soft delete"""
-    dhmos = get_object_or_404(Organization, pk=pk)
-    dhmos.delete()
+    organization = get_object_or_404(Organization, pk=pk)
+    organization.delete()
     return redirect('pelatis')
 
-def restore_dhmos(request, pk):
+def restore_organization(request, pk):
     """Restore a soft-deleted product."""
-    dhmos = get_object_or_404(Organization, pk=pk)
-    dhmos.restore()
+    organization = get_object_or_404(Organization, pk=pk)
+    organization.restore()
     return redirect('pelatis')
 
 ##################################################################################
@@ -108,4 +109,13 @@ def edit_contact(request, employee_id):
 
     return JsonResponse({'status': 'failed'}, status=400)
 
-# Create your views here.
+##################################################################################
+
+# Λίστα Εργασιών Οργανισμού
+
+class OrganizationTasks(LoginRequiredMixin, FilterView):
+    model = Ergasies
+    context_object_name = 'tasks_list'
+    template_name = 'apps/foreas/tasks.html'
+    filterset = TaskFilter
+    ordering = ['importdate']

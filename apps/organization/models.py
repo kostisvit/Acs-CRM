@@ -100,7 +100,7 @@ class Ergasies(models.Model):
     organization = models.ForeignKey('Organization', on_delete=models.CASCADE, verbose_name='Πελάτης', default='-')
     importdate = models.DateField(default=datetime.date.today, verbose_name='Ημ. Κατ.', db_index=True)
     app = models.CharField(max_length=100, choices=app_choice,verbose_name='Εφαρμογή', blank=True)
-    jobtype = models.CharField(max_length=100, choices=job_choice,verbose_name='Τύπος Εργασίας', default='TeamViewer')
+    jobtype = models.CharField(max_length=100, choices=JobChoice.choices,verbose_name='Τύπος Εργασίας', default='TeamViewer')
     info = models.TextField(max_length=1000, verbose_name='Περιγραφή')
     text = models.TextField(max_length=1000, verbose_name='Σημειώσεις', blank=True)
     employee= models.ForeignKey('accounts.User', max_length=100, verbose_name='Υπάλληλος',on_delete=models.CASCADE, default='-')  # delete kai
