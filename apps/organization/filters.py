@@ -1,6 +1,6 @@
 import django_filters
 from django.contrib.auth import get_user_model
-from .models import Organization, Employee, Ergasies
+from .models import Organization, Employee, Ergasies,Application
 from django import forms
 from django.utils.translation import gettext_lazy as _
 from .model_choices import *
@@ -99,7 +99,14 @@ class TaskFilter(django_filters.FilterSet):
         widget=forms.Select(attrs={
             'class': 'form-select sm:w-full md:w-1/3 text-center mt-1 block  border border-gray-300 rounded-lg text-gray-700 font-medium',
         }))
-    #app = django_filters.ChoiceFilter(choices=app_choice, label=_(u'Εφαρμογή'))
+    app = django_filters.ModelChoiceFilter(
+        queryset=Application.objects.filter(is_active=True),
+        label=False,
+        empty_label="Επιλέξτε Εφαρμογή...",
+        widget=forms.Select(attrs={
+            'class': 'form-select text-center mt-1 block border border-gray-300 rounded-lg text-gray-700 font-medium py-2 sm:w-full md:w-1/3',  # Added 'py-2' and width classes for consistency
+        })
+    )
     employee = django_filters.ModelChoiceFilter(        
         queryset=User.objects.filter(is_active=True),
         label=False,
@@ -109,15 +116,16 @@ class TaskFilter(django_filters.FilterSet):
         })
     )
     importdate = django_filters.DateFromToRangeFilter(
-        label=_(u'Ημ. Καταχώρησης'),
+        label=False,
         widget=django_filters.widgets.RangeWidget(
             attrs={
                 'placeholder': 'dd/mm/yyyy',
                 'type': 'date',
-                'class': 'form-input text-center mt-1 block border border-gray-300 rounded-lg text-gray-700 font-medium py-2 w-full md:w-auto',  # Tailwind form styles
+                'class': 'form-input text-center mt-1 border border-gray-300 rounded-lg text-gray-700 font-medium py-2 w-48 inline-block mr-2',  # Smaller width and inline-block for horizontal alignment  # Tailwind form styles
             }
         )
     )
+    
     class Meta:
         model = Ergasies
         fields = ['organization', 'app', 'employee', 'jobtype', 'importdate']

@@ -8,7 +8,7 @@ from .forms import UserCreationForm
 class CustomUserAdmin(ImportExportModelAdmin):
     model = User
     add_form = UserCreationForm
-    list_display = ('id','email', 'first_name', 'last_name', 'is_staff', 'is_active')
+    list_display = ('id','email','display_company', 'first_name', 'last_name', 'is_staff', 'is_active')
     list_filter = ('is_staff', 'is_active')
     readonly_fields = ()
     fieldsets = (
@@ -35,6 +35,10 @@ class CustomUserAdmin(ImportExportModelAdmin):
                 default_password = "defaultpassword123"  # Replace with your desired default password
                 obj.password = make_password(default_password)
         super().save_model(request, obj, form, change)
+
+    def display_company(self, obj):
+        return ", ".join([company.company_title_alias for company in obj.company.all()])
+    display_company.short_description = 'Company'
 
     def get_queryset(self, request):
         # Include all users, both active and inactive

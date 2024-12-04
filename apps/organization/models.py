@@ -141,6 +141,7 @@ class Ergasies(models.Model):
 class Application(TimeStampedModel):
     title = models.CharField(max_length=255, null=False, blank=False, db_index=True)
     description = models.CharField(max_length=255, null=True, blank=True)
+    is_active = models.BooleanField(default=False, verbose_name='Κατάσταση')
     
     class Meta:
         indexes = [models.Index(fields=['title'])]

@@ -1,3 +1,4 @@
+{% load custom_tags %}
 {% load static %}
 
 <!DOCTYPE html>
@@ -89,6 +90,7 @@
                                     <ul>
                                         <li><a href="{% url 'pelatis' %}" class="block px-4 py-2 text-sm font-medium text-gray-900 hover:bg-indigo-600 hover:text-white rounded-lg">Πελάτης</a></li>
                                         <li><a href="{% url 'contact' %}" class="block px-4 py-2 text-sm text-gray-900 font-medium hover:bg-indigo-600 hover:text-white rounded-lg">Επαφές</a></li>
+                                        <li><a href="{% url 'tasks' %}" class="block px-4 py-2 text-sm text-gray-900 font-medium hover:bg-indigo-600 hover:text-white rounded-lg">Εργασίες</a></li>
                                         <li><a href="#" class="block px-4 py-2 text-sm text-gray-900 font-medium hover:bg-indigo-600 hover:text-white rounded-lg">Λογισμικό</a></li>
                                     </ul>
                                 </div>
@@ -230,12 +232,12 @@
                 </div>
                  <!-- App Version Section -->
             <div class="px-4 py-4 text-center text-xs font-bold text-gray-700 dark:text-white mb-20">
-                {% comment %} {% get_latest_update_version as latest_version %} {% endcomment %}
+                {% get_latest_update_version as latest_version %} 
                     {% if latest_version %} 
-                App Version: <span id="app-version"><a href="" target='_blank'></a></span></br>
+                App Version: <span id="app-version"><a href="" target='_blank'>{{ latest_version.version }}</a></span></br>
                     {% endif %}
                 {% if user.is_authenticated %}
-                {{ user.organization.title }}</br>
+                {{ user.company.company_title }}</br>
                 {% endif %}
                 Copyright@{% now "Y" %}
             </div>
