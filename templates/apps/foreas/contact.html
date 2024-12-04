@@ -46,7 +46,7 @@
             <tbody>
                 {% for employee in epafi_list %}
                 <tr class="odd:bg-white odd:dark:bg-gray-900 even:bg-gray-50 even:dark:bg-gray-800 border-b ">
-                    <td class="px-4 py-2 border-b" data-label="Φορέας">{{employee.dhmos }}</td>
+                    <td class="px-4 py-2 border-b" data-label="Φορέας">{{employee.organization }}</td>
                     <td class="px-4 py-2" data-label="Διεύθυνση">
                         <input type="text" value="{{employee.lastname }}" class="w-full bg-transparent border-none text-center text-sm rounded-md" id="lastname-{{ employee.id }}"></td>
                     <td class="px-4 py-2" data-label="Διεύθυνση">

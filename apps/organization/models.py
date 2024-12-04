@@ -106,7 +106,7 @@ class Ergasies(models.Model):
     text = models.TextField(max_length=1000, verbose_name='Σημειώσεις', blank=True)
     employee= models.ForeignKey('accounts.User', max_length=100, verbose_name='Υπάλληλος',on_delete=models.CASCADE, default='-')  # delete kai
     time = models.FloatField(verbose_name='Διάρκεια')
-    name = models.CharField(max_length=100, verbose_name='Υπάλληλος Επικοιν.',null=True, help_text='Επώνυμο-Όνομα', blank=True)
+    org_employee = models.ForeignKey('Employee', on_delete=models.CASCADE, verbose_name='Πελάτης', default='408')
     ticketid = models.CharField(max_length=50, verbose_name='Αίτημα OTS', blank=True)
     
     class Meta:
