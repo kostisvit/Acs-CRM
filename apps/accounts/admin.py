@@ -56,10 +56,11 @@ class AdeiesAdmin(ImportExportModelAdmin):
 
 
 class TrainingAdmin(ImportExportModelAdmin):
-    list_display = ('foreas', 'importdate', 'place', 'training_type', 'app', 'time', 'employee', 'created_at', 'updated_at')
-    list_filter = ['employee','foreas','training_type']
+    list_display = ('company', 'importdate', 'place', 'training_type', 'app', 'time', 'acs_employee', 'created', 'modified')
+    list_filter = ['acs_employee','company','training_type']
 
 
 admin.site.register(Company,CompanyAdmin)
 admin.site.register(User,CustomUserAdmin)
 admin.site.register(Adeia, AdeiesAdmin)
+admin.site.register(Training, TrainingAdmin)

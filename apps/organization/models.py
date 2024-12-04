@@ -3,6 +3,7 @@ from django.urls import reverse
 from .model_choices import *
 import datetime
 from django.db.models import Sum
+from django_extensions.db.models import TimeStampedModel
 
 class VisibilityManager(models.Manager):
     """
@@ -135,3 +136,14 @@ class Ergasies(models.Model):
 
     def get_admin_url_history(self):
         return reverse('admin:%s_%s_history' % (self._meta.app_label, self._meta.model_name),args=[self.id])
+
+
+class Application(TimeStampedModel):
+    title = models.CharField(max_length=255, null=False, blank=False, db_index=True)
+    description = models.CharField(max_length=255, null=True, blank=True)
+    
+    class Meta:
+        indexes = [models.Index(fields=['title'])]
+        verbose_name = 'OTS Εφαρμογές'
+        verbose_name_plural = 'OTS Εφαρμογές'
+        ordering = ['title']

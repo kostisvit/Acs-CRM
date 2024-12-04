@@ -86,6 +86,7 @@ class ErgasiesAdmin(ImportExportModelAdmin):
 admin.site.register(Organization, OrganizationAdmin)
 admin.site.register(Employee, EmployeeAdmin)
 admin.site.register(Ergasies, ErgasiesAdmin)
+admin.site.register(Application)
 
 
 
