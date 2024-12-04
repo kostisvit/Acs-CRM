@@ -83,16 +83,46 @@ class EpafiFilter(django_filters.FilterSet):
 
 
 class TaskFilter(django_filters.FilterSet):
-    organiztion = django_filters.ModelChoiceFilter(queryset=Organization.objects.filter(is_visible=True),label=_(u'Φορέας'))
-    jobtype = django_filters.ChoiceFilter(choices=JobChoice.choices, label=_(u'Τύπος'))
+    
+    organization = django_filters.ModelChoiceFilter(
+        queryset=Organization.objects.filter(is_visible=True),
+        label=False,
+        empty_label="Επιλέξτε Οργανισμό...",
+        widget=forms.Select(attrs={
+            'class': 'form-select text-center mt-1 block border border-gray-300 rounded-lg text-gray-700 font-medium py-2 sm:w-full md:w-1/3',  # Added 'py-2' and width classes for consistency
+        })
+    )
+    jobtype = django_filters.ChoiceFilter(
+        choices=JobChoice.choices,
+        label=False,
+        empty_label="Τύπος εργασίας...",
+        widget=forms.Select(attrs={
+            'class': 'form-select sm:w-full md:w-1/3 text-center mt-1 block  border border-gray-300 rounded-lg text-gray-700 font-medium',
+        }))
     #app = django_filters.ChoiceFilter(choices=app_choice, label=_(u'Εφαρμογή'))
-    employee = django_filters.ModelChoiceFilter(queryset=User.objects.filter(is_active=True), label=_(u'Υπάλληλος'))
-    importdate = django_filters.DateFromToRangeFilter(label=_(u'Ημ. Καταχώρησης'),widget=django_filters.widgets.RangeWidget(attrs={'placeholder': 'dd/mm/yyyy','type': 'date'}))
+    employee = django_filters.ModelChoiceFilter(        
+        queryset=User.objects.filter(is_active=True),
+        label=False,
+        empty_label="Επιλέξτε Υπάλληλο...",
+        widget=forms.Select(attrs={
+            'class': 'form-select text-center mt-1 block border border-gray-300 rounded-lg text-gray-700 font-medium py-2 sm:w-full md:w-1/3',  # Added 'py-2' and width classes for consistency
+        })
+    )
+    importdate = django_filters.DateFromToRangeFilter(
+        label=_(u'Ημ. Καταχώρησης'),
+        widget=django_filters.widgets.RangeWidget(
+            attrs={
+                'placeholder': 'dd/mm/yyyy',
+                'type': 'date',
+                'class': 'form-input text-center mt-1 block border border-gray-300 rounded-lg text-gray-700 font-medium py-2 w-full md:w-auto',  # Tailwind form styles
+            }
+        )
+    )
     class Meta:
         model = Ergasies
-        fields = ['organiztion', 'app', 'employee', 'jobtype', 'importdate']
+        fields = ['organization', 'app', 'employee', 'jobtype', 'importdate']
 
-    def __init__(self, *args, **kwargs):
-        super(TaskFilter, self).__init__(*args, **kwargs)
-        if self.data == {}:
-            self.queryset = self.queryset.none()
+    # def __init__(self, *args, **kwargs):
+    #     super(TaskFilter, self).__init__(*args, **kwargs)
+    #     if self.data == {}:
+    #         self.queryset = self.queryset.none()

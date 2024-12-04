@@ -115,7 +115,7 @@ def edit_contact(request, employee_id):
 
 class OrganizationTasks(LoginRequiredMixin, FilterView):
     model = Ergasies
-    context_object_name = 'tasks_list'
+    #context_object_name = 'tasks_list'
     template_name = 'apps/foreas/tasks.html'
-    filterset = TaskFilter
+    filterset_class = TaskFilter
     ordering = ['importdate']
