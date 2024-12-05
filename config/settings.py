@@ -82,6 +82,7 @@ TEMPLATES = [
                 'organization.context_processor.organization_task_count',
                 'accounts.context_processor.training_count',
                 'accounts.context_processor.adeia_count',
+                'pages.context_processor.user_companies',
             ],
         },
     },

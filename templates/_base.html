@@ -237,7 +237,9 @@
                 App Version: <span id="app-version"><a href="" target='_blank'>{{ latest_version.version }}</a></span></br>
                     {% endif %}
                 {% if user.is_authenticated %}
-                {{ user.company.company_title }}</br>
+                {% for company in user_company %}
+                {{ company.company_title }}
+            {% endfor %}</br>
                 {% endif %}
                 Copyright@{% now "Y" %}
             </div>
