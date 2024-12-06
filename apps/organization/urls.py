@@ -7,15 +7,15 @@ from .views import OrganizationListView,OrganizationListViewVisibleFalse,EpafiLi
 # from .update_records import AdeiaUpdateView
 
 urlpatterns = [
-
-    path('acs-services/foreas', OrganizationListView.as_view(), name='pelatis'),
-    path('acs-services/foreas-in-active', OrganizationListViewVisibleFalse.as_view(), name='in_active_pelatis'),
-    path('acs-services/edit/<int:organization_id>/',views.edit_forea, name='edit_forea'),
-    path('acs-services/delete/<int:pk>/', views.soft_delete_organization, name='soft_delete_organization'),
-    path('acs-services/restore/<int:pk>/', views.restore_organization, name='restore_organization'),
-    path('acs-services/contacts/', EpafiListView.as_view(), name='contact'),
+    
+    path('acs-services/organization', OrganizationListView.as_view(), name='pelatis'),
+    path('acs-services/organization-no-active', OrganizationListViewVisibleFalse.as_view(), name='in_active_pelatis'),
+    path('acs-services/edit/organization/<int:organization_id>/',views.edit_organization, name='edit_organization'),
+    path('acs-services/delete/organization/<int:pk>/', views.soft_delete_organization, name='soft_delete_organization'),
+    path('acs-services/restore/organization/<int:pk>/', views.restore_organization, name='restore_organization'),
+    path('acs-services/contact/', EpafiListView.as_view(), name='contact'),
     path('acs-services/edit/contact/<int:employee_id>/',views.edit_contact, name='edit_contact'),
-#     path('acs-services/update/contact/<int:pk>/',views.epafi_update, name='epafi_update'),
+    path('acs-services/delete/contact/<int:pk>/',views.soft_delete_contact, name='soft_delete_contact'),
     path('acs-services/organization/tasks', OrganizationTasks.as_view(), name='tasks'),
 #     path('acs-services/update/task/<int:pk>/',views.ergasia_update, name='ergasia_update'),
 #     path('acs-services/update/new_task/<int:pk>/',views.ergasia_copy_paste, name='ergasia_copy_paste'),

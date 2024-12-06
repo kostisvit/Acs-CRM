@@ -140,7 +140,7 @@
         const email = document.getElementById(`email-${organizationId}`).value;
         const website = document.getElementById(`website-${organizationId}`).value;
 
-        fetch(`/acs-services/edit/${organizationId}/`, {
+        fetch(`/acs-services/edit/organization/${organizationId}/`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

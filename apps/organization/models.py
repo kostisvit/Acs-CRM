@@ -81,7 +81,7 @@ class Employee(models.Model):
         verbose_name_plural = 'ACS Στοιχεία Επικοινωνίας Υπαλλήλων'
 
     def __str__(self):
-        return (self.lastname) + " " + (self.firstname)
+        return f"{self.lastname} {self.firstname}"
 
     # Custom managers
     objects = VisibilityManager()  # Filters only active objects
@@ -134,8 +134,6 @@ class Ergasies(models.Model):
     def get_absolute_url_delete(self):
         return reverse('delete_ergasia', args=[str(self.id)])
 
-    def get_admin_url_history(self):
-        return reverse('admin:%s_%s_history' % (self._meta.app_label, self._meta.model_name),args=[self.id])
 
 
 class Application(TimeStampedModel):

@@ -42,7 +42,7 @@ class OrganizationListViewVisibleFalse(LoginRequiredMixin,FilterView):
 
 #Διόρθωση εγγραφών πελατών
 @login_required
-def edit_forea(request, organization_id):
+def edit_organization(request, organization_id):
     if request.method == 'POST':
         data = json.loads(request.body)
         organization = get_object_or_404(Organization, id=organization_id)
@@ -108,6 +108,19 @@ def edit_contact(request, employee_id):
         return JsonResponse({'status': 'success'})
 
     return JsonResponse({'status': 'failed'}, status=400)
+
+
+def soft_delete_contact(request, pk):
+    """Soft delete"""
+    employee = get_object_or_404(Employee, pk=pk)
+    employee.delete()
+    return redirect('contact')
+
+def restore_contact(request, pk):
+    """Restore a soft-deleted product."""
+    employee = get_object_or_404(Employee, pk=pk)
+    employee.restore()
+    return redirect('contact')
 
 ##################################################################################
 
