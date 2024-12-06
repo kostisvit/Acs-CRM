@@ -82,11 +82,16 @@ class ErgasiesAdmin(ImportExportModelAdmin):
 
 
 
+class AppAdmin(admin.ModelAdmin):
+    list_display = ('title','description')
+    
+
+
 
 admin.site.register(Organization, OrganizationAdmin)
 admin.site.register(Employee, EmployeeAdmin)
 admin.site.register(Ergasies, ErgasiesAdmin)
-admin.site.register(Application)
+admin.site.register(Application,AppAdmin)
 
 
 

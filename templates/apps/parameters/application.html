@@ -1,0 +1,111 @@
+{% extends "_base.html" %}
+
+{% block content %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Application Form</title>
+    <script type="module">
+        import Alpine from 'https://cdn.jsdelivr.net/npm/alpinejs@latest/dist/module.esm.js';
+        window.Alpine = Alpine;
+        Alpine.start();
+      </script>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 py-10">
+    <div class="container mx-auto bg-white p-8 rounded shadow-lg">
+        <h1 class="text-2xl font-bold mb-4">Εφαρμογές OTS</h1>
+        
+        <div x-data="appForm()">
+            <form method="POST" action="">
+                {% csrf_token %}
+                <template x-for="(app, index) in applications" :key="index">
+                    <div class="mb-4 flex space-x-4">
+                        <div class="flex-1">
+                            <label class="block text-sm font-medium text-gray-700">Όνομα εφαρμογής</label>
+                            <input type="text" name="title" class="form-input block w-full mt-1 border-gray-300 rounded-md shadow-sm" x-model="app.title" placeholder="Enter application name">
+                        </div>
+                        <div class="flex-1">
+                            <label class="block text-sm font-medium text-gray-700">Περιγραφή</label>
+                            <textarea name="description" class="form-textarea block w-full mt-1 border-gray-300 rounded-md shadow-sm" x-model="app.description" placeholder="Enter description"></textarea>
+                        </div>
+                        <div class="flex items-end">
+                            <button type="button" @click="removeApplication(index)" class="text-red-500 hover:text-red-700">&times;</button>
+                        </div>
+                    </div>
+                </template>
+                <!-- Submit -->
+                <div class="mt-4">
+                    <button type="button" @click="addApplication" class="bg-indigo-600 text-white py-2 px-4 rounded hover:bg-indigo-700">+ Προσθήκη</button>
+                    <button type="submit" class="bg-green-600 text-white py-2 px-4 rounded hover:bg-green-700">Αποθήκευση</button>
+                </div>
+            </form>
+        </div>
+        <!-- Display existing applications -->
+        <div class="mb-6 mt-4">
+            <h2 class="text-lg font-semibold mb-2"></h2>
+            <div class="space-y-1">
+                {% for app in applications %}
+                    <div class="mb-4 flex space-x-4"> <!-- Flex container with space between columns -->
+                        {% if loop.first %}
+                            <!-- Title Column -->
+                            <div class="flex-1">
+                                <label class="block text-sm font-medium text-gray-700">Application Name</label>
+                                <input type="text" name="title" class="form-input block w-full mt-1 border-gray-300 rounded-md shadow-sm" value="{{ app.title }}" placeholder="Enter application name">
+                            </div>
+                            <!-- Description Column -->
+                            <div class="flex-1">
+                                <label class="block text-sm font-medium text-gray-700">Description</label>
+                                <textarea name="description" class="form-input block w-full mt-1 border-gray-300 rounded-md shadow-sm" placeholder="Enter description">{{ app.description }}</textarea>
+                            </div>
+                        {% else %}
+                            <!-- Fields for other rows (no labels) -->
+                            <div class="flex-1">
+                                <input type="text" name="title" class="form-input block w-full mt-1 border-gray-300 rounded-md shadow-sm" value="{{ app.title }}" disabled>
+                            </div>
+                            <div class="flex-1">
+                                <textarea name="description" class="form-textarea block w-full mt-1 border-gray-300 rounded-md shadow-sm" disabled>{{ app.description }}</textarea>
+                            </div>
+                        {% endif %}
+                    </div>
+                {% empty %}
+                    <p class="text-gray-500">No applications found.</p>
+                {% endfor %}
+            </div>
+            
+            
+            
+            
+            
+            
+            
+            
+        </div>
+
+        <!-- Application form -->
+
+    </div>
+
+    <script>
+        function appForm() {
+            return {
+                applications: [{
+                    title: '',
+                    description: ''
+                }],
+                addApplication() {
+                    this.applications.push({ title: '', description: '' });
+                },
+                removeApplication(index) {
+                    this.applications.splice(index, 1);
+                }
+            };
+        }
+    </script>
+</body>
+</html>
+
+
+{% endblock %}

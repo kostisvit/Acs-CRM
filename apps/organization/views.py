@@ -132,3 +132,20 @@ class OrganizationTasks(LoginRequiredMixin, FilterView):
     template_name = 'apps/foreas/tasks.html'
     filterset_class = TaskFilter
     ordering = ['importdate']
+
+
+from django.shortcuts import render
+from django.http import HttpResponse
+from .forms import ApplicationForm
+from .models import Application
+
+def application_view(request):
+    if request.method == 'POST':
+        form = ApplicationForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('application_view')  # Reload to display updated records
+
+    form = ApplicationForm()
+    applications = Application.objects.all().order_by('-id')  # Show newest first
+    return render(request, 'apps/parameters/application.html', {'form': form, 'applications': applications})
