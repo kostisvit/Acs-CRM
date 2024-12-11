@@ -30,17 +30,17 @@ class VisibilityManager(models.Manager):
 
 
 class Organization(models.Model):
-    name = models.CharField(max_length=100, verbose_name='Πελάτης', blank=False,default='ACS')
-    address = models.CharField(max_length=100, verbose_name='Διεύθυνση', blank=True,null=True )
-    city = models.CharField(max_length=100, verbose_name='Πόλη', blank=True,null=True)
-    phone = models.CharField(max_length=100, verbose_name='Τηλέφωνο', blank=False,null=True)
-    fax = models.CharField(max_length=50, verbose_name='Fax', blank=True,null=True)
-    teamviewer = models.CharField(max_length=60, verbose_name='TeamViewer', blank=True,null=True)
-    email = models.EmailField(blank=True,null=True)
-    website = models.URLField(max_length=250, blank=True, null=True)
-    info = models.TextField(max_length=1000, verbose_name='Πληροφορίες', blank=True,null=True)
+    name = models.CharField(max_length=100, verbose_name='Πελάτης')
+    address = models.CharField(max_length=100, verbose_name='Διεύθυνση')
+    city = models.CharField(max_length=100, verbose_name='Πόλη')
+    phone = models.CharField(max_length=100, verbose_name='Τηλέφωνο')
+    fax = models.CharField(max_length=50, verbose_name='Fax')
+    teamviewer = models.CharField(max_length=60, verbose_name='TeamViewer')
+    email = models.EmailField()
+    website = models.URLField(max_length=250)
+    info = models.TextField(max_length=1000, verbose_name='Πληροφορίες')
     is_visible = models.BooleanField(default=False, verbose_name='Κατάσταση')
-    old_id = models.IntegerField(verbose_name='old_id', null=True, blank=False)
+    old_id = models.IntegerField(verbose_name='old_id',null=True,blank=True)
 
     class Meta:
         verbose_name = 'ACS Φορέας'

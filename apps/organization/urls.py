@@ -14,7 +14,7 @@ urlpatterns = [
     path('acs-services/edit/organization/<int:organization_id>/',views.edit_organization, name='edit_organization'),
     path('acs-services/delete/organization/<int:pk>/', views.soft_delete_organization, name='soft_delete_organization'),
     path('acs-services/restore/organization/<int:pk>/', views.restore_organization, name='restore_organization'),
-    
+    path('acs-services/organization/create/', views.create_organization, name='organization-create'),
     #Contact
     path('acs-services/contact/', EpafiListView.as_view(), name='contact'),
     path('acs-services/edit/contact/<int:employee_id>/',views.edit_contact, name='edit_contact'),

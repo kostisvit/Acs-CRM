@@ -7,14 +7,16 @@ from .filters import PelatisFilter, EpafiFilter, TaskFilter
 from django.shortcuts import render, get_object_or_404,redirect
 from django.http import JsonResponse
 import json
-
+from django.views.generic.edit import CreateView
+from django.urls import reverse_lazy
+from .forms import OrganizationModelForm
 ##################################################################################
 
 #Λίστα πελατών
 class OrganizationListView(LoginRequiredMixin,FilterView):
     model = Organization
     context_object_name = 'foreas_list'
-    template_name = 'apps/foreas/foreas.html'
+    template_name = 'apps/organization/organization_list.html'
     filterset_class = PelatisFilter
     ordering = ['name']
     paginate_by = 10
@@ -29,7 +31,7 @@ class OrganizationListView(LoginRequiredMixin,FilterView):
 class OrganizationListViewVisibleFalse(LoginRequiredMixin,FilterView):
     model = Organization
     context_object_name = 'foreas_list'
-    template_name = 'apps/foreas/foreas_in_active.html'
+    template_name = 'apps/organization/organization_inactive.html'
     filterset_class = PelatisFilter
     ordering = ['name']
     paginate_by = 10  
@@ -39,6 +41,38 @@ class OrganizationListViewVisibleFalse(LoginRequiredMixin,FilterView):
         Use the custom manager to filter inactive records (is_visible=False).
         """
         return Organization.objects.invisible()
+
+from django.contrib import messages
+def create_organization(request):
+    if request.method == 'POST':
+        # Print the POST data to check what has been submitted
+        print(request.POST)  # Debug: print all submitted data
+
+        # Create the form with the submitted data
+        form = OrganizationModelForm(request.POST)
+
+        # Check if the form is valid
+        if form.is_valid():
+            # Save the form if valid
+            form.save()
+
+            # Add a success message
+            messages.success(request, 'Ο οργανισμός δημιουργήθηκε με επιτυχία!')
+
+            return redirect('organization-create')  # Redirect to a success page after saving
+        else:
+            # If the form is not valid, print the form errors
+            print(form.errors)  # Debug: print form errors
+
+            # Optionally, print each field's specific error:
+            for field, errors in form.errors.items():
+                print(f"Error in {field}: {errors}")
+
+    else:
+        # If the request method is GET, just instantiate an empty form
+        form = OrganizationModelForm()
+
+    return render(request, 'apps/organization/organization_new_form.html', {'form': form}) # Adjust the URL as needed
 
 #Διόρθωση εγγραφών πελατών
 @login_required
@@ -77,7 +111,7 @@ def restore_organization(request, pk):
 class EpafiListView(LoginRequiredMixin, FilterView):
     model = Employee
     context_object_name = 'epafi_list'
-    template_name = 'apps/foreas/contact.html'
+    template_name = 'apps/organization/organization_contact.html'
     filterset_class = EpafiFilter
     ordering = ['lastname']
     paginate_by = 9
@@ -129,7 +163,7 @@ def restore_contact(request, pk):
 class OrganizationTasks(LoginRequiredMixin, FilterView):
     model = Ergasies
     #context_object_name = 'tasks_list'
-    template_name = 'apps/foreas/tasks.html'
+    template_name = 'apps/organization/organization_tasks.html'
     filterset_class = TaskFilter
     ordering = ['importdate']
 

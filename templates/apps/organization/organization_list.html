@@ -16,9 +16,7 @@
 
 <!--Buttons-->
 <div class="">
-    <button type="button" class="px-4 py-2.5 text-sm font-medium text-white transition-all duration-200 bg-indigo-600 hover:bg-indigo-700  rounded-lg group" title="Νέα εγγραφή" onclick="window.location.href='/'">
-        {% trans 'Νέα εγγραφή' %}
-    </button>
+    <a href="{% url 'organization-create' %}" class="px-4 py-2.5 text-sm font-medium text-white transition-all duration-200 bg-indigo-600 hover:bg-indigo-700  rounded-lg group" title="Νέα εγγραφή">Νέα εγγραφή</a>
     <button type="button" class="px-4 py-2.5 text-sm font-medium text-white transition-all duration-200 bg-green-600 hover:bg-green-700  rounded-lg group" title="Export" onclick="window.location.href='/'">
         Export
     </button>
