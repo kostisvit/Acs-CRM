@@ -24,11 +24,12 @@ tmhma_choice = (
     ('15', 'Ειδικός Συνεργάτης')
 )
 
-class JobChoice(models.TextChoices):
-    Temaviewer = '1', 'TeamViewer'
-    Episkepsi = '2', 'Επίσκεψη'
-    Office = '3', 'Γραφείο'
-    Webinar_Zoom = '4', 'Webinar-Zoom'
+job_choice = (
+    ('TeamViewer', 'TeamViewer'),
+    ('Επίσκεψη', 'Επίσκεψη'),
+    ('Γραφείο', 'Γραφείο'),
+    ('Webinar-Zoom', 'Webinar-Zoom')
+)
 
 
 app_choice = (

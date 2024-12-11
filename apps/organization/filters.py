@@ -93,7 +93,7 @@ class TaskFilter(django_filters.FilterSet):
         })
     )
     jobtype = django_filters.ChoiceFilter(
-        choices=JobChoice.choices,
+        choices=job_choice,
         label=False,
         empty_label="Τύπος εργασίας...",
         widget=forms.Select(attrs={

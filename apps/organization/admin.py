@@ -7,7 +7,7 @@ from import_export.widgets import ForeignKeyWidget
 from accounts.models import User
 
 class OrganizationAdmin(ImportExportModelAdmin):
-    list_display = ('id','name', 'phone', 'address', 'city', 'teamviewer', 'fax', 'email', 'is_visible')
+    list_display = ('id','name', 'phone', 'address', 'city', 'teamviewer', 'fax', 'email', 'is_visible','old_id')
     list_filter = ['is_visible']
     list_editable = ['is_visible']
     search_fields = ['name', ]
@@ -66,7 +66,7 @@ class ErgasiesResource(resources.ModelResource):
     class Meta:
         model = Ergasies
         exclude = ('text', 'ticketid')
-        export_order = ('id','organization', 'importdate', 'app', 'employee','jobtype', 'info', 'org_employee', 'time')
+        export_order = ('id','organization', 'importdate', 'app', 'employee','jobtype', 'info', 'org_employee', 'time','old_id')
         
 
 

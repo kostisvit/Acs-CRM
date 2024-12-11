@@ -40,6 +40,7 @@ class Organization(models.Model):
     website = models.URLField(max_length=250, blank=True, null=True)
     info = models.TextField(max_length=1000, verbose_name='Πληροφορίες', blank=True,null=True)
     is_visible = models.BooleanField(default=False, verbose_name='Κατάσταση')
+    old_id = models.IntegerField(verbose_name='old_id', null=True, blank=False)
 
     class Meta:
         verbose_name = 'ACS Φορέας'
@@ -75,6 +76,7 @@ class Employee(models.Model):
     secondary_email = models.EmailField(blank=True, null=True)
     info = models.TextField(max_length=1000, verbose_name='Πληροφορίες', blank=True)
     is_visible = models.BooleanField(default=False, verbose_name='Κατάσταση')
+    old_id = models.IntegerField(verbose_name='old_id', null=True, blank=False)
 
     class Meta:
         verbose_name = 'ACS Στοιχεία Επικοινωνίας Υπαλλήλων'
@@ -98,16 +100,17 @@ class Employee(models.Model):
 
 
 class Ergasies(models.Model):
-    organization = models.ForeignKey('Organization', on_delete=models.CASCADE, verbose_name='Πελάτης', default='-')
+    organization = models.ForeignKey('Organization', on_delete=models.CASCADE, verbose_name='Πελάτης')
     importdate = models.DateField(default=datetime.date.today, verbose_name='Ημ. Κατ.', db_index=True)
     app = models.CharField(max_length=100, choices=app_choice,verbose_name='Εφαρμογή', blank=True)
-    jobtype = models.CharField(max_length=100, choices=JobChoice.choices,verbose_name='Τύπος Εργασίας', default='TeamViewer')
+    jobtype = models.CharField(max_length=100, choices=job_choice,verbose_name='Τύπος Εργασίας', default='TeamViewer')
     info = models.TextField(max_length=1000, verbose_name='Περιγραφή')
     text = models.TextField(max_length=1000, verbose_name='Σημειώσεις', blank=True)
-    employee= models.ForeignKey('accounts.User', max_length=100, verbose_name='Υπάλληλος',on_delete=models.CASCADE, default='-')  # delete kai
-    time = models.FloatField(verbose_name='Διάρκεια')
-    org_employee = models.ForeignKey('Employee', on_delete=models.CASCADE, verbose_name='Πελάτης', default='408')
+    employee= models.ForeignKey('accounts.User', max_length=100, verbose_name='Υπάλληλος',on_delete=models.CASCADE)  # delete kai
+    time = models.FloatField(verbose_name='Διάρκεια',null=True, blank=True)
+    org_employee = models.ForeignKey('Employee', on_delete=models.CASCADE, verbose_name='Πελάτης',null=True, blank=False)
     ticketid = models.CharField(max_length=50, verbose_name='Αίτημα OTS', blank=True)
+    old_id = models.IntegerField(verbose_name='old_id', null=True, blank=False)
     
     class Meta:
         indexes = [models.Index(fields=['importdate', 'employee'])]
@@ -140,6 +143,7 @@ class Application(TimeStampedModel):
     title = models.CharField(max_length=255, null=False, blank=False, db_index=True)
     description = models.CharField(max_length=255, null=True, blank=True)
     is_active = models.BooleanField(default=False, verbose_name='Κατάσταση')
+    old_id = models.IntegerField(verbose_name='old_id', null=True, blank=False)
     
     class Meta:
         indexes = [models.Index(fields=['title'])]
