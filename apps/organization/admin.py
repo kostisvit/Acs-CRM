@@ -72,7 +72,7 @@ class ErgasiesResource(resources.ModelResource):
 
 class ErgasiesAdmin(ImportExportModelAdmin):
     date_hierarchy = 'importdate'
-    list_display = ('organization', 'importdate','app','employee','jobtype', 'info','org_employee','time','ticketid')
+    list_display = ('organization', 'importdate','app','employee','jobtype', 'info','org_employee','time','ticketid','old_id')
     search_fields = ['organization','info' ]
     list_filter = ['employee', 'organization', 'jobtype', 'app']
     list_select_related = ['employee','organization']

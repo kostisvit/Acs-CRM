@@ -5,11 +5,6 @@ from django.core.management.base import BaseCommand
 from django.contrib.auth import get_user_model
 from organization.models import Ergasies, Organization , Employee # Adjust import paths for your app
 
-import sys
-import csv
-import time
-from django.core.management.base import BaseCommand
-from django.contrib.auth import get_user_model
 
 class Command(BaseCommand):
     help = "Load Employees from CSV into the database"
@@ -20,7 +15,7 @@ class Command(BaseCommand):
     def handle(self, *args, **kwargs):
         start_time = time.time()
         path = kwargs['path']
-        max_rows = 100  # Limit for testing
+        max_rows = 50  # Limit for testing
 
         if not path:
             self.stderr.write("Please provide a valid path to the CSV file using the --path argument.")
@@ -57,7 +52,7 @@ class Command(BaseCommand):
                         elif username == "kostasvit":
                             username = "kostasvit@gmail.com"
                         elif username == "kostas":
-                            username = "kostasvit@gmail.com"
+                            username = "kvytiniotis@acsservices.gr"
                         elif username == "alexis":
                             username = "amav@acsservices.gr"
                         elif username == "geo":
@@ -78,9 +73,27 @@ class Command(BaseCommand):
                         if not employee:
                             raise ValueError(f"Employee with email {username} not found.")
 
+                        if row[7]:
+                            # Split the full name into parts
+                            full_name = row[7].strip()
+                            name_parts = full_name.split()
+
+                            if len(name_parts) == 2:
+                                lastname, firstname = name_parts
+                            elif len(name_parts) > 2:  # Handle cases with middle names or extra spaces
+                                lastname = name_parts[-1]
+                                firstname = " ".join(name_parts[:-1])
+                            else:
+                                lastname, firstname = name_parts[0], None
+
+                            # Query the Employee model
+                            org_employee = Employee.objects.filter(lastname=lastname, firstname=firstname).first()
+                        else:
+                            org_employee = None
+
                         # Query the Organization object
                         organization = Organization.objects.get(name=row[1]) if row[1] else None
-                        org_employee = Employee.objects.get(lastname=row[7]) if row[7] else None
+                        #org_employee = Employee.objects.get(lastname=row[7]) if row[7] else None
                         # Update or create Ergasies record
                         Ergasies.objects.update_or_create(
                             old_id=row[0],
@@ -90,8 +103,8 @@ class Command(BaseCommand):
                             defaults={
                                 'importdate': row[2],
                                 'app': row[3],
-                                'jobtype': row[4],
-                                'info': row[5],
+                                'jobtype': row[5],
+                                'info': row[6],
                                 'text': row[6],
                                 'time': row[8],
                                 # Add any other fields you need to update here

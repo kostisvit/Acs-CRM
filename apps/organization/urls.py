@@ -1,7 +1,7 @@
 from . import views
 from django.urls import path
 #class based views
-from .views import OrganizationListView,OrganizationListViewVisibleFalse,EpafiListView,OrganizationTasks,export_data
+from .views import OrganizationListView,OrganizationListViewVisibleFalse,EpafiListView,OrganizationTasks,export_organization_data
 # from .delete_records import AithmaDeleteView,ForeasDeleteView,ContactDeleteView,ErgasiaDeleteView,AdeiaDeleteView,ServiceDeleteView,SellCornfirmDelete,TrainingDeleteView,HardwareDeleteView
 # from .search import HomePageSearchListView
 # from .update_records import AdeiaUpdateView
@@ -15,7 +15,7 @@ urlpatterns = [
     path('acs-services/delete/organization/<int:pk>/', views.soft_delete_organization, name='soft_delete_organization'),
     path('acs-services/restore/organization/<int:pk>/', views.restore_organization, name='restore_organization'),
     path('acs-services/organization/create/', views.create_organization, name='organization-create'),
-    path('acs-services/organization/export/', export_data, name="export_organization"),
+    path('acs-services/organization/export/', export_organization_data, name="export_organization"),
     #Contact
     path('acs-services/contact/', EpafiListView.as_view(), name='contact'),
     path('acs-services/edit/contact/<int:employee_id>/',views.edit_contact, name='edit_contact'),
@@ -24,7 +24,6 @@ urlpatterns = [
     
     #Parameter
     path('acs-services/applications/', views.application_view, name='application_view'),
-    path('acs-services/export/', export_data, name="export_data"),
 #     path('acs-services/update/task/<int:pk>/',views.ergasia_update, name='ergasia_update'),
 #     path('acs-services/update/new_task/<int:pk>/',views.ergasia_copy_paste, name='ergasia_copy_paste'),
 #     path('acs-services/carrier/days-off', AdeiaListView.as_view(), name='adeia'),
