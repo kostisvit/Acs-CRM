@@ -117,36 +117,31 @@
 <!-- Centered Pagination Controls -->
 <div class="flex justify-center items-center mt-6 space-x-2">
     <!-- Previous Page Link -->
-    {% if page_obj.has_previous %}
-        <a href="?{% for key, value in request.GET.items %}{% if key != 'page' %}{{ key }}={{ value|urlencode }}&{% endif %}{% endfor %}page={{ page_obj.previous_page_number }}" 
-           class="px-4 py-2 bg-gray-200 text-gray-700 rounded hover:bg-gray-300 font-medium">
-           Previous
-        </a>
-    {% else %}
-        <span class="px-4 py-2 bg-gray-100 text-gray-400 rounded font-medium">Previous</span>
-    {% endif %}
+{% if page_obj.has_previous %}
+    <a href="?page={{ page_obj.previous_page_number }}" class="px-4 py-2 bg-gray-200 text-gray-700 rounded hover:bg-gray-300 font-medium">
+    Previous
+    </a>
+{% else %}
+    <span class="px-4 py-2 bg-gray-100 text-gray-400 rounded font-medium">Previous</span>
+{% endif %}
 
-    <!-- Page Numbers -->
-    {% for num in page_obj.paginator.page_range %}
-        {% if page_obj.number == num %}
-            <span class="px-4 py-2 bg-blue-700 text-white rounded font-medium">{{ num }}</span>
-        {% else %}
-            <a href="?{% for key, value in request.GET.items %}{% if key != 'page' %}{{ key }}={{ value|urlencode }}&{% endif %}{% endfor %}page={{ num }}" 
-               class="px-4 py-2 bg-gray-200 text-gray-700 rounded hover:bg-gray-300 font-medium">
-               {{ num }}
-            </a>
-        {% endif %}
-    {% endfor %}
-
-    <!-- Next Page Link -->
-    {% if page_obj.has_next %}
-        <a href="?{% for key, value in request.GET.items %}{% if key != 'page' %}{{ key }}={{ value|urlencode }}&{% endif %}{% endfor %}page={{ page_obj.next_page_number }}" 
-           class="px-4 py-2 bg-gray-200 text-gray-700 rounded hover:bg-gray-300 font-medium">
-           Next
-        </a>
+<!-- Page Numbers -->
+{% for num in page_obj.paginator.page_range %}
+    {% if page_obj.number == num %}
+    <span class="px-4 py-2 bg-blue-700 text-white rounded font-medium">{{ num }}</span>
     {% else %}
-        <span class="px-4 py-2 bg-gray-100 text-gray-400 rounded font-medium">Next</span>
+    <a href="?page={{ num }}" class="px-4 py-2 bg-gray-200 text-gray-700 rounded hover:bg-gray-300 font-medium">{{ num }}</a>
     {% endif %}
+{% endfor %}
+
+<!-- Next Page Link -->
+{% if page_obj.has_next %}
+    <a href="?page={{ page_obj.next_page_number }}" class="px-4 py-2 bg-gray-200 text-gray-700 rounded hover:bg-gray-300 font-medium">
+    Next
+    </a>
+{% else %}
+    <span class="px-4 py-2 bg-gray-100 text-gray-400 rounded font-medium">Next</span>
+{% endif %}
 </div>
 <!--End Center pagination Controlss-->
 

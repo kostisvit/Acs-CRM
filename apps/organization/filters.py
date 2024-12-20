@@ -5,6 +5,7 @@ from django import forms
 from django.utils.translation import gettext_lazy as _
 from .model_choices import *
 
+
 User = get_user_model()
 
 class PelatisFilter(django_filters.FilterSet):
@@ -130,7 +131,7 @@ class TaskFilter(django_filters.FilterSet):
         model = Ergasies
         fields = ['organization', 'app', 'employee', 'jobtype', 'importdate']
 
-    # def __init__(self, *args, **kwargs):
-    #     super(TaskFilter, self).__init__(*args, **kwargs)
-    #     if self.data == {}:
-    #         self.queryset = self.queryset.none()
+    def __init__(self, *args, **kwargs):
+        super(TaskFilter, self).__init__(*args, **kwargs)
+        if self.data == {}:
+            self.queryset = self.queryset.none()

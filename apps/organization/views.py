@@ -13,7 +13,8 @@ from .forms import OrganizationModelForm,ApplicationForm
 from .export import export_organization_data
 from django.shortcuts import render
 from django.http import HttpResponse
-
+import datetime
+from django.core.paginator import Paginator
 
 
 ##################################################################################
@@ -167,12 +168,27 @@ def restore_contact(request, pk):
 # Λίστα Εργασιών Οργανισμού
 
 class OrganizationTasks(LoginRequiredMixin, FilterView):
+    today = datetime.date.today()
     model = Ergasies
-    context_object_name = 'tasks_list'
+    context_object_name = 'task_list'
+    #queryset = Ergasies.objects.select_related('employee').filter(importdate__year=today.year)
     template_name = 'apps/organization/organization_tasks.html'
     filterset_class = TaskFilter
     ordering = ['importdate']
-    paginate_by = 10
+    paginate_by = 9
+
+    # def get_queryset(self):
+    #     # Optionally override the queryset method if additional filtering is needed
+    #     queryset = super().get_queryset()
+    #     return queryset
+
+    # def get_context_data(self, **kwargs):
+    #     context = super().get_context_data(**kwargs)
+    #     page_number = self.request.GET.get('page')
+    #     paginator = Paginator(self.object_list, self.paginate_by)
+    #     page_obj = paginator.get_page(page_number)
+    #     context['page_obj'] = page_obj
+    #     return context
 
 ##################################################################################
 

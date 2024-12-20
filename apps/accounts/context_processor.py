@@ -1,6 +1,11 @@
 import datetime
 from .models import *
+from organization.models import Ergasies
 
+def task_count(request):
+    today = datetime.date.today()
+    task_count = Ergasies.objects.filter(importdate__year=today.year).count() or 0
+    return {'task_count': task_count}
 
 def adeia_count(request):
     today = datetime.date.today()
