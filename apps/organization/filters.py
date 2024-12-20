@@ -97,14 +97,14 @@ class TaskFilter(django_filters.FilterSet):
         label=False,
         empty_label="Τύπος εργασίας...",
         widget=forms.Select(attrs={
-            'class': 'form-select sm:w-full md:w-1/3 text-center mt-1 block  border border-gray-300 rounded-lg text-gray-700 font-medium',
+            'class': 'form-select text-center mt-1 block border border-gray-300 rounded-lg text-gray-700 font-medium py-2 lg:w-44 ',
         }))
     app = django_filters.ModelChoiceFilter(
         queryset=Application.objects.filter(is_active=True),
         label=False,
         empty_label="Επιλέξτε Εφαρμογή...",
         widget=forms.Select(attrs={
-            'class': 'form-select text-center mt-1 block border border-gray-300 rounded-lg text-gray-700 font-medium py-2 sm:w-full md:w-1/3',  # Added 'py-2' and width classes for consistency
+            'class': 'form-select text-center mt-1 block border border-gray-300 rounded-lg text-gray-700 font-medium py-2 sm:w-full  md:w-1/3',  # Added 'py-2' and width classes for consistency
         })
     )
     employee = django_filters.ModelChoiceFilter(        
@@ -112,7 +112,7 @@ class TaskFilter(django_filters.FilterSet):
         label=False,
         empty_label="Επιλέξτε Υπάλληλο...",
         widget=forms.Select(attrs={
-            'class': 'form-select text-center mt-1 block border border-gray-300 rounded-lg text-gray-700 font-medium py-2 sm:w-full md:w-1/3',  # Added 'py-2' and width classes for consistency
+            'class': 'form-select text-center mt-1 block border border-gray-300 rounded-lg text-gray-700 font-medium py-2 sm:w-full  md:w-1/3',  # Added 'py-2' and width classes for consistency
         })
     )
     importdate = django_filters.DateFromToRangeFilter(
@@ -121,7 +121,7 @@ class TaskFilter(django_filters.FilterSet):
             attrs={
                 'placeholder': 'dd/mm/yyyy',
                 'type': 'date',
-                'class': 'form-input text-center mt-1 border border-gray-300 rounded-lg text-gray-700 font-medium py-2 w-48 inline-block mr-2',  # Smaller width and inline-block for horizontal alignment  # Tailwind form styles
+                'class': 'form-input text-center mt-1 border border-gray-300 rounded-lg text-gray-700 font-medium py-2 inline-block mr-2',  # Smaller width and inline-block for horizontal alignment  # Tailwind form styles
             }
         )
     )

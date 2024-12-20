@@ -2,15 +2,20 @@ from django.shortcuts import render
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.decorators import login_required
 from django_filters.views import FilterView
-from .models import Organization, Employee, Ergasies
+from .models import Organization, Employee, Ergasies, Application
 from .filters import PelatisFilter, EpafiFilter, TaskFilter
 from django.shortcuts import render, get_object_or_404,redirect
 from django.http import JsonResponse
 import json
 from django.views.generic.edit import CreateView
 from django.urls import reverse_lazy
-from .forms import OrganizationModelForm
+from .forms import OrganizationModelForm,ApplicationForm
 from .export import export_organization_data
+from django.shortcuts import render
+from django.http import HttpResponse
+
+
+
 ##################################################################################
 
 #Λίστα πελατών
@@ -163,16 +168,15 @@ def restore_contact(request, pk):
 
 class OrganizationTasks(LoginRequiredMixin, FilterView):
     model = Ergasies
-    #context_object_name = 'tasks_list'
+    context_object_name = 'tasks_list'
     template_name = 'apps/organization/organization_tasks.html'
     filterset_class = TaskFilter
     ordering = ['importdate']
+    paginate_by = 10
+
+##################################################################################
 
 
-from django.shortcuts import render
-from django.http import HttpResponse
-from .forms import ApplicationForm
-from .models import Application
 
 def application_view(request):
     if request.method == 'POST':

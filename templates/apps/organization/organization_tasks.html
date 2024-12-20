@@ -5,10 +5,24 @@
 
 {% block content %}
 <!--Filter Form-->
-<form method="get" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 mt-3">
+<form method="get" class="grid grid-cols-2 gap-4 mt-3 lg:flex lg:flex-wrap lg:items-center lg:gap-4">
     {% csrf_token %}
-    {{ filter.form }}
-    <button type="submit" class="block text-center sm:w-44 py-2 border text-gray-700 bg-yellow-400 hover:bg-yellow-500 rounded-lg focus:ring-indigo-600 focus:border-indigo-600 sm:text-sm font-bold">Αναζήτηση</button>
+    <div class="w-full lg:w-auto">
+        {{ filter.form.organization }}
+    </div>
+    <div class="w-full lg:w-auto">
+        {{ filter.form.jobtype }}
+    </div>
+    <div class="w-full lg:w-auto">
+        {{ filter.form.app }}
+    </div>
+    <div class="w-full lg:w-auto">
+        {{ filter.form.employee }}
+    </div>
+    <div class="w-full lg:w-auto">
+        {{ filter.form.importdate }}
+    </div>
+    <button type="submit" class="block text-center mt-1 sm:w-44 py-2 border text-gray-700 bg-yellow-400 hover:bg-yellow-500 rounded-lg focus:ring-indigo-600 focus:border-indigo-600 sm:text-sm font-bold">Αναζήτηση</button>
 </form>
 <!--End Filter Form-->
 
@@ -30,7 +44,7 @@
         <table class="w-full text-sm text-center rtl:text-right text-gray-500 dark:text-white">
             <thead class="text-xs odd:bg-white odd:dark:bg-gray-900 even:bg-gray-50 even:dark:bg-gray-800 border-b">
                 <tr>
-                    <th colspan="10" class="text-center text-2xl font-bold">Πελάτες</th>
+                    {% comment %} <th colspan="10" class="text-center text-2xl font-bold">Πελάτες</th> {% endcomment %}
                 </tr>
                 <tr>
                     <th scope="col" class="px-4 py-2">Οργανισμός</th>
@@ -41,30 +55,28 @@
                     <th scope="col" class="px-4 py-2">Περιγραφή</th>
                     <th scope="col" class="px-4 py-2">Acs</th>
                     <th scope="col" class="px-4 py-2">Χρόνος</th>
-                    <th scope="col" class="px-4 py-2">Ticketid</th>
+                    {% comment %} <th scope="col" class="px-4 py-2">Ticketid</th> {% endcomment %}
                     <th scope="col" class="px-4 py-2">Ενέργειες</th>
                 </tr>
             </thead>
             <tbody>
-                {% for obj in filter.qs %}
+                {% for obj in tasks_list %}
                 <tr class="odd:bg-white odd:dark:bg-gray-900 even:bg-gray-50 even:dark:bg-gray-800 border-b ">
-                    <td class="px-4 py-2 whitespace-nowrap" data-label="Φορέας">{{obj.organization }}</td>
+                    <td class="px-4 py-2" data-label="Φορέας">{{obj.organization }}</td>
                     <td class="px-4 py-2" data-label="Υπάλληλος">
-                        <input type="text" value="{{obj.org_employee }}" class="w-full bg-transparent border-none text-center text-sm rounded-md" id="lastname-{{ employee.id }}"></td>
+                        <input type="text" value="{{obj.org_employee }}" class="flex flex-wrap justify-center items-center text-center text-sm bg-transparent border-none rounded-md space-y-1" id="lastname-{{ employee.id }}"></td>
                     <td class="px-4 py-2" data-label="Καταχώρηση">
-                        <input type="text" value="{{obj.importdate }}" class="w-full bg-transparent border-none text-center text-sm rounded-md" id="lastname-{{ employee.id }}"></td>
+                        <input type="text" value="{{obj.importdate|date:'d/m/Y' }}" class="w-full bg-transparent border-none text-center text-sm rounded-md" id="lastname-{{ employee.id }}"></td>
                     <td class="px-4 py-2" data-label="Εφαρμογή">
-                        <input type="text" value="{{obj.app }}" class="w-full bg-transparent border-none text-center text-sm rounded-md" id="firstname-{{ employee.id }}"></td>
+                        <input type="text" value="{{obj.get_app_display }}" class="flex flex-wrap justify-center items-center text-center text-sm bg-transparent border-none rounded-md space-y-1" id="firstname-{{ employee.id }}"></td>
                     <td class="px-4 py-2" data-label="Εργασία">
                         <input type="text" value="{{obj.get_jobtype_display }}" class="w-full bg-transparent border-none text-center text-sm rounded-md" id="tmhma-{{ employee.id }}"></td>
                     <td class="px-4 py-2" data-label="Περιγραφή">
-                        <input type="text" value="{{obj.info }}" class="w-full bg-transparent border-none text-center text-sm rounded-md" id="phone-{{ employee.id }}"></td>
+                        <input type="text" id="expandableInput" value="{{obj.info }}" class="w-full bg-transparent border-none text-center text-sm rounded-md"  onclick="expandInput(this)" onblur="shrinkInput(this)" id="phone-{{ employee.id }}"></td>
                     <td class="px-4 py-2" data-label="Acs">
-                        <input type="text" value="{{ obj.employee|username_from_email }}" class="w-full bg-transparent border-none text-center text-sm rounded-md" id="cellphone-{{ employee.id }}"></td>
-                        <td class="px-4 py-2" data-label="Χρόνος">
-                            <input type="text" value="{{ obj.time }}" class="w-full bg-transparent border-none text-center text-sm rounded-md overflow-visible" id="email-{{ employee.id }}"></td>
-                    <td class="px-4 py-2" data-label="Υπάλληλος">
-                        <input type="text" value="{{obj.name }}" class="w-full bg-transparent border-none text-center text-sm rounded-md" id="secondary_email-{{ employee.id }}"></td>
+                        <input type="text" value="{{ obj.employee.last_name }} {{ obj.employee.first_name }}" class="flex flex-wrap justify-center items-center text-center text-sm bg-transparent border-none rounded-md space-y-1" id="cellphone-{{ employee.id }}"></td>
+                    <td class="px-4 py-2" data-label="Χρόνος">
+                        <input type="text" value="{{ obj.time }}" class="w-full bg-transparent border-none text-center text-sm rounded-md overflow-visible" id="email-{{ employee.id }}"></td>
                         <td class="px-4 py-2" data-label="Ενέργειες">
                             <div class="flex space-x-2">
                                 <a href="#" 
@@ -80,5 +92,44 @@
             </tbody>
         </table>
     </div>
+<!-- Centered Pagination Controls -->
+<div class="flex justify-center items-center mt-6 space-x-2">
+    <!-- Previous Page Link -->
+{% if page_obj.has_previous %}
+    <a href="?page={{ page_obj.previous_page_number }}" class="px-4 py-2 bg-gray-200 text-gray-700 rounded hover:bg-gray-300 font-medium">
+    Previous
+    </a>
+{% else %}
+    <span class="px-4 py-2 bg-gray-100 text-gray-400 rounded font-medium">Previous</span>
+{% endif %}
 
+<!-- Page Numbers -->
+{% for num in page_obj.paginator.page_range %}
+    {% if page_obj.number == num %}
+    <span class="px-4 py-2 bg-blue-700 text-white rounded font-medium">{{ num }}</span>
+    {% else %}
+    <a href="?page={{ num }}" class="px-4 py-2 bg-gray-200 text-gray-700 rounded hover:bg-gray-300 font-medium">{{ num }}</a>
+    {% endif %}
+{% endfor %}
+
+<!-- Next Page Link -->
+{% if page_obj.has_next %}
+    <a href="?page={{ page_obj.next_page_number }}" class="px-4 py-2 bg-gray-200 text-gray-700 rounded hover:bg-gray-300 font-medium">
+    Next
+    </a>
+{% else %}
+    <span class="px-4 py-2 bg-gray-100 text-gray-400 rounded font-medium">Next</span>
+{% endif %}
+</div>
+<!--End Center pagination Controlss-->
+<script>
+    function expandInput(input) {
+      input.style.width = "24rem"; // Expand to 24rem
+      input.style.transition = "width 0.2s"; // Smooth transition
+    }
+  
+    function shrinkInput(input) {
+      input.style.width = "100%"; // Shrink back to full width
+    }
+  </script>
 {% endblock %}

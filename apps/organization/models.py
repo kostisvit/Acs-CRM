@@ -150,3 +150,6 @@ class Application(TimeStampedModel):
         verbose_name = 'OTS Εφαρμογές'
         verbose_name_plural = 'OTS Εφαρμογές'
         ordering = ['title']
+
+    def __str__(self):
+        return f"{self.title}"
