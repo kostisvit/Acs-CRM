@@ -31,11 +31,11 @@ job_choice = (
 
 from django.db import models
 
-class AdeiaChoices(models.TextChoices):
-    KANONIKI = '1', 'Κανονική'
-    ANARROTIKI = '2', 'Αναρρωτική'
-    EORTASTIKI = '3', 'Εορταστική'
-    GONIKI = '4', 'Γονική'
+adeia_choice = (
+    ('1', 'Κανονική'),
+    ('2', 'Αναρρωτική'),
+    ('3', 'Εορταστική')
+)
 
 app_choice = (
     ('ΤΑΠ', 'ΤΑΠ'),

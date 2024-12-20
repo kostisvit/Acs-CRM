@@ -41,7 +41,6 @@
                     <th scope="col" class="px-4 py-2">Τηλέφωνο</th>
                     <th scope="col" class="px-4 py-2">Email</th>
                     <th scope="col" class="px-4 py-2">Ιστιότοπος</th>
-                    <th scope="col" class="px-4 py-2">Κατάσταση</th>
                     <th scope="col" class="px-4 py-2">Ενέργειες</th>
                 </tr>
             </thead>
@@ -60,9 +59,6 @@
                         <input type="text" value="{{organization.email }}" class="w-full bg-transparent border-none text-center text-sm rounded-md" id="email-{{ dhmos.id }}"></td>
                     <td class="px-4 py-2" data-label="Ιστιότοπος">
                         <input type="text" value="{{organization.website | remove_protocol }}" class="w-full bg-transparent border-none text-center text-sm rounded-md" id="website-{{ dhmos.id }}"></td>
-                    <td class="px-4 py-2 text-green-500 font-bold" data-label="Κατάσταση">
-                        <input type="checkbox" class="form-checkbox h-5 w-5 text-green-600" id="is_visible-{{ organization.id }}" 
-                            {% if organization.is_visible %} checked {% endif %}></td>
                     <td class="px-4 py-2" data-label="Ενέργειες">
                         <a href="{% url 'restore_organization' organization.pk %}" class="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-lg dark:bg-green-600 dark:hover:bg-green-700 focus:outline-none dark:focus:ring-green-800" onclick="return confirm('Είστε σίγουροι για την ενεργοποίηση του Φορέα;');">Restore</a>
                         

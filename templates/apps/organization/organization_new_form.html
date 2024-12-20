@@ -11,80 +11,79 @@
 </head>
 <!-- component -->
 <form method="post">
-  <div class=" p-6 flex items-center justify-center">
+  <div class="p-6 flex items-center justify-center">
     <div class="container max-w-screen-lg mx-auto">
       {% if messages %}
       <div class="space-y-4">
         {% for message in messages %}
-          <div class="alert alert-success bg-green-100 border border-green-300 text-green-800 p-4 rounded-md">
-            <p>{{ message }}</p>
-          </div>
+        <div class="alert alert-success bg-green-100 border border-green-300 text-green-800 p-4 rounded-md">
+          <p>{{ message }}</p>
+        </div>
         {% endfor %}
       </div>
-    {% endif %}
+      {% endif %}
       <div>
         <div class="bg-white rounded shadow-lg p-4 px-4 md:p-8 mb-6">
-          <div class="grid gap-4 gap-y-2 text-sm grid-cols-1 lg:grid-cols-3">
+          <div class="grid gap-4 gap-y-2 text-sm grid-cols-1 lg:grid-cols-1">
             <div class="text-gray-600">
               <p class="font-medium text-lg">Οργανισμός</p>
               <p>Please fill out all the fields.</p>
             </div>
-            <div class="lg:col-span-2">
-              <div class="grid gap-4 gap-y-2 text-sm grid-cols-1 md:grid-cols-5">
+            <div class="lg:col-span-1">
+              <div class="grid gap-4 gap-y-2 text-sm grid-cols-1">
                 {% csrf_token %}
-                <div class="md:col-span-5">
+                <div class="md:col-span-1">
                   <label for="name" class="text-gray-700 text-sm font-medium">Οργανισμός<span class="text-red-600 ml-2">*</span></label>
                   <input type="text" name="name" id="name" class="h-10 border mt-1 rounded px-4 w-full bg-gray-50 text-gray-700" value="" />
                   {% if form.name.errors %}
                   <div class="text-red-500 text-sm">{{ form.name.errors }}</div>
-              {% endif %}
+                  {% endif %}
                 </div>
 
-                <div class="md:col-span-5">
+                <div class="md:col-span-1">
                   <label for="email" class="text-gray-700 text-sm font-medium">Email</label>
                   <input type="text" name="email" id="email" class="h-10 border mt-1 rounded px-4 w-full bg-gray-50 text-gray-700" value="" placeholder="email@domain.com" />
                 </div>
 
-                <div class="md:col-span-3">
+                <div class="md:col-span-1">
                   <label for="address" class="text-gray-700 text-sm font-medium">Διεύθυνση</label>
                   <input type="text" name="address" id="address" class="h-10 border mt-1 rounded px-4 w-full bg-gray-50 text-gray-700" value="" placeholder="" />
                 </div>
 
-                <div class="md:col-span-2" >
+                <div class="md:col-span-1">
                   <label for="city" class="text-gray-700 text-sm font-medium">Πόλη</label>
                   <input type="text" name="city" id="city" class="h-10 border mt-1 rounded px-4 w-full bg-gray-50 text-gray-700" value="" placeholder="" />
                 </div>
-                
-                <div class="md:col-span-2" >
-                  <label for="city" class="text-gray-700 text-sm font-medium">Τηλέφωνο<span class="text-red-600 ml-2">*</span></label>
+
+                <div class="md:col-span-1">
+                  <label for="phone" class="text-gray-700 text-sm font-medium">Τηλέφωνο<span class="text-red-600 ml-2">*</span></label>
                   <input type="text" name="phone" id="phone" class="h-10 border mt-1 rounded px-4 w-full bg-gray-50 text-gray-700" value="" placeholder="" />
                   {% if form.phone.errors %}
                   <div class="text-red-500 text-sm">{{ form.phone.errors }}</div>
                   {% endif %}
                 </div>
 
-                <div class="md:col-span-2" >
+                <div class="md:col-span-1">
                   <label for="teamviewer" class="text-gray-700 text-sm font-medium">Teamviewer</label>
                   <input type="text" name="teamviewer" id="teamviewer" class="h-10 border mt-1 rounded px-4 w-full bg-gray-50 text-gray-700" value="" placeholder="" />
                 </div>
 
-                <div class="md:col-span-2" >
+                <div class="md:col-span-1">
                   <label for="zipcode" class="text-gray-700 text-sm font-medium">Τ.Κ</label>
                   <input type="text" name="zipcode" id="zipcode" class="h-10 border mt-1 rounded px-4 w-full bg-gray-50 text-gray-700" placeholder="" value="" />
                 </div>
 
-                <div class="md:col-span-5">
+                <div class="md:col-span-1">
                   <div class="inline-flex items-center">
-                    <!-- Correct the 'for' attribute to 'id' for proper label linking -->
                     <input type="checkbox" name="is_visible" id="is_visible" class="form-checkbox" {% if form.is_visible.value %}checked{% endif %} />
                     <label for="is_visible" class="text-gray-700 text-sm font-medium ml-2">Κατάσταση<span class="text-red-600 ml-2">*</span></label>
-                </div>
-                {% if form.is_visible.errors %}
-                <div class="text-red-500 text-sm">{{ form.is_visible.errors }}</div>
-                {% endif %}
+                  </div>
+                  {% if form.is_visible.errors %}
+                  <div class="text-red-500 text-sm">{{ form.is_visible.errors }}</div>
+                  {% endif %}
                 </div>
 
-                <div class="md:col-span-5 text-right">
+                <div class="md:col-span-1 text-right">
                   <div class="inline-flex items-end">
                     <button type="submit" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded">
                       Αποθήκευση
@@ -100,6 +99,7 @@
     </div>
   </div>
 </form>
+
 
 
 </html>

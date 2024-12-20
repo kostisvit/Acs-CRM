@@ -1,8 +1,12 @@
 from django.shortcuts import render
 from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import render, redirect
 from .forms import EmailAuthenticationForm
 from .password_change import password_change
+from django_filters.views import FilterView
+from .models import Adeia
+from .filters import AdeiaFilter
 
 # Login user function
 def custom_login_view(request):
@@ -28,3 +32,13 @@ def custom_login_view(request):
 def custom_logout(request):
     logout(request)
     return redirect('login')
+
+
+##########################################################################
+class AdeiaListView(LoginRequiredMixin,FilterView):
+    model = Adeia
+    template_name = "apps/accounts/adeia.html"
+    context_object_name = "adeia_list"
+    filterset_class = AdeiaFilter
+    ordering = ['created']
+    pagination = 10

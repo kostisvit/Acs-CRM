@@ -80,7 +80,7 @@ class User(AbstractBaseUser, PermissionsMixin):
 
 class Adeia(TimeStampedModel):
     acs_employee = models.ForeignKey('User', max_length=100, verbose_name='Υπάλληλος', on_delete=models.CASCADE)
-    adeiatype = models.CharField(max_length=1,choices=AdeiaChoices.choices,default=AdeiaChoices.KANONIKI, verbose_name='Τύπος Άδειας')
+    adeiatype = models.CharField(max_length=1,choices=adeia_choice, verbose_name='Τύπος Άδειας')
     startdate = models.DateField(default=datetime.date.today, verbose_name='Από')
     enddate = models.DateField(default=datetime.date.today, verbose_name='Έως')
     #createddate = models.DateField(default=datetime.date.today, verbose_name='Ημ. Δημουργίας')
