@@ -20,19 +20,30 @@ from django.core.paginator import Paginator
 ##################################################################################
 
 #Λίστα πελατών
-class OrganizationListView(LoginRequiredMixin,FilterView):
-    model = Organization
-    context_object_name = 'foreas_list'
-    template_name = 'apps/organization/organization_list.html'
-    filterset_class = PelatisFilter
-    ordering = ['name']
-    paginate_by = 10
+def organization_list(request):
 
-    def get_queryset(self):
-        """
-        Use the custom manager to filter inactive records (is_visible=False).
-        """
-        return Organization.objects.visible()
+    # Step 1: Get the filtered queryset
+    organization_list = Organization.objects.visible()
+    organization_filter = PelatisFilter(request.GET, queryset=organization_list)
+
+    # Step 2: Apply pagination
+    paginator = Paginator(organization_filter.qs, 10)  # 9 tasks per page
+    page_number = request.GET.get('page')  # Get the page number from the request
+    page_obj = paginator.get_page(page_number)
+
+    # Step 3: Get filter query params
+    filter_params = request.GET.copy()  # Copy request.GET to preserve existing filters
+    if filter_params.get('page'):
+        filter_params.pop('page')  # Remove 'page' parameter to prevent it from being included in the filter query
+
+    # Step 4: Render the template with context
+    context = {
+        'organization_list': page_obj,
+        'filter': organization_filter,
+        'filter_params': filter_params.urlencode()  # Pass the encoded filter query params
+    }
+
+    return render(request, 'apps/organization/organization_list.html', context)
 
 
 class OrganizationListViewVisibleFalse(LoginRequiredMixin,FilterView):
@@ -167,28 +178,32 @@ def restore_contact(request, pk):
 
 # Λίστα Εργασιών Οργανισμού
 
-class OrganizationTasks(LoginRequiredMixin, FilterView):
+def organization_tasks(request):
     today = datetime.date.today()
-    model = Ergasies
-    context_object_name = 'task_list'
-    #queryset = Ergasies.objects.select_related('employee').filter(importdate__year=today.year)
-    template_name = 'apps/organization/organization_tasks.html'
-    filterset_class = TaskFilter
-    ordering = ['importdate']
-    paginate_by = 9
 
-    # def get_queryset(self):
-    #     # Optionally override the queryset method if additional filtering is needed
-    #     queryset = super().get_queryset()
-    #     return queryset
+    # Step 1: Get the filtered queryset
+    task_list = Ergasies.objects.filter(importdate__year=today.year)
+    task_filter = TaskFilter(request.GET, queryset=task_list)
 
-    # def get_context_data(self, **kwargs):
-    #     context = super().get_context_data(**kwargs)
-    #     page_number = self.request.GET.get('page')
-    #     paginator = Paginator(self.object_list, self.paginate_by)
-    #     page_obj = paginator.get_page(page_number)
-    #     context['page_obj'] = page_obj
-    #     return context
+    # Step 2: Apply pagination
+    paginator = Paginator(task_filter.qs, 10)  # 9 tasks per page
+    page_number = request.GET.get('page')  # Get the page number from the request
+    page_obj = paginator.get_page(page_number)
+
+    # Step 3: Get filter query params
+    filter_params = request.GET.copy()  # Copy request.GET to preserve existing filters
+    if filter_params.get('page'):
+        filter_params.pop('page')  # Remove 'page' parameter to prevent it from being included in the filter query
+
+    # Step 4: Render the template with context
+    context = {
+        'task_list': page_obj,
+        'filter': task_filter,
+        'filter_params': filter_params.urlencode()  # Pass the encoded filter query params
+    }
+
+    return render(request, 'apps/organization/organization_tasks.html', context)
+
 
 ##################################################################################
 

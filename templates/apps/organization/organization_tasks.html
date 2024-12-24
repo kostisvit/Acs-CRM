@@ -57,55 +57,39 @@
                     <th scope="col" class="px-4 py-2">Ενέργειες</th>
                 </tr>
             </thead>
-            <tbody>
-                <!-- Task List Table -->
-<div>
-    <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
-        <thead>
-            <tr class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-                <th scope="col" class="px-4 py-2">Φορέας</th>
-                <th scope="col" class="px-4 py-2">Υπάλληλος</th>
-                <th scope="col" class="px-4 py-2">Καταχώρηση</th>
-                <th scope="col" class="px-4 py-2">Εφαρμογή</th>
-                <th scope="col" class="px-4 py-2">Εργασία</th>
-                <th scope="col" class="px-4 py-2">Περιγραφή</th>
-                <th scope="col" class="px-4 py-2">Acs</th>
-                <th scope="col" class="px-4 py-2">Χρόνος</th>
-                <th scope="col" class="px-4 py-2">Ενέργειες</th>
-            </tr>
-        </thead>
+
         <tbody>
-            {% for ergasies in task_list %}
+            {% for task in task_list %}
             <tr class="odd:bg-white odd:dark:bg-gray-900 even:bg-gray-50 even:dark:bg-gray-800 border-b">
-                <td class="px-4 py-2" data-label="Φορέας">{{ ergasies.organization }}</td>
+                <td class="px-4 py-2" data-label="Φορέας">{{ task.organization }}</td>
                 <td class="px-4 py-2" data-label="Υπάλληλος">
-                    <input type="text" value="{{ ergasies.org_employee }}" 
-                           class="flex flex-wrap justify-center items-center text-center text-sm bg-transparent border-none rounded-md space-y-1" 
+                    <input type="text" value="{{ task.org_employee }}" 
+                           class="w-full bg-transparent border-none text-center text-sm rounded-md" 
                            id="org_employee-{{ ergasies.id }}">
                 </td>
                 <td class="px-4 py-2" data-label="Καταχώρηση">
-                    <input type="text" value="{{ ergasies.importdate|date:'d/m/Y' }}" 
+                    <input type="text" value="{{ task.importdate|date:'d/m/Y' }}" 
                            class="w-full bg-transparent border-none text-center text-sm rounded-md">
                 </td>
                 <td class="px-4 py-2" data-label="Εφαρμογή">
-                    <input type="text" value="{{ ergasies.get_app_display }}" 
-                           class="flex flex-wrap justify-center items-center text-center text-sm bg-transparent border-none rounded-md space-y-1">
+                    <input type="text" value="{{ task.get_app_display }}" 
+                           class="w-full bg-transparent border-none text-center text-sm rounded-md">
                 </td>
                 <td class="px-4 py-2" data-label="Εργασία">
-                    <input type="text" value="{{ ergasies.get_jobtype_display }}" 
+                    <input type="text" value="{{ task.get_jobtype_display }}" 
                            class="w-full bg-transparent border-none text-center text-sm rounded-md">
                 </td>
                 <td class="px-4 py-2" data-label="Περιγραφή">
-                    <input type="text" id="expandableInput" value="{{ ergasies.info }}" 
+                    <input type="text" id="expandableInput" value="{{ task.info }}" 
                            class="w-full bg-transparent border-none text-center text-sm rounded-md" 
                            onclick="expandInput(this)" onblur="shrinkInput(this)">
                 </td>
                 <td class="px-4 py-2" data-label="Acs">
-                    <input type="text" value="{{ ergasies.employee.last_name }} {{ ergasies.employee.first_name }}" 
-                           class="flex flex-wrap justify-center items-center text-center text-sm bg-transparent border-none rounded-md space-y-1">
+                    <input type="text" value="{{ task.employee.last_name }} {{ task.employee.first_name }}" 
+                           class="w-full bg-transparent border-none text-center text-sm rounded-md">
                 </td>
                 <td class="px-4 py-2" data-label="Χρόνος">
-                    <input type="text" value="{{ ergasies.time }}" 
+                    <input type="text" value="{{ task.time }}" 
                            class="w-full bg-transparent border-none text-center text-sm rounded-md overflow-visible">
                 </td>
                 <td class="px-4 py-2" data-label="Ενέργειες">
@@ -123,30 +107,22 @@
 </div>
 </div>
 
-<!-- Pagination Controls -->
-<div class="flex justify-center items-center mt-6 space-x-2">
-    <!-- Previous Page -->
-    {% if page_obj.has_previous %}
-    <a href="?page={{ page_obj.previous_page_number }}" class="px-4 py-2 bg-gray-200 text-gray-700 rounded hover:bg-gray-300 font-medium">Previous</a>
-    {% else %}
-    <span class="px-4 py-2 bg-gray-100 text-gray-400 rounded font-medium">Previous</span>
-    {% endif %}
+<div class="pagination mt-4">
+    <div class="flex items-center justify-center space-x-4">
+        {% if task_list.has_previous %}
+            <a href="?page=1&{{ filter_params }}" class="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-700">First</a>
+            <a href="?page={{ task_list.previous_page_number }}&{{ filter_params }}" class="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-700">Previous</a>
+        {% endif %}
 
-    <!-- Page Numbers -->
-    {% for num in page_obj.paginator.page_range %}
-    {% if page_obj.number == num %}
-    <span class="px-4 py-2 bg-blue-700 text-white rounded font-medium">{{ num }}</span>
-    {% else %}
-    <a href="?page={{ num }}" class="px-4 py-2 bg-gray-200 text-gray-700 rounded hover:bg-gray-300 font-medium">{{ num }}</a>
-    {% endif %}
-    {% endfor %}
+        <span class="text-sm text-gray-700">
+            Page {{ task_list.number }} of {{ task_list.paginator.num_pages }}.
+        </span>
 
-    <!-- Next Page -->
-    {% if page_obj.has_next %}
-    <a href="?page={{ page_obj.next_page_number }}" class="px-4 py-2 bg-gray-200 text-gray-700 rounded hover:bg-gray-300 font-medium">Next</a>
-    {% else %}
-    <span class="px-4 py-2 bg-gray-100 text-gray-400 rounded font-medium">Next</span>
-    {% endif %}
+        {% if task_list.has_next %}
+            <a href="?page={{ task_list.next_page_number }}&{{ filter_params }}" class="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-700">Next</a>
+            <a href="?page={{ task_list.paginator.num_pages }}&{{ filter_params }}" class="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-700">Last</a>
+        {% endif %}
+    </div>
 </div>
 
 <!--End Center pagination Controlss-->

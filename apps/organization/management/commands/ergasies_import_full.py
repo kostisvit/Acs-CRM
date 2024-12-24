@@ -43,7 +43,7 @@ class Command(BaseCommand):
                         if username == "athanasia":
                             username = "akarakousi@acsservices.gr"
                         elif username == "kostasvit":
-                            username = "kostasvit@gmail.com"
+                            username = "kostasvit@acsservices.gr"
                         elif username == "kostas":
                             username = "kvytiniotis@acsservices.gr"
                         elif username == "alexis":
@@ -86,6 +86,9 @@ class Command(BaseCommand):
 
                         # Query the Organization object
                         organization = Organization.objects.get(name=row[1]) if row[1] else None
+                        
+                        # Replace newlines with spaces in jobtype field (row[5])
+                        jobtype = row[5].replace("\n", " ").replace("\r", " ") if row[5] else None
 
                         # Update or create Ergasies record
                         Ergasies.objects.update_or_create(
@@ -96,7 +99,7 @@ class Command(BaseCommand):
                             defaults={
                                 'importdate': row[2],
                                 'app': row[3],
-                                'jobtype': row[5],
+                                'jobtype': jobtype,
                                 'info': row[6],
                                 'text': row[6],
                                 'time': row[8],
