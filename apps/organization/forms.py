@@ -1,5 +1,6 @@
 from django import forms
-from .models import Application,Organization
+from django.forms import ModelChoiceField
+from .models import Application,Organization, Ergasies, Employee
 
 class ApplicationForm(forms.ModelForm):
     class Meta:
@@ -31,3 +32,35 @@ class OrganizationModelForm(forms.ModelForm):
     class Meta:
         model = Organization
         fields = ['name', 'address', 'city','phone','teamviewer','email','website','is_visible']
+    
+
+from accounts.models import User
+
+class TaskForm(forms.ModelForm):
+    organization = ModelChoiceField(queryset=Organization.objects.all(),
+        widget=forms.Select(attrs={'class': 'mt-1 block w-full  rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50 text-gray-700'}),
+        label='Μαθητής',
+        required=True)
+    importdate = forms.DateField(
+        widget=forms.DateInput(attrs={'type': 'date','class': 'block w-full rounded-md mt-1   text-gray-700 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6','placeholder': 'YYYY-MM-DD',}),
+        required=True)
+    app = forms.ModelChoiceField(queryset=Application.objects.all(),
+        widget=forms.Select(attrs={'class': 'mt-1 block w-full  rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50 text-gray-700'}),
+        label='Εφαρμογή',
+        required=True)
+    info = forms.CharField(widget=forms.Textarea(attrs={'class': 'block w-full px-4 py-2 border rounded-lg text-gray-700'}),required=True)
+    text = forms.CharField(widget=forms.Textarea(attrs={'class': 'block w-full px-4 py-2 border rounded-lg text-gray-700'}),required=False)
+    time = forms.FloatField(widget=forms.NumberInput(attrs={'class': 'block w-full mt-1 px-4 py-2 border rounded-lg text-gray-700'}),required=False)
+    employee = ModelChoiceField(queryset=User.objects.all(),
+        widget=forms.Select(attrs={'class': 'mt-1 block w-full  rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50 text-gray-700'}),
+        label='ACS',
+        required=True)
+    org_employee = ModelChoiceField(queryset=Employee.objects.all(),widget=forms.Select(attrs={'class': 'mt-1 block w-full  rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50 text-gray-700'}),
+        label='ACS',
+        required=True)
+    class Meta:
+        model = Ergasies
+        fields = ['organization','importdate','app','jobtype','info','text','time','employee']
+        widgets = {
+            'jobtype': forms.Select(attrs={'class': 'block w-full px-4 py-2 border rounded-lg'}),
+        }

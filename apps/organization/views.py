@@ -177,6 +177,7 @@ def restore_contact(request, pk):
 ##################################################################################
 
 # Λίστα Εργασιών Οργανισμού
+from .forms import TaskForm
 
 def organization_tasks(request):
     today = datetime.date.today()
@@ -194,13 +195,22 @@ def organization_tasks(request):
     filter_params = request.GET.copy()  # Copy request.GET to preserve existing filters
     if filter_params.get('page'):
         filter_params.pop('page')  # Remove 'page' parameter to prevent it from being included in the filter query
-
+        
+    if request.method == "POST":
+        form = TaskForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('tasks')
+    else:
+        form = TaskForm()
     # Step 4: Render the template with context
     context = {
         'task_list': page_obj,
         'filter': task_filter,
-        'filter_params': filter_params.urlencode()  # Pass the encoded filter query params
+        'filter_params': filter_params.urlencode(),
+        'form': form, # Pass the encoded filter query params
     }
+
 
     return render(request, 'apps/organization/organization_tasks.html', context)
 

@@ -21,7 +21,7 @@ urlpatterns = [
     path('acs-services/edit/contact/<int:employee_id>/',views.edit_contact, name='edit_contact'),
     path('acs-services/delete/contact/<int:pk>/',views.soft_delete_contact, name='soft_delete_contact'),
     path('acs-services/organization/tasks', views.organization_tasks, name='tasks'),
-    
+
     #Parameter
     path('acs-services/applications/', views.application_view, name='application_view'),
 #     path('acs-services/update/task/<int:pk>/',views.ergasia_update, name='ergasia_update'),

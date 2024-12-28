@@ -5,15 +5,15 @@
 
 {% block content %}
 <!--Filter Form-->
-<form method="get" class="grid grid-cols-2 gap-4 mt-3 lg:flex lg:flex-wrap lg:items-center lg:gap-4">
+<form method="get" class="grid grid-cols-1 gap-4 mt-3 lg:flex lg:flex-wrap lg:items-center lg:gap-4">
     {% csrf_token %}
     <div class="w-full lg:w-auto">
         {{ filter.form.organization }}
     </div>
-    <div class="w-full lg:w-auto">
+    <div class="w-full lg:w-56">
         {{ filter.form.jobtype }}
     </div>
-    <div class="w-full lg:w-auto">
+    <div class="w-full lg:w-64">
         {{ filter.form.app }}
     </div>
     <div class="w-full lg:w-auto">
@@ -30,9 +30,8 @@
 
 <!--Buttons-->
 <div class="">
-    <a href="#"
-       class="px-4 py-2.5 text-sm font-medium text-white transition-all duration-200 bg-indigo-600 hover:bg-indigo-700  rounded-lg group"
-       title="Νέα εγγραφή">Νέα εγγραφή</a>
+    <!-- Button to open modal -->
+    <button id="openModal" class="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg">Νέα εργασία</button>
     <a class="px-4 py-2.5 text-sm font-medium text-white transition-all duration-200 bg-green-600 hover:bg-green-700 rounded-lg group"
        href="#"
        title="Νέα εγγραφή">Export</a>
@@ -110,8 +109,8 @@
 <div class="pagination mt-4">
     <div class="flex items-center justify-center space-x-4">
         {% if task_list.has_previous %}
-            <a href="?page=1&{{ filter_params }}" class="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-700">First</a>
-            <a href="?page={{ task_list.previous_page_number }}&{{ filter_params }}" class="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-700">Previous</a>
+            <a href="?page=1&{{ filter_params }}" class="px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700">First</a>
+            <a href="?page={{ task_list.previous_page_number }}&{{ filter_params }}" class="px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700">Previous</a>
         {% endif %}
 
         <span class="text-sm text-gray-700">
@@ -119,13 +118,96 @@
         </span>
 
         {% if task_list.has_next %}
-            <a href="?page={{ task_list.next_page_number }}&{{ filter_params }}" class="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-700">Next</a>
-            <a href="?page={{ task_list.paginator.num_pages }}&{{ filter_params }}" class="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-700">Last</a>
+            <a href="?page={{ task_list.next_page_number }}&{{ filter_params }}" class="px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700">Next</a>
+            <a href="?page={{ task_list.paginator.num_pages }}&{{ filter_params }}" class="px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700">Last</a>
         {% endif %}
     </div>
 </div>
 
 <!--End Center pagination Controlss-->
+
+<!-- Modal -->
+<div id="modal" class="fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center hidden">
+    <div class="bg-white rounded-lg p-6 w-full max-w-4xl">
+        <!-- Close Button -->
+        <div class="relative">
+            <button id="closeModal" class="absolute font-bold text-2xl top-2 right-2 text-red-600 hover:text-red-700">
+                &times;
+            </button>
+        </div>
+        <h2 class="text-2xl text-indigo-600 font-semibold mb-4">Νέα εργασία</h2>
+        <form method="post">
+            {% csrf_token %}
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                <!-- Field 1 -->
+                <div>
+                    <label for="organization" class="block text-sm font-medium text-gray-700 dark:text-white">Οργανισμός<span class="text-red-600 ml-2">*</span></label>
+                    {{form.organization}} 
+                </div>
+
+                
+                <!-- Field 2 -->
+                <div>
+                    <label for="org_employee" class="block text-sm font-medium text-gray-700 dark:text-white">Υπάλληλος<span class="text-red-600 ml-2">*</span></label>
+                    {{form.org_employee}}
+                </div>
+                
+
+                <!-- Field 3 -->
+                <div>
+                    <label for="importdate" class="block text-sm font-medium text-gray-700 dark:text-white">Καταχώρηση<span class="text-red-600 ml-2">*</span></label>
+                    {{form.importdate}}
+                </div>
+
+                <!-- Field 4 -->
+                <div>
+                    <label for="app" class="block text-sm font-medium text-gray-700 dark:text-white">Εφαρμογή<span class="text-red-600 ml-2">*</span></label>
+                    {{form.app}}
+                </div>
+                
+
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
+                <!-- Field 5 -->
+                <div>
+                    <label for="time" class="block text-sm font-medium text-gray-700 dark:text-white">Διάρκεια<span class="text-red-600 ml-2">*</span></label>
+                    {{form.time}}
+                </div>
+
+                <div>
+                    <label for="jobtype" class="block text-sm font-medium text-gray-700 dark:text-white">Τύπος<span class="text-red-600 ml-2">*</span></label>
+                    {{form.jobtype}}
+                </div>
+                
+                <!-- Field 6 -->
+                <div>
+                    <label for="text" class="block text-sm font-medium text-gray-700 dark:text-white">ACS<span class="text-red-600 ml-2">*</span></label>
+                    {{form.employee}}
+                </div>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-1 gap-4 mt-4">
+                <!-- Field 7 -->
+                <div>
+                    <label for="info" class="block text-sm font-medium text-gray-700 dark:text-white">Εργασία<span class="text-red-600 ml-2">*</span></label>
+                    {{form.info}}
+                </div>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-1 gap-4 mt-4">
+                <!-- Field 8 -->
+                <div>
+                    <label for="text" class="block text-sm font-medium text-gray-700 dark:text-white">Σημειώσεις</label>
+                    {{form.text}}
+                </div>
+            </div>
+
+            <div class="flex justify-end mt-6">
+                <button type="button" id="closeModal" class="px-4 py-2 bg-gray-500 text-white rounded-lg mr-2">Cancel</button>
+                <button type="submit" class="px-4 py-2 bg-green-600 text-white rounded-lg">Save</button>
+            </div>
+        </form>
+    </div>
+</div>
 <script>
     function expandInput(input) {
       input.style.width = "24rem"; // Expand to 24rem
@@ -136,4 +218,18 @@
       input.style.width = "100%"; // Shrink back to full width
     }
   </script>
+  
+  <script>
+    // Open modal
+    document.getElementById('openModal').addEventListener('click', function () {
+        document.getElementById('modal').classList.remove('hidden');
+    });
+
+    // Close modal
+    document.querySelectorAll('#closeModal').forEach(button => {
+        button.addEventListener('click', function () {
+            document.getElementById('modal').classList.add('hidden');
+        });
+    });
+</script>
 {% endblock %}

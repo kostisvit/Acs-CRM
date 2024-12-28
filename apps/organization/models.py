@@ -143,7 +143,6 @@ class Application(TimeStampedModel):
     title = models.CharField(max_length=255, null=False, blank=False, db_index=True)
     description = models.CharField(max_length=255, null=True, blank=True)
     is_active = models.BooleanField(default=False, verbose_name='Κατάσταση')
-    old_id = models.IntegerField(verbose_name='old_id', null=True, blank=False)
     
     class Meta:
         indexes = [models.Index(fields=['title'])]

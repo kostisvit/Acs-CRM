@@ -98,7 +98,7 @@ class TaskFilter(django_filters.FilterSet):
         label=False,
         empty_label="Τύπος εργασίας...",
         widget=forms.Select(attrs={
-            'class': 'form-select text-center mt-1 block border border-gray-300 rounded-lg text-gray-700 font-medium py-2 lg:w-44 ',
+            'class': 'form-select text-center mt-1 block border border-gray-300 rounded-lg text-gray-700 font-medium py-2 sm:w-full  md:w-1/3',
         }))
     app = django_filters.ModelChoiceFilter(
         queryset=Application.objects.filter(is_active=True),

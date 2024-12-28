@@ -1,6 +1,11 @@
--IMPORT CSV-
+-IMPORT CSV COMMANDS-
 
-1- poetry run python manage.py organization_import --path="C:\\users\kostasvit\desktop\projects\acs-crm\apps\organization\management\commands\dhmos.csv" # organization
-2- poetry run python manage.py employee_import --path="C:\\users\kostasvit\desktop\projects\acs-crm\apps\organization\management\commands\employee.csv" # employee   
-3- poetry run python manage.py ergasies_import --path="C:\\users\kostasvit\desktop\projects\acs-crm\apps\organization\management\commands\ergasies.csv" # tasks                      
+#Organization
+1- poetry run python manage.py organization_import --path="C:\\users\kostasvit\desktop\projects\acs-crm\apps\organization\management\commands\dhmos.csv"
+
+#Employee
+2- poetry run python manage.py employee_import --path="C:\\users\kostasvit\desktop\projects\acs-crm\apps\organization\management\commands\employee.csv"
+
+#Tasks
+3- poetry run python manage.py ergasies_import --path="C:\\users\kostasvit\desktop\projects\acs-crm\apps\organization\management\commands\ergasies.csv"                      
                                                       /Users/kostasvit/Desktop/Projects/Acs-CRM/apps/organization/management/commands/tasks.csv
