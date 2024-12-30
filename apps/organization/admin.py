@@ -7,7 +7,7 @@ from import_export.widgets import ForeignKeyWidget
 from accounts.models import User
 
 class OrganizationAdmin(ImportExportModelAdmin):
-    list_display = ('id','name', 'phone', 'address', 'city', 'teamviewer', 'fax', 'email', 'is_visible','old_id')
+    list_display = ('id','name', 'phone', 'address', 'city', 'teamviewer', 'fax', 'email', 'is_visible','old_id','created','modified')
     list_filter = ['is_visible']
     list_editable = ['is_visible']
     search_fields = ['name', ]

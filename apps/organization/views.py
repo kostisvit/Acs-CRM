@@ -9,7 +9,7 @@ from django.http import JsonResponse
 import json
 from django.views.generic.edit import CreateView
 from django.urls import reverse_lazy
-from .forms import OrganizationModelForm,ApplicationForm
+from .forms import OrganizationForm,ApplicationForm
 from .export import export_organization_data
 from django.shortcuts import render
 from django.http import HttpResponse
@@ -21,26 +21,40 @@ from django.core.paginator import Paginator
 
 #Λίστα πελατών
 def organization_list(request):
-
     # Step 1: Get the filtered queryset
     organization_list = Organization.objects.visible()
     organization_filter = PelatisFilter(request.GET, queryset=organization_list)
 
     # Step 2: Apply pagination
-    paginator = Paginator(organization_filter.qs, 10)  # 9 tasks per page
+    paginator = Paginator(organization_filter.qs, 10)  # 10 tasks per page
     page_number = request.GET.get('page')  # Get the page number from the request
     page_obj = paginator.get_page(page_number)
 
     # Step 3: Get filter query params
     filter_params = request.GET.copy()  # Copy request.GET to preserve existing filters
     if filter_params.get('page'):
-        filter_params.pop('page')  # Remove 'page' parameter to prevent it from being included in the filter query
+        filter_params.pop('page')
+
+    form = OrganizationForm()  # Default form (used in GET requests)
+    show_modal = False  # Default flag for modal visibility
+
+    if request.method == "POST":
+        form = OrganizationForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return JsonResponse({"success": True})  # Redirect to a success page after saving
+        else:
+            return JsonResponse({"success": False, "errors": form.errors})
+    else:
+        form = OrganizationForm()  # Show modal if the form is invalid
 
     # Step 4: Render the template with context
     context = {
         'organization_list': page_obj,
         'filter': organization_filter,
-        'filter_params': filter_params.urlencode()  # Pass the encoded filter query params
+        'filter_params': filter_params.urlencode(),
+        'form': form,  # Pass the form (valid or with errors)
+        'show_modal': show_modal,  # Pass modal visibility flag
     }
 
     return render(request, 'apps/organization/organization_list.html', context)
@@ -60,37 +74,37 @@ class OrganizationListViewVisibleFalse(LoginRequiredMixin,FilterView):
         """
         return Organization.objects.invisible()
 
-from django.contrib import messages
-def create_organization(request):
-    if request.method == 'POST':
-        # Print the POST data to check what has been submitted
-        print(request.POST)  # Debug: print all submitted data
+# from django.contrib import messages
+# def create_organization(request):
+#     if request.method == 'POST':
+#         # Print the POST data to check what has been submitted
+#         print(request.POST)  # Debug: print all submitted data
 
-        # Create the form with the submitted data
-        form = OrganizationModelForm(request.POST)
+#         # Create the form with the submitted data
+#         form = OrganizationModelForm(request.POST)
 
-        # Check if the form is valid
-        if form.is_valid():
-            # Save the form if valid
-            form.save()
+#         # Check if the form is valid
+#         if form.is_valid():
+#             # Save the form if valid
+#             form.save()
 
-            # Add a success message
-            messages.success(request, 'Ο οργανισμός δημιουργήθηκε με επιτυχία!')
+#             # Add a success message
+#             messages.success(request, 'Ο οργανισμός δημιουργήθηκε με επιτυχία!')
 
-            return redirect('organization-create')  # Redirect to a success page after saving
-        else:
-            # If the form is not valid, print the form errors
-            print(form.errors)  # Debug: print form errors
+#             return redirect('organization-create')  # Redirect to a success page after saving
+#         else:
+#             # If the form is not valid, print the form errors
+#             print(form.errors)  # Debug: print form errors
 
-            # Optionally, print each field's specific error:
-            for field, errors in form.errors.items():
-                print(f"Error in {field}: {errors}")
+#             # Optionally, print each field's specific error:
+#             for field, errors in form.errors.items():
+#                 print(f"Error in {field}: {errors}")
 
-    else:
-        # If the request method is GET, just instantiate an empty form
-        form = OrganizationModelForm()
+#     else:
+#         # If the request method is GET, just instantiate an empty form
+#         form = OrganizationModelForm()
 
-    return render(request, 'apps/organization/organization_new_form.html', {'form': form}) # Adjust the URL as needed
+#     return render(request, 'apps/organization/organization_new_form.html', {'form': form}) # Adjust the URL as needed
 
 #Διόρθωση εγγραφών πελατών
 @login_required
@@ -104,7 +118,6 @@ def edit_organization(request, organization_id):
         organization.phone = data.get('phone')
         organization.email = data.get('email')
         organization.website = data.get('website')
-        organization.is_visible = data.get('is_visible')
         organization.save()
         return JsonResponse({'status': 'success'})
 

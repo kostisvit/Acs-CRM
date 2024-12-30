@@ -1,6 +1,9 @@
 from django import forms
 from django.forms import ModelChoiceField
 from .models import Application,Organization, Ergasies, Employee
+from accounts.models import User
+from django.core.exceptions import ValidationError
+
 
 class ApplicationForm(forms.ModelForm):
     class Meta:
@@ -19,22 +22,20 @@ class ApplicationForm(forms.ModelForm):
         }
 
 
-
-class OrganizationModelForm(forms.ModelForm):
-    name = forms.CharField(widget=forms.TextInput(attrs={}),required=True)
-    address = forms.CharField(widget=forms.TextInput(attrs={}),required=False)
-    city = forms.CharField(widget=forms.TextInput(attrs={}),required=False)
-    phone = forms.CharField(widget=forms.TextInput(attrs={}),required=True)
-    teamviewer = forms.CharField(widget=forms.TextInput(attrs={}),required=False)
-    email = forms.CharField(widget=forms.TextInput(attrs={}),required=False)
-    website = forms.CharField(widget=forms.TextInput(attrs={}),required=False)
-    is_visible = forms.BooleanField(initial=True,widget=forms.CheckboxInput(attrs={'class': 'h-4 w-4 text-blue-600 border-gray-300 rounded',}),required=True)
+class OrganizationForm(forms.ModelForm):
+    name = forms.CharField(widget=forms.TextInput(attrs={'class': 'block w-full px-4 py-2 border rounded-lg text-gray-700'}),required=True)
+    address = forms.CharField(widget=forms.TextInput(attrs={'class': 'block w-full px-4 py-2 border rounded-lg text-gray-700'}),required=False)
+    city = forms.CharField(widget=forms.TextInput(attrs={'class': 'block w-full px-4 py-2 border rounded-lg text-gray-700'}),required=False)
+    phone = forms.CharField(widget=forms.TextInput(attrs={'class': 'block w-full px-4 py-2 border rounded-lg text-gray-700'}),required=True)
+    teamviewer = forms.CharField(widget=forms.TextInput(attrs={'class': 'block w-full px-4 py-2 border rounded-lg text-gray-700'}),required=False)
+    email = forms.CharField(widget=forms.TextInput(attrs={'class': 'block w-full px-4 py-2 border rounded-lg text-gray-700'}),required=False)
+    website = forms.URLField(widget=forms.TextInput(attrs={'class': 'block w-full px-4 py-2 border rounded-lg text-gray-700','placeholder':'https://www.example.com'}),required=False)
+    is_visible = forms.BooleanField(initial=True,widget=forms.CheckboxInput(attrs={'class': 'h-4 w-4 text-blue-600 border-gray-300 rounded',}),required=False)
     class Meta:
         model = Organization
         fields = ['name', 'address', 'city','phone','teamviewer','email','website','is_visible']
-    
 
-from accounts.models import User
+
 
 class TaskForm(forms.ModelForm):
     organization = ModelChoiceField(queryset=Organization.objects.all(),

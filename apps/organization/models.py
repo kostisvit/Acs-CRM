@@ -29,7 +29,7 @@ class VisibilityManager(models.Manager):
         return self.get_queryset().filter(is_visible=False)
 
 
-class Organization(models.Model):
+class Organization(TimeStampedModel):
     name = models.CharField(max_length=100, verbose_name='Πελάτης')
     address = models.CharField(max_length=100, verbose_name='Διεύθυνση')
     city = models.CharField(max_length=100, verbose_name='Πόλη')
