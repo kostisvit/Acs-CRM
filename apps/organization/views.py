@@ -74,38 +74,6 @@ class OrganizationListViewVisibleFalse(LoginRequiredMixin,FilterView):
         """
         return Organization.objects.invisible()
 
-# from django.contrib import messages
-# def create_organization(request):
-#     if request.method == 'POST':
-#         # Print the POST data to check what has been submitted
-#         print(request.POST)  # Debug: print all submitted data
-
-#         # Create the form with the submitted data
-#         form = OrganizationModelForm(request.POST)
-
-#         # Check if the form is valid
-#         if form.is_valid():
-#             # Save the form if valid
-#             form.save()
-
-#             # Add a success message
-#             messages.success(request, 'Ο οργανισμός δημιουργήθηκε με επιτυχία!')
-
-#             return redirect('organization-create')  # Redirect to a success page after saving
-#         else:
-#             # If the form is not valid, print the form errors
-#             print(form.errors)  # Debug: print form errors
-
-#             # Optionally, print each field's specific error:
-#             for field, errors in form.errors.items():
-#                 print(f"Error in {field}: {errors}")
-
-#     else:
-#         # If the request method is GET, just instantiate an empty form
-#         form = OrganizationModelForm()
-
-#     return render(request, 'apps/organization/organization_new_form.html', {'form': form}) # Adjust the URL as needed
-
 #Διόρθωση εγγραφών πελατών
 @login_required
 def edit_organization(request, organization_id):
@@ -123,13 +91,14 @@ def edit_organization(request, organization_id):
 
     return JsonResponse({'status': 'failed'}, status=400)
 
-
+@login_required
 def soft_delete_organization(request, pk):
     """Soft delete"""
     organization = get_object_or_404(Organization, pk=pk)
     organization.delete()
     return redirect('pelatis')
-
+    
+@login_required
 def restore_organization(request, pk):
     """Restore a soft-deleted product."""
     organization = get_object_or_404(Organization, pk=pk)

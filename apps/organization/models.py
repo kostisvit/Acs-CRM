@@ -139,6 +139,23 @@ class Ergasies(models.Model):
 
 
 
+class Department(TimeStampedModel):
+    name = models.CharField(max_length=255, null=False, blank=False, db_index=True)
+    description = models.CharField(max_length=255, null=True, blank=True)
+    is_active = models.BooleanField(default=False, verbose_name='Κατάσταση')
+    
+    class Meta:
+        indexes = [models.Index(fields=['name'])]
+        verbose_name = 'Υπηρεσίες Οργανισμών'
+        verbose_name_plural = 'Υπηρεσίες Οργανισμών'
+        ordering = ['name']
+
+    def __str__(self):
+        return f"{self.name}"
+
+
+
+
 class Application(TimeStampedModel):
     title = models.CharField(max_length=255, null=False, blank=False, db_index=True)
     description = models.CharField(max_length=255, null=True, blank=True)

@@ -86,12 +86,15 @@ class AppAdmin(admin.ModelAdmin):
     list_display = ('title','description')
     
 
+class DepartmentAdmin(admin.ModelAdmin):
+    list_display = ('name', 'description','is_active','created','modified')
 
 
 admin.site.register(Organization, OrganizationAdmin)
 admin.site.register(Employee, EmployeeAdmin)
 admin.site.register(Ergasies, ErgasiesAdmin)
 admin.site.register(Application,AppAdmin)
+admin.site.register(Department,DepartmentAdmin)
 
 
 
