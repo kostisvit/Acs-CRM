@@ -8,7 +8,7 @@ from .model_choices import *
 
 User = get_user_model()
 
-class PelatisFilter(django_filters.FilterSet):
+class OrganizationFilter(django_filters.FilterSet):
     name = django_filters.CharFilter(field_name='name',
         lookup_expr='icontains',
         label=False,
@@ -36,7 +36,7 @@ class PelatisFilter(django_filters.FilterSet):
         fields = ['name', 'phone','email']
 
 
-class EpafiFilter(django_filters.FilterSet):
+class OrgEmpoloyeeFilter(django_filters.FilterSet):
     IS_ACTIVE_CHOICES = (
         (True, 'Online'),
         (False, 'Offline'),
@@ -70,7 +70,7 @@ class EpafiFilter(django_filters.FilterSet):
         label=False,
         choices=IS_ACTIVE_CHOICES,
         widget=forms.Select(attrs={
-            'class': 'form-select sm:w-full md:w-1/3 text-center mt-1 block  border border-gray-300 rounded-lg text-gray-700 font-medium',
+            'class': 'form-select text-center mt-1 block border border-gray-300 rounded-lg text-gray-700 font-medium py-2 sm:w-full md:w-1/3',
         }))
 
     class Meta:
@@ -78,7 +78,7 @@ class EpafiFilter(django_filters.FilterSet):
         fields = ['organization', 'firstname', 'lastname']
 
     def __init__(self, *args, **kwargs):
-        super(EpafiFilter, self).__init__(*args, **kwargs)
+        super(OrgEmpoloyeeFilter, self).__init__(*args, **kwargs)
         if self.data == {}:
             self.queryset = self.queryset.none()
 

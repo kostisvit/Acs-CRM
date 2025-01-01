@@ -3,13 +3,13 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.decorators import login_required
 from django_filters.views import FilterView
 from .models import Organization, Employee, Ergasies, Application
-from .filters import PelatisFilter, EpafiFilter, TaskFilter
+from .filters import OrganizationFilter, OrgEmpoloyeeFilter, TaskFilter
 from django.shortcuts import render, get_object_or_404,redirect
 from django.http import JsonResponse
 import json
 from django.views.generic.edit import CreateView
 from django.urls import reverse_lazy
-from .forms import OrganizationForm,ApplicationForm
+from .forms import OrganizationForm,ApplicationForm,OrgEmployeeForm
 from .export import export_organization_data
 from django.shortcuts import render
 from django.http import HttpResponse
@@ -20,10 +20,11 @@ from django.core.paginator import Paginator
 ##################################################################################
 
 #Λίστα πελατών
+@login_required
 def organization_list(request):
     # Step 1: Get the filtered queryset
     organization_list = Organization.objects.visible()
-    organization_filter = PelatisFilter(request.GET, queryset=organization_list)
+    organization_filter = OrganizationFilter(request.GET, queryset=organization_list)
 
     # Step 2: Apply pagination
     paginator = Paginator(organization_filter.qs, 10)  # 10 tasks per page
@@ -64,7 +65,7 @@ class OrganizationListViewVisibleFalse(LoginRequiredMixin,FilterView):
     model = Organization
     context_object_name = 'foreas_list'
     template_name = 'apps/organization/organization_inactive.html'
-    filterset_class = PelatisFilter
+    filterset_class = OrganizationFilter
     ordering = ['name']
     paginate_by = 10  
 
@@ -107,20 +108,61 @@ def restore_organization(request, pk):
 
 ##################################################################################
 
-# Λίστα επαφών
-class EpafiListView(LoginRequiredMixin, FilterView):
-    model = Employee
-    context_object_name = 'epafi_list'
-    template_name = 'apps/organization/organization_contact.html'
-    filterset_class = EpafiFilter
-    ordering = ['lastname']
-    paginate_by = 9
 
-    def get_queryset(self):
-        """
-        Use the custom manager to filter inactive records (is_visible=False).
-        """
-        return Employee.objects.visible()
+@login_required
+def org_employee_list(request):
+    # Step 1: Get the filtered queryset
+    org_employee_list = Employee.objects.visible()
+    org_employee_filter = OrgEmpoloyeeFilter(request.GET, queryset=org_employee_list)
+
+    # Step 2: Apply pagination
+    paginator = Paginator(org_employee_filter.qs, 10)  # 10 tasks per page
+    page_number = request.GET.get('page')  # Get the page number from the request
+    page_obj = paginator.get_page(page_number)
+
+    # Step 3: Get filter query params
+    filter_params = request.GET.copy()  # Copy request.GET to preserve existing filters
+    if filter_params.get('page'):
+        filter_params.pop('page')
+
+    form = OrgEmployeeForm()  # Default form (used in GET requests)
+    show_modal = False  # Default flag for modal visibility
+
+    if request.method == "POST":
+        form = OrgEmployeeForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return JsonResponse({"success": True})  # Redirect to a success page after saving
+        else:
+            return JsonResponse({"success": False, "errors": form.errors})
+    else:
+        form = OrgEmployeeForm()  # Show modal if the form is invalid
+
+    # Step 4: Render the template with context
+    context = {
+        'org_employee_list': page_obj,
+        'filter': org_employee_filter,
+        'filter_params': filter_params.urlencode(),
+        'form': form,  # Pass the form (valid or with errors)
+        'show_modal': show_modal,  # Pass modal visibility flag
+    }
+
+    return render(request, 'apps/organization/organization_contact.html', context)
+
+# Λίστα επαφών
+# class EpafiListView(LoginRequiredMixin, FilterView):
+#     model = Employee
+#     context_object_name = 'epafi_list'
+#     template_name = 'apps/organization/organization_contact.html'
+#     filterset_class = EpafiFilter
+#     ordering = ['lastname']
+#     paginate_by = 9
+
+#     def get_queryset(self):
+#         """
+#         Use the custom manager to filter inactive records (is_visible=False).
+#         """
+#         return Employee.objects.visible()
 
 
 #Διόρθωση εγγραφών πελατών

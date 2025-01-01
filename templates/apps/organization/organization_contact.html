@@ -17,9 +17,7 @@
 
 <!--Buttons-->
 <div class="">
-    <a href="#"
-       class="px-4 py-2.5 text-sm font-medium text-white transition-all duration-200 bg-indigo-600 hover:bg-indigo-700  rounded-lg group"
-       title="Νέα εγγραφή">Νέα εγγραφή</a>
+    <button id="openModal" class="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg">Νέα επαφή</button>
     <a class="px-4 py-2.5 text-sm font-medium text-white transition-all duration-200 bg-green-600 hover:bg-green-700 rounded-lg group"
        href="#"
        title="Νέα εγγραφή">Export</a>
@@ -34,7 +32,7 @@
         <table class="w-full text-sm text-center rtl:text-right text-gray-500 dark:text-white">
             <thead class="text-xs odd:bg-white odd:dark:bg-gray-900 even:bg-gray-50 even:dark:bg-gray-800 border-b">
                 <tr>
-                    {% comment %} <th colspan="10" class="text-center text-2xl font-bold">Πελάτες</th> {% endcomment %}
+
                 </tr>
                 <tr>
                     <th scope="col" class="px-4 py-2">Φορέας</th>
@@ -144,6 +142,139 @@
 {% endif %}
 </div>
 <!--End Center pagination Controlss-->
+
+<!--Employee Modal-->
+<div id="modal" class="fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center {% if not show_modal %}hidden{% endif %}">
+    <div class="bg-white rounded-lg p-6 w-full max-w-4xl">
+        <!-- Close Button -->
+        <div class="relative">
+            <button id="closeModal" class="absolute font-bold text-2xl top-2 right-2 text-red-600 hover:text-red-700">
+                &times;
+            </button>
+        </div>
+        <h2 class="text-2xl text-indigo-600 font-semibold mb-4">Νέα επαφή</h2>
+    <form method="post" id="modal-form">
+        {% csrf_token %}
+        <div class="mb-4 space-y-4">
+            <!-- Field 1 -->
+            <div>
+                <label for="name" class="block text-sm font-medium text-gray-700 dark:text-white">Οργανισμός<span class="text-red-600 ml-2">*</span></label>
+                {{form.organization}} 
+                {% if form.organization.errors %}
+                <div class="text-red-500 text-sm">{{ form.name.errors }}</div>
+                {% endif %}
+            </div>
+        
+            <!-- Field 2 -->
+            <div>
+                <label for="address" class="block text-sm font-medium text-gray-700 dark:text-white">Όνομα<span class="text-red-600 ml-2">*</span></label>
+                {{form.firstname}} 
+            </div>
+        
+            <!-- Field 3 -->
+            <div>
+                <label for="city" class="block text-sm font-medium text-gray-700 dark:text-white">Επώνυμο<span class="text-red-600 ml-2">*</span></label>
+                {{form.lastname}} 
+            </div>
+
+            <!-- Field 4 -->
+            <div>
+                <label for="phone" class="block text-sm font-medium text-gray-700 dark:text-white">Υπηρεσία</label>
+                {{form.department}} 
+            </div>
+
+            <!-- Field 5 -->
+            <div>
+                <label for="email" class="block text-sm font-medium text-gray-700 dark:text-white">Τηλέφωνο Επιπκοινωνίας</label>
+                {{form.phone}} 
+            </div>
+
+            <!-- Field 6 -->
+            <div>
+                <label for="website" class="block text-sm font-medium text-gray-700 dark:text-white">Κινητό</label>
+                {{form.cellphone}} 
+            </div> 
+            
+            <!-- Field 6 -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-3">
+                <div>
+                    <label for="email" class="block text-sm font-medium text-gray-700 dark:text-white">Primary Email</label>
+                    {{ form.email }}
+                </div>
+                <div>
+                    <label for="secondary_email" class="block text-sm font-medium text-gray-700 dark:text-white">Secondary Email</label>
+                    {{ form.secondary_email }}
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-1 gap-4 mt-4">
+                <!-- Field 7 -->
+                <div>
+                    <label for="info" class="block text-sm font-medium text-gray-700 dark:text-white">Πληροφορίες</label>
+                    {{form.info}}
+                </div>
+            </div>
+
+            <!-- Field 7 -->
+            <div>
+                <label for="website" class="block text-sm font-medium text-gray-700 dark:text-white mt-5">Κατάσταση</label>
+                {{form.is_visible}} 
+            </div>
+                
+            <div class="flex justify-end mt-6">
+                <button type="submit" class="px-4 py-2 w-full bg-green-600 hover:bg-green-700 text-white rounded-lg">Αποθήκευση</button>
+            </div>
+        </div>
+    </form>
+  </div>
+</div>
+<!--End Employee Modal-->
+<script>
+    document.getElementById("openModal").addEventListener("click", () => {
+        document.getElementById("modal").classList.remove("hidden");
+    });
+    
+    document.getElementById("closeModal").addEventListener("click", () => {
+        document.getElementById("modal").classList.add("hidden");
+    });
+    </script>
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const modal = document.getElementById("modal");
+            const form = document.getElementById("modal-form");
+        
+            form.addEventListener("submit", async (event) => {
+                event.preventDefault();
+        
+                // Form submission
+                const formData = new FormData(form);
+                const response = await fetch(form.action, {
+                    method: "POST",
+                    body: formData,
+                });
+                const result = await response.json();
+        
+                if (result.success) {
+                    // Close modal on success
+                    modal.classList.add("hidden");
+                    alert("Form submitted successfully!");
+                } else {
+                    // Keep modal open and show errors
+                    modal.classList.remove("hidden");
+        
+                    // Display errors
+                    const errorMessages = document.getElementById("error-messages");
+                    errorMessages.innerHTML = "";
+                    for (const [field, errors] of Object.entries(result.errors)) {
+                        const errorItem = document.createElement("div");
+                        errorItem.className = "text-red-500";
+                        errorItem.textContent = `${field}: ${errors.join(", ")}`;
+                        errorMessages.appendChild(errorItem);
+                    }
+                }
+            });
+        });
+        </script>
 
 <script>
     function saveChanges(employeeId) {

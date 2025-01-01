@@ -1,6 +1,6 @@
 from django import forms
 from django.forms import ModelChoiceField
-from .models import Application,Organization, Ergasies, Employee
+from .models import Application,Organization, Ergasies, Employee, Department
 from accounts.models import User
 from django.core.exceptions import ValidationError
 
@@ -35,6 +35,29 @@ class OrganizationForm(forms.ModelForm):
         model = Organization
         fields = ['name', 'address', 'city','phone','teamviewer','email','website','is_visible']
 
+
+class OrgEmployeeForm(forms.ModelForm):
+    organization = ModelChoiceField(queryset=Organization.objects.all(),
+        widget=forms.Select(attrs={'class': 'mt-1 block w-full  rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50 text-gray-700'}),
+        label='Μαθητής',
+        required=True)
+    firstname = forms.CharField(widget=forms.TextInput(attrs={'class': 'block w-full px-4 py-2 border rounded-lg text-gray-700'}),required=True)
+    lastname = forms.CharField(widget=forms.TextInput(attrs={'class': 'block w-full px-4 py-2 border rounded-lg text-gray-700'}),required=True)
+    department = ModelChoiceField(queryset=Department.objects.all(),
+        widget=forms.Select(attrs={'class': 'mt-1 block w-full  rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50 text-gray-700'}),
+        label='Υπηρεσία',
+        required=False)
+    phone = forms.CharField(widget=forms.TextInput(attrs={'class': 'block w-full px-4 py-2 border rounded-lg text-gray-700'}),required=False)
+    cellphone = forms.CharField(widget=forms.TextInput(attrs={'class': 'block w-full px-4 py-2 border rounded-lg text-gray-700'}),required=False)
+    email = forms.EmailField(widget=forms.EmailInput(attrs={'class': 'block w-full px-4 py-2 border rounded-lg text-gray-700'}),required=False)
+    secondary_email = forms.EmailField(widget=forms.EmailInput(attrs={'class': 'block w-full px-4 py-2 border rounded-lg text-gray-700'}),required=False)
+    info = forms.CharField(widget=forms.Textarea(attrs={'class': 'block w-full px-4 py-2 border rounded-lg text-gray-700'}),required=False)
+    is_visible = forms.BooleanField(initial=True,widget=forms.CheckboxInput(attrs={'class': 'h-4 w-4 text-blue-600 border-gray-300 rounded',}),required=False)
+    
+    class Meta:
+        model = Employee
+        fields = ['organization','firstname','lastname','department','phone','cellphone','email','secondary_email','info','is_visible']
+    
 
 
 class TaskForm(forms.ModelForm):
