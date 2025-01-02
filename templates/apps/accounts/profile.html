@@ -1,0 +1,52 @@
+{% extends "_base.html" %}
+
+{% block content %}
+<div class="">
+  <div class="container mx-auto py-8">
+      <div class="grid grid-cols-4 sm:grid-cols-12 gap-6 px-4">
+          <div class="col-span-4 sm:col-span-3">
+              <div class="bg-white shadow rounded-lg p-6">
+                  <div class="flex flex-col items-center">
+                      <img src="https://randomuser.me/api/portraits/men/94.jpg" class="w-32 h-32 bg-gray-300 rounded-full mb-4 shrink-0">
+
+                      </img>
+                      <h1 class="text-xl font-bold">{% if user.is_authenticated %}
+                        {{user.last_name}} {{user.first_name}}
+                        </h1>
+                      <p class="text-gray-700">{{user.job_title}}</p>
+                      {% endif %}
+                      <div class="mt-6 flex flex-wrap gap-4 justify-center">
+                          <a href="#" class="bg-red-600 hover:bg-red-700 text-white py-2 px-4 rounded">Αλλαγή κωδικού</a>
+                          {% comment %} <a href="#" class="bg-gray-300 hover:bg-gray-400 text-gray-700 py-2 px-4 rounded">Resume</a> {% endcomment %}
+                      </div> 
+                  </div>
+                  <hr class="my-6 border-t border-gray-300">
+                  <div class="flex flex-col">
+                      <span class="text-indigo-600 text-base font-bold tracking-wider mb-2">Πληροφορίες</span>
+                      <ul class="text-gray-700">
+                          <li class="mb-2">Τηλέφωνο:</li>
+                          <li class="mb-2">Email:</li>
+                      </ul>
+                  </div>
+              </div>
+          </div>
+          <div class="col-span-4 sm:col-span-9">
+              <div class="form bg-white shadow rounded-lg p-6  space-y-4">
+                  <h2 class="text-xl font-bold mb-4">About Me</h2>
+                  <label for="username" class="text-sm font-medium text-gray-700">Όνομα χρήστη</label>
+                  <input 
+                  type="text" 
+                  id="job-title" 
+                  name="job-title" 
+                  value="{{user.email}}" 
+                  class="w-full px-4 py-2 border border-gray-300 rounded-lg bg-gray-100 text-gray-700 shadow-sm"
+                  readonly
+                />
+                <div class="divider divider-primary"></div>
+              </div>
+
+          </div>
+      </div>
+  </div>
+</div>
+{% endblock %}

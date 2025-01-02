@@ -16,9 +16,9 @@
 
 <!--Buttons-->
 <div class="">
-    <button id="openModal" class="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg">Νέος Οργανισμός</button>
-    <a href="{% url 'export_organization' %}" class="px-4 py-2.5 text-sm font-medium text-white transition-all duration-200 bg-green-600 hover:bg-green-700  rounded-lg group" title="Export">Export</a>
-    <a href="{% url 'in_active_pelatis' %}" class="px-4 py-2.5 text-sm font-medium text-white transition-all duration-200 bg-red-600 hover:bg-red-700  rounded-lg group" title="Ανενεργές εγγραφές">Ανενεργές εγγραφές</a>
+    <button id="openModal" class="px-4 py-2 text-base md:px-2 md:py-2 md:text-sm bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg font-medium">Νέος Οργανισμός</button>
+    <a href="{% url 'export_organization' %}" class="px-4 py-2.5 text-base  font-medium text-white transition-all duration-200 bg-green-600 hover:bg-green-700  rounded-lg group" title="Export">Export</a>
+    <a href="{% url 'in_active_pelatis' %}" class="px-4 py-2.5  font-medium text-white transition-all duration-200 bg-red-600 hover:bg-red-700  rounded-lg group" title="Ανενεργές εγγραφές">Ανενεργές εγγραφές</a>
 </div>
 <!--End Buttons-->
 
@@ -110,7 +110,7 @@
 
 <!--Organization Modal-->
 <div id="modal" class="fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center {% if not show_modal %}hidden{% endif %}">
-    <div class="bg-white rounded-lg p-6 w-full max-w-4xl">
+    <div class="bg-white rounded-lg p-4 sm:p-6 w-full max-w-sm sm:max-w-md md:max-w-4xl  max-h-[90vh] sm:max-h-[85vh] overflow-y-auto">
         <!-- Close Button -->
         <div class="relative">
             <button id="closeModal" class="absolute font-bold text-2xl top-2 right-2 text-red-600 hover:text-red-700">

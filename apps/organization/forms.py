@@ -37,7 +37,7 @@ class OrganizationForm(forms.ModelForm):
 
 
 class OrgEmployeeForm(forms.ModelForm):
-    organization = ModelChoiceField(queryset=Organization.objects.all(),
+    organization = ModelChoiceField(queryset=Organization.objects.filter(is_visible=True),
         widget=forms.Select(attrs={'class': 'mt-1 block w-full  rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50 text-gray-700'}),
         label='Μαθητής',
         required=True)
@@ -61,7 +61,7 @@ class OrgEmployeeForm(forms.ModelForm):
 
 
 class TaskForm(forms.ModelForm):
-    organization = ModelChoiceField(queryset=Organization.objects.all(),
+    organization = ModelChoiceField(queryset=Organization.objects.filter(is_visible=True),
         widget=forms.Select(attrs={'class': 'mt-1 block w-full  rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50 text-gray-700'}),
         label='Μαθητής',
         required=True)
@@ -79,7 +79,7 @@ class TaskForm(forms.ModelForm):
         widget=forms.Select(attrs={'class': 'mt-1 block w-full  rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50 text-gray-700'}),
         label='ACS',
         required=True)
-    org_employee = ModelChoiceField(queryset=Employee.objects.all(),widget=forms.Select(attrs={'class': 'mt-1 block w-full  rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50 text-gray-700'}),
+    org_employee = ModelChoiceField(queryset=Employee.objects.filter(is_visible=True),widget=forms.Select(attrs={'class': 'mt-1 block w-full  rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50 text-gray-700'}),
         label='ACS',
         required=True)
     class Meta:

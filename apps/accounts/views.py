@@ -5,6 +5,7 @@ from django.shortcuts import render, redirect
 from .forms import EmailAuthenticationForm
 from .password_change import password_change
 from django_filters.views import FilterView
+from django.views.generic import TemplateView
 from .models import Adeia
 from .filters import AdeiaFilter
 
@@ -42,3 +43,8 @@ class AdeiaListView(LoginRequiredMixin,FilterView):
     filterset_class = AdeiaFilter
     ordering = ['created']
     pagination = 10
+
+
+
+class AcsProfile(LoginRequiredMixin,TemplateView):
+    template_name = "apps/accounts/profile.html"
