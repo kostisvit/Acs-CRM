@@ -135,7 +135,7 @@
 
 <!--Employee Modal-->
 <div id="modal" class="fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center {% if not show_modal %}hidden{% endif %}">
-    <div class="bg-white rounded-lg p-6 w-full max-w-4xl">
+    <div class="bg-white rounded-lg p-4 sm:p-6 w-full max-w-sm sm:max-w-md md:max-w-4xl  max-h-[90vh] sm:max-h-[85vh] overflow-y-auto">
         <!-- Close Button -->
         <div class="relative">
             <button id="closeModal" class="absolute font-bold text-2xl top-2 right-2 text-red-600 hover:text-red-700">
@@ -156,17 +156,18 @@
             </div>
         
             <!-- Field 2 -->
-            <div>
-                <label for="address" class="block text-sm font-medium text-gray-700 dark:text-white">Όνομα<span class="text-red-600 ml-2">*</span></label>
-                {{form.firstname}} 
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-3">
+                <div>
+                    <label for="address" class="block text-sm font-medium text-gray-700 dark:text-white">Όνομα<span class="text-red-600 ml-2">*</span></label>
+                    {{form.firstname}} 
+                </div>
+            
+                <!-- Field 3 -->
+                <div>
+                    <label for="city" class="block text-sm font-medium text-gray-700 dark:text-white">Επώνυμο<span class="text-red-600 ml-2">*</span></label>
+                    {{form.lastname}} 
+                </div>
             </div>
-        
-            <!-- Field 3 -->
-            <div>
-                <label for="city" class="block text-sm font-medium text-gray-700 dark:text-white">Επώνυμο<span class="text-red-600 ml-2">*</span></label>
-                {{form.lastname}} 
-            </div>
-
             <!-- Field 4 -->
             <div>
                 <label for="phone" class="block text-sm font-medium text-gray-700 dark:text-white">Υπηρεσία</label>
@@ -174,17 +175,18 @@
             </div>
 
             <!-- Field 5 -->
-            <div>
-                <label for="email" class="block text-sm font-medium text-gray-700 dark:text-white">Τηλέφωνο Επιπκοινωνίας</label>
-                {{form.phone}} 
-            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-3">
+                <div>
+                    <label for="email" class="block text-sm font-medium text-gray-700 dark:text-white">Τηλέφωνο Επιπκοινωνίας</label>
+                    {{form.phone}} 
+                </div>
 
-            <!-- Field 6 -->
-            <div>
-                <label for="website" class="block text-sm font-medium text-gray-700 dark:text-white">Κινητό</label>
-                {{form.cellphone}} 
-            </div> 
-            
+                <!-- Field 6 -->
+                <div>
+                    <label for="website" class="block text-sm font-medium text-gray-700 dark:text-white">Κινητό</label>
+                    {{form.cellphone}} 
+                </div> 
+            </div>
             <!-- Field 6 -->
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-3">
                 <div>
@@ -199,7 +201,7 @@
 
             <div class="grid grid-cols-1 md:grid-cols-1 gap-4 mt-4">
                 <!-- Field 7 -->
-                <div>
+                <div id="infoSection" class="hidden mt-4">
                     <label for="info" class="block text-sm font-medium text-gray-700 dark:text-white">Πληροφορίες</label>
                     {{form.info}}
                 </div>
@@ -210,7 +212,11 @@
                 <label for="website" class="block text-sm font-medium text-gray-700 dark:text-white mt-5">Κατάσταση</label>
                 {{form.is_visible}} 
             </div>
-                
+            <div class="grid grid-cols-1 gap-4 mt-4">            <!-- Button to Toggle Notes Section -->
+                <button type="button" id="toggleNotesButton" class="px-4 py-2 mt-4 bg-indigo-600 text-white rounded-lg">
+                    Σημειώσεις
+                </button>
+            </div>
             <div class="flex justify-end mt-6">
                 <button type="submit" class="px-4 py-2 w-full bg-green-600 hover:bg-green-700 text-white rounded-lg">Αποθήκευση</button>
             </div>
@@ -308,5 +314,22 @@
         });
     }
 </script>
+<script>
+    // JavaScript to toggle the notes section
+    document.addEventListener("DOMContentLoaded", () => {
+        const toggleButton = document.getElementById("toggleNotesButton");
+        const infoSection = document.getElementById("infoSection");
+        const taskSection = document.getElementById("taskSection");
 
+        toggleButton.addEventListener("click", () => {
+            if (infoSection.classList.contains("hidden")) {
+                infoSection.classList.remove("hidden");
+                toggleButton.textContent = "Hide Notes";
+            } else {
+                infoSection.classList.add("hidden");
+                toggleButton.textContent = "Show Notes";
+            }
+        });
+    });
+</script>
 {% endblock %}

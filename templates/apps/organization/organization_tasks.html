@@ -128,7 +128,7 @@
 
 <!-- Modal -->
 <div id="modal" class="fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center hidden">
-    <div class="bg-white rounded-lg p-6 w-full max-w-4xl">
+    <div class="bg-white rounded-lg p-4 sm:p-6 w-full max-w-sm sm:max-w-md md:max-w-4xl  max-h-[90vh] sm:max-h-[85vh] overflow-y-auto">
         <!-- Close Button -->
         <div class="relative">
             <button id="closeModal" class="absolute font-bold text-2xl top-2 right-2 text-red-600 hover:text-red-700">
@@ -192,7 +192,7 @@
             </div>
             <div class="grid grid-cols-1 gap-4 mt-4">
                 <!-- Field 7 -->
-                <div>
+                <div id="taskSection">
                     <label for="info" class="block text-sm font-medium text-gray-700 dark:text-white">
                         Εργασία<span class="text-red-600 ml-2">*</span>
                     </label>
@@ -248,17 +248,20 @@
     });
 </script>
 <script>
-    // JavaScript to toggle the notes section
+    // JavaScript to toggle the notes and task sections
     document.addEventListener("DOMContentLoaded", () => {
         const toggleButton = document.getElementById("toggleNotesButton");
         const notesSection = document.getElementById("notesSection");
+        const taskSection = document.getElementById("taskSection");
 
         toggleButton.addEventListener("click", () => {
             if (notesSection.classList.contains("hidden")) {
                 notesSection.classList.remove("hidden");
+                taskSection.classList.add("hidden");
                 toggleButton.textContent = "Hide Notes";
             } else {
                 notesSection.classList.add("hidden");
+                taskSection.classList.remove("hidden");
                 toggleButton.textContent = "Show Notes";
             }
         });

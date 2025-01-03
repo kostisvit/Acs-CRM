@@ -8,19 +8,19 @@ from .forms import UserCreationForm
 class CustomUserAdmin(ImportExportModelAdmin):
     model = User
     add_form = UserCreationForm
-    list_display = ('id','email','display_company', 'first_name', 'last_name','job_title', 'is_staff', 'is_active')
+    list_display = ('id','email','display_company', 'first_name', 'last_name','job_title', 'is_staff', 'is_active','created','modified')
     list_filter = ('is_staff', 'is_active')
     readonly_fields = ()
     fieldsets = (
-        (None, {'fields': ('email','company','job_title')}),
+        (None, {'fields': ('email','company','job_title','days_sum','days_left')}),
         ('Personal info', {'fields': ('first_name', 'last_name', 'phone_number')}),
-        ('Permissions', {'fields': ('is_staff', 'is_active','groups', 'user_permissions')}),
+        ('Permissions', {'fields': ('is_staff','is_superuser','is_active','groups', 'user_permissions')}),
         ('Important dates', {'fields': ('last_login',)}),
     )
     add_fieldsets = (
         (None, {
             'classes': ('wide',),
-            'fields': ('first_name', 'last_name', 'email','job_title',  'is_staff','is_active','phone_number','groups', 'user_permissions')}
+            'fields': ('first_name', 'last_name', 'email','job_title','days_sum','days_left','is_superuser','is_staff','is_active','phone_number','groups', 'user_permissions')}
         ),
     )
     search_fields = ('email',)

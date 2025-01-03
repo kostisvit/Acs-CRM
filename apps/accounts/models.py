@@ -57,7 +57,7 @@ class CustomUserManager(BaseUserManager):
         return self.create_user(email, password, **extra_fields)
 
 
-class User(AbstractBaseUser, PermissionsMixin):
+class User(AbstractBaseUser, PermissionsMixin,TimeStampedModel):
     company = models.ManyToManyField(Company, related_name="users")
     email = models.EmailField(unique=True)
     first_name = models.CharField(max_length=30, blank=True)
@@ -65,7 +65,10 @@ class User(AbstractBaseUser, PermissionsMixin):
     job_title = models.CharField(max_length=60, blank=True)
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
+    is_superuser = models.BooleanField(default=False)
     phone_number = models.CharField(max_length=15, unique=True,null=True, blank=True)
+    days_sum = models.IntegerField(verbose_name="Ημέρες άδειας", null=False, blank=False, default='0')
+    days_left = models.IntegerField(verbose_name="Υπόλοιπο προηγούμενου έτους", null=False, blank=False, default='0')
     first_login = models.BooleanField(default=True)
 
     objects = CustomUserManager()
@@ -76,6 +79,8 @@ class User(AbstractBaseUser, PermissionsMixin):
     def __str__(self):
         return self.email
 
+    def total(self):  # Προσθέτει τον αριθμό ημερών άδειας του εργαζομένου με το υπόλοιπο του προηγούμενου έτους
+        return self.days_sum + self.days_left
 
 
 
