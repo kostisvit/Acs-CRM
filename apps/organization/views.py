@@ -15,6 +15,7 @@ from django.shortcuts import render
 from django.http import HttpResponse
 import datetime
 from django.core.paginator import Paginator
+from .forms import TaskForm
 
 
 ##################################################################################
@@ -108,6 +109,7 @@ def restore_organization(request, pk):
 
 ##################################################################################
 
+#Λίστα Επαφών Οργανισμού
 
 @login_required
 def org_employee_list(request):
@@ -149,20 +151,7 @@ def org_employee_list(request):
 
     return render(request, 'apps/organization/organization_contact.html', context)
 
-# Λίστα επαφών
-# class EpafiListView(LoginRequiredMixin, FilterView):
-#     model = Employee
-#     context_object_name = 'epafi_list'
-#     template_name = 'apps/organization/organization_contact.html'
-#     filterset_class = EpafiFilter
-#     ordering = ['lastname']
-#     paginate_by = 9
 
-#     def get_queryset(self):
-#         """
-#         Use the custom manager to filter inactive records (is_visible=False).
-#         """
-#         return Employee.objects.visible()
 
 
 #Διόρθωση εγγραφών πελατών
@@ -201,8 +190,8 @@ def restore_contact(request, pk):
 ##################################################################################
 
 # Λίστα Εργασιών Οργανισμού
-from .forms import TaskForm
 
+@login_required
 def organization_tasks(request):
     today = datetime.date.today()
 
@@ -241,8 +230,9 @@ def organization_tasks(request):
 
 ##################################################################################
 
+# Λίστα εφαρνογών
 
-
+@login_required
 def application_view(request):
     if request.method == 'POST':
         form = ApplicationForm(request.POST)
@@ -259,7 +249,11 @@ def application_view(request):
 
 
 
+##################################################################################
 
+#  API
+
+@login_required
 def api_dhmos(request, pk):
     employee_list = Employee.objects.all().filter(organization_id=pk,is_visible=True).order_by('lastname')
     employeesSerialized = serializers.serialize('json', employee_list, ensure_ascii=False)
