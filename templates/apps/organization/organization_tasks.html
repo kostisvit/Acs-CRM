@@ -7,16 +7,16 @@
 <!--Filter Form-->
 <form method="get" class="grid grid-cols-1 gap-4 mt-3 lg:flex lg:flex-wrap lg:items-center lg:gap-4">
     {% csrf_token %}
-    <div class="w-full lg:w-auto">
+    <div class="w-full lg:w-80">
         {{ filter.form.organization }}
     </div>
-    <div class="w-full lg:w-56">
+    <div class="w-full lg:w-80">
         {{ filter.form.jobtype }}
     </div>
-    <div class="w-full lg:w-64">
+    <div class="w-full lg:w-80">
         {{ filter.form.app }}
     </div>
-    <div class="w-full lg:w-auto">
+    <div class="w-full lg:w-80">
         {{ filter.form.employee }}
     </div>
     <div class="w-full lg:w-auto">
