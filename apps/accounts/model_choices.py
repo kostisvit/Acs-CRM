@@ -31,6 +31,11 @@ job_choice = (
 
 from django.db import models
 
+sex_choice = (
+    ('1', 'Άνδρας'),
+    ('2', 'Γυναίκα')
+)
+
 adeia_choice = (
     ('1', 'Κανονική'),
     ('2', 'Αναρρωτική'),

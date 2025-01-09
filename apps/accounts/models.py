@@ -62,6 +62,7 @@ class User(AbstractBaseUser, PermissionsMixin,TimeStampedModel):
     email = models.EmailField(unique=True)
     first_name = models.CharField(max_length=30, blank=True)
     last_name = models.CharField(max_length=30, blank=True)
+    sex_choice = models.CharField(max_length=10, choices=sex_choice, verbose_name='Φύλο', blank=True)
     job_title = models.CharField(max_length=60, blank=True)
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)

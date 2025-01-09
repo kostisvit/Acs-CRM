@@ -253,3 +253,14 @@ def application_view(request):
     form = ApplicationForm()
     applications = Application.objects.all().order_by('-id')  # Show newest first
     return render(request, 'apps/parameters/application.html', {'form': form, 'applications': applications})
+    
+    
+
+
+
+
+
+def api_dhmos(request, pk):
+    employee_list = Employee.objects.all().filter(organization_id=pk,is_visible=True).order_by('lastname')
+    employeesSerialized = serializers.serialize('json', employee_list, ensure_ascii=False)
+    return JsonResponse(json.loads(employeesSerialized), safe=False)

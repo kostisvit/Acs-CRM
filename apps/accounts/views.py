@@ -68,5 +68,3 @@ def update_profile(request):
 
     return render(request, 'apps/accounts/profile.html', {'form': form})
 
-
-

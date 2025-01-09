@@ -267,4 +267,42 @@
         });
     });
 </script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", init);
+  
+    function init() {
+      var organization_input = document.getElementById("id_organization");
+  
+      organization_input.addEventListener("change", search_epafi);
+    }
+  
+    function search_epafi() {
+      var value = this[this.selectedIndex].value;
+  
+      $.ajax({
+        url: "/api/ergasies-update/dhmoi-epafes/" + value,
+        success: function (data) {
+          populateEpafes(data);
+        },
+        error: function (error) {
+          console.log(error);
+        },
+      });
+    }
+    // <option value="134">Αγγελοπούλου Γεωργία</option>
+    function populateEpafes(employees) {
+      var allOptions = '<option value="">---------</option>';
+      employee.forEach(function (employee) {
+        var fname = employee.fields.firstname;
+        var lname = employee.fields.lastname;
+        var fullName = lname + " " + fname;
+  
+        allOptions +=
+          '<option value="' + employee.pk + '">' + fullName + "</option>";
+      });
+  
+      $("#id_name").html(allOptions);
+    }
+  </script>
 {% endblock %}
