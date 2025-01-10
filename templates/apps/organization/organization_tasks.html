@@ -7,23 +7,41 @@
 <!--Filter Form-->
 <form method="get" class="grid grid-cols-1 gap-4 mt-3 lg:flex lg:flex-wrap lg:items-center lg:gap-4">
     {% csrf_token %}
-    <div class="w-full lg:w-auto">
+    
+    <!-- Organization Filter -->
+    <div class="w-full lg:w-auto flex-1">
         {{ filter.form.organization }}
     </div>
-    <div class="w-full lg:w-56">
+
+    <!-- Job Type Filter -->
+    <div class="w-full lg:w-64 flex-1">
         {{ filter.form.jobtype }}
     </div>
-    <div class="w-full lg:w-64">
+
+    <!-- App Filter -->
+    <div class="w-full lg:w-64 flex-1">
         {{ filter.form.app }}
     </div>
-    <div class="w-full lg:w-auto">
+
+    <!-- Employee Filter -->
+    <div class="w-full lg:w-64 flex-1">
         {{ filter.form.employee }}
     </div>
-    <div class="w-full lg:w-auto">
+
+    <!-- Import Date Filter -->
+    <div class="w-full lg:w-auto flex-1">
         {{ filter.form.importdate }}
     </div>
-    <button type="submit" class="block text-center mt-1 sm:w-44 py-2 border text-gray-700 bg-yellow-400 hover:bg-yellow-500 rounded-lg focus:ring-indigo-600 focus:border-indigo-600 sm:text-sm font-bold">Αναζήτηση</button>
+
+    <!-- Submit Button -->
+    <div class="w-full lg:w-auto">
+        <button type="submit" 
+                class="block w-full lg:w-auto text-center mt-1 py-2 px-4 border text-gray-700 bg-yellow-400 hover:bg-yellow-500 rounded-lg focus:ring-indigo-600 focus:border-indigo-600 sm:text-sm font-bold">
+            Αναζήτηση
+        </button>
+    </div>
 </form>
+
 <!--End Filter Form-->
 
 <div class="divider divider-primary"></div>
