@@ -2,12 +2,15 @@ from django.shortcuts import render
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import render, redirect
-from .forms import EmailAuthenticationForm, UserUpdateForm
+from .forms import AdeiaForm, EmailAuthenticationForm, UserUpdateForm
 from .password_change import password_change
 from django_filters.views import FilterView
 from django.views.generic import TemplateView
 from .models import Adeia
 from .filters import AdeiaFilter
+from django.contrib import messages
+from django.core.paginator import Paginator
+from django.http import JsonResponse
 
 # Login user function
 def custom_login_view(request):
@@ -36,13 +39,39 @@ def custom_logout(request):
 
 
 ##########################################################################
-class AdeiaListView(LoginRequiredMixin,FilterView):
-    model = Adeia
-    template_name = "apps/accounts/adeia.html"
-    context_object_name = "adeia_list"
-    filterset_class = AdeiaFilter
-    ordering = ['created']
-    pagination = 10
+
+def adeia_list(request):
+    adeia_list = Adeia.objects.all()
+    adeia_filter = AdeiaFilter(request.GET, queryset=adeia_list)
+    
+    paginator = Paginator(adeia_filter.qs, 10)  # 10 tasks per page
+    page_number = request.GET.get('page')  # Get the page number from the request
+    page_obj = paginator.get_page(page_number)
+    
+    filter_params = request.GET.copy()  # Copy request.GET to preserve existing filters
+    if filter_params.get('page'):
+        filter_params.pop('page')
+    form = AdeiaForm() 
+    show_modal = False
+    if request.method == "POST":
+        form = AdeiaForm(request.POST) 
+        if form.is_valid():
+            form.author = request.user
+            form.save()
+            return JsonResponse({"success": True})
+        else:
+            return JsonResponse({"success": False, "errors": form.errors})
+    else:
+        form = AdeiaForm(initial={'acs_employee': request.user})
+    
+    context = {
+        'adeia_list': page_obj,
+        'filter': adeia_filter,
+        'filter_params': filter_params.urlencode(),
+        'form': form,  
+        'show_modal': show_modal,
+    }
+    return render(request, 'apps/accounts/adeia.html', context)
 
 
 
@@ -52,7 +81,7 @@ class AcsProfile(LoginRequiredMixin,TemplateView):
 
 
 
-from django.contrib import messages
+
 
 def update_profile(request):
     if request.method == 'POST':

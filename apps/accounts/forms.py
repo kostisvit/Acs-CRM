@@ -4,9 +4,9 @@ from django.contrib.auth import get_user_model
 from django.contrib.auth.forms import AuthenticationForm
 from django.core.exceptions import ValidationError
 from django.forms import ModelChoiceField
-from .models import Company
+from .models import Company,Adeia
 from django.contrib.auth.forms import UserCreationForm
-
+from .model_choices import adeia_choice
 
 UserModel = get_user_model()
 
@@ -86,3 +86,27 @@ class UserUpdateForm(forms.ModelForm):
     class Meta:
         model = get_user_model()
         fields = ('phone_number','days_left','days_sum')
+
+from django.contrib import admin
+
+class AdeiaForm(forms.ModelForm):
+    acs_employee = ModelChoiceField(queryset=get_user_model().objects.all().filter(is_active=True),empty_label='Επιλέξτε εταιρεία...',
+        widget=forms.Select(attrs={'class': 'mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50 text-gray-700'}),label='ACS',required=True)
+    adeiatype = forms.ChoiceField(choices=adeia_choice,
+        widget=forms.Select(attrs={'class': 'mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50 text-gray-700'}),label='Τύπος Άδειας',required=True)
+    start_date = forms.DateField(
+        widget=forms.DateInput(attrs={'type': 'date','placeholder': 'ΗΗ/ΜΜ/ΕΕΕΕ', 'class': 'mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50 text-gray-700'}),
+        required=True)
+    end_date = forms.DateField(
+        widget=forms.DateInput(attrs={'type': 'date','class': 'mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50 text-gray-700','placeholder': 'YYYY-MM-DD',}),
+        required=True)
+    days = forms.IntegerField(widget=forms.NumberInput(attrs={'class':'block w-56 rounded-md border-0 py-1.5 text-gray-700 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6'}),required=True)
+    
+    class Meta:
+        model = Adeia
+        fields = ('acs_employee','adeiatype','start_date','end_date','days')
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['days'].widget.attrs['readonly'] = True  # Make 'days' readonly # Make 'days' readonly
+  # Add custom JavaScript file

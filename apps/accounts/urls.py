@@ -4,7 +4,7 @@ from django.urls import path
 from django.contrib.auth import views as auth_views
 from .forms import EmailAuthenticationForm
 from . import views
-from .views import AdeiaListView,AcsProfile
+from .views import adeia_list,AcsProfile
 
 urlpatterns = [
     path('accounts/login/', views.custom_login_view, name='login'),
@@ -13,6 +13,6 @@ urlpatterns = [
     path('accounts/update-profile/', views.update_profile, name='update_profile'),
     
     #acs_employees
-    path("acs/adeia", AdeiaListView.as_view(), name="acs-adeies"),
+    path("acs/adeia", views.adeia_list, name="acs-adeies"),
     path("acs/user/profile", AcsProfile.as_view(), name="profile")
 ]
