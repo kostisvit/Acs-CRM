@@ -111,8 +111,7 @@
                 </td>
                 <td class="px-4 py-2" data-label="Ενέργειες">
                     <div class="flex space-x-2">
-                        <a href="#" class="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-lg dark:bg-red-600 dark:hover:bg-red-700 focus:outline-none dark:focus:ring-red-800" 
-                           onclick="return confirm('Είστε σίγουροι για την απενεργοποίηση του Φορέα;');">Del</a>
+                        <a href="{{ task.get_absolute_url_delete }}" class="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-lg dark:bg-red-600 dark:hover:bg-red-700 focus:outline-none dark:focus:ring-red-800" >Del</a>
                         <button onclick="saveChanges({{ ergasies.id }})" 
                                 class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded-lg dark:bg-indigo-600 dark:hover:bg-indigo-700 focus:outline-none dark:focus:ring-indigo-800">Save</button>
                     </div>
@@ -159,28 +158,28 @@
             <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
                 <!-- Field 1 -->
                 <div>
-                    <label for="organization" class="block text-sm font-medium text-gray-700 dark:text-white">
+                    <label for="id_organization" class="block text-sm font-medium text-gray-700 dark:text-white">
                         Οργανισμός<span class="text-red-600 ml-2">*</span>
                     </label>
                     {{form.organization}}
                 </div>
                 <!-- Field 2 -->
                 <div>
-                    <label for="org_employee" class="block text-sm font-medium text-gray-700 dark:text-white">
+                    <label for="id_org_employee" class="block text-sm font-medium text-gray-700 dark:text-white">
                         Υπάλληλος<span class="text-red-600 ml-2">*</span>
                     </label>
                     {{form.org_employee}}
                 </div>
                 <!-- Field 3 -->
                 <div>
-                    <label for="importdate" class="block text-sm font-medium text-gray-700 dark:text-white">
+                    <label for="id_importdate" class="block text-sm font-medium text-gray-700 dark:text-white">
                         Καταχώρηση<span class="text-red-600 ml-2">*</span>
                     </label>
                     {{form.importdate}}
                 </div>
                 <!-- Field 4 -->
                 <div>
-                    <label for="app" class="block text-sm font-medium text-gray-700 dark:text-white">
+                    <label for="id_app" class="block text-sm font-medium text-gray-700 dark:text-white">
                         Εφαρμογή<span class="text-red-600 ml-2">*</span>
                     </label>
                     {{form.app}}
@@ -189,20 +188,20 @@
             <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 mt-4">
                 <!-- Field 5 -->
                 <div>
-                    <label for="time" class="block text-sm font-medium text-gray-700 dark:text-white">
+                    <label for="id_time" class="block text-sm font-medium text-gray-700 dark:text-white">
                         Διάρκεια<span class="text-red-600 ml-2">*</span>
                     </label>
                     {{form.time}}
                 </div>
                 <div>
-                    <label for="jobtype" class="block text-sm mt-1 font-medium text-gray-700 dark:text-white">
+                    <label for="id_jobtype" class="block text-sm mt-1 font-medium text-gray-700 dark:text-white">
                         Τύπος<span class="text-red-600 ml-2">*</span>
                     </label>
                     {{form.jobtype}}
                 </div>
                 <!-- Field 6 -->
                 <div>
-                    <label for="text" class="block text-sm font-medium text-gray-700 dark:text-white">
+                    <label for="id_text" class="block text-sm font-medium text-gray-700 dark:text-white">
                         ACS<span class="text-red-600 ml-2">*</span>
                     </label>
                     {{form.employee}}
@@ -211,17 +210,17 @@
             <div class="grid grid-cols-1 gap-4 mt-4">
                 <!-- Field 7 -->
                 <div id="taskSection">
-                    <label for="info" class="block text-sm font-medium text-gray-700 dark:text-white">
+                    <label for="id_info" class="block text-sm font-medium text-gray-700 dark:text-white">
                         Εργασία<span class="text-red-600 ml-2">*</span>
                     </label>
                     {{form.info}}
                 </div>
             </div>
-            <div class="grid grid-cols-1 gap-4 mt-4">
+            <div class="grid grid-cols-1 gap-4">
                 <!-- Field 8 -->
             <!-- Hidden Notes Section -->
-            <div id="notesSection" class="hidden mt-4">
-                <label for="text" class="block text-sm font-medium text-gray-700 dark:text-white">
+            <div id="notesSection" class="hidden">
+                <label for="id_text" class="block text-sm font-medium text-gray-700 dark:text-white">
                     Σημειώσεις
                 </label>
                 {{form.text}}
@@ -311,7 +310,7 @@
     // <option value="134">Αγγελοπούλου Γεωργία</option>
     function populateEpafes(employees) {
       var allOptions = '<option value="">---------</option>';
-      employee.forEach(function (employee) {
+      employees.forEach(function (employee) {
         var fname = employee.fields.firstname;
         var lname = employee.fields.lastname;
         var fullName = lname + " " + fname;

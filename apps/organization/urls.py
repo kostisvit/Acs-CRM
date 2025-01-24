@@ -2,7 +2,7 @@ from . import views
 from django.urls import path
 #class based views
 from .views import OrganizationListViewVisibleFalse,export_organization_data
-# from .delete_records import AithmaDeleteView,ForeasDeleteView,ContactDeleteView,ErgasiaDeleteView,AdeiaDeleteView,ServiceDeleteView,SellCornfirmDelete,TrainingDeleteView,HardwareDeleteView
+from .delete_view import ErgasiesDeleteView
 # from .search import HomePageSearchListView
 # from .update_records import AdeiaUpdateView
 
@@ -57,7 +57,7 @@ urlpatterns = [
 #     # delete records
 #     path('delete-pelatis/<int:pk>/',ForeasDeleteView.as_view(), name='delete_pelatis'),
 #     path('delete-epafi/<int:pk>/', ContactDeleteView.as_view(), name='delete_epafi'),
-#     path('delete-ergasia/<int:pk>/',ErgasiaDeleteView.as_view(), name='delete_ergasia'),
+      path('<int:pk>/delete/', ErgasiesDeleteView.as_view(),  name='delete_ergasia'),
 #     path('delete_adeia/<int:pk>/', AdeiaDeleteView.as_view(), name='delete_adeia'),
 #     path('delete_aithma/<int:pk>/', AithmaDeleteView.as_view(), name='delete_aithma'),
 #     path('delete_polisi/<int:pk>/', SellCornfirmDelete.as_view(), name='delete_polisi'),

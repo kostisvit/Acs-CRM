@@ -16,6 +16,9 @@ from django.http import HttpResponse
 import datetime
 from django.core.paginator import Paginator
 from .forms import TaskForm
+from django.core import serializers
+from .delete_view import *
+
 
 
 ##################################################################################
@@ -196,7 +199,7 @@ def organization_tasks(request):
     today = datetime.date.today()
 
     # Step 1: Get the filtered queryset
-    task_list = Ergasies.objects.filter(importdate__year=today.year)
+    task_list = Ergasies.objects.filter(importdate__year=today.year,employee=request.user)
     task_filter = TaskFilter(request.GET, queryset=task_list)
 
     # Step 2: Apply pagination
@@ -252,7 +255,6 @@ def application_view(request):
 ##################################################################################
 
 #  API
-
 @login_required
 def api_dhmos(request, pk):
     employee_list = Employee.objects.all().filter(organization_id=pk,is_visible=True).order_by('lastname')

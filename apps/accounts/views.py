@@ -11,6 +11,7 @@ from .filters import AdeiaFilter
 from django.contrib import messages
 from django.core.paginator import Paginator
 from django.http import JsonResponse
+import datetime
 
 # Login user function
 def custom_login_view(request):
@@ -41,7 +42,9 @@ def custom_logout(request):
 ##########################################################################
 
 def adeia_list(request):
-    adeia_list = Adeia.objects.all()
+    today = datetime.date.today()
+    
+    adeia_list = Adeia.objects.filter(startdate__year=today.year,acs_employee=request.user)
     adeia_filter = AdeiaFilter(request.GET, queryset=adeia_list)
     
     paginator = Paginator(adeia_filter.qs, 10)  # 10 tasks per page

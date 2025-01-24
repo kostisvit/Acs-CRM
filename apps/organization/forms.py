@@ -63,7 +63,6 @@ class OrgEmployeeForm(forms.ModelForm):
 class TaskForm(forms.ModelForm):
     organization = ModelChoiceField(queryset=Organization.objects.filter(is_visible=True),
         widget=forms.Select(attrs={'class': 'mt-1 block w-full  rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50 text-gray-700'}),
-        label='Μαθητής',
         required=True)
     importdate = forms.DateField(
         widget=forms.DateInput(attrs={'type': 'date','class': 'block w-full rounded-md mt-1   text-gray-700 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6','placeholder': 'YYYY-MM-DD',}),
@@ -82,9 +81,10 @@ class TaskForm(forms.ModelForm):
     org_employee = ModelChoiceField(queryset=Employee.objects.filter(is_visible=True),widget=forms.Select(attrs={'class': 'mt-1 block w-full  rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50 text-gray-700'}),
         label='ACS',
         required=True)
+    
     class Meta:
         model = Ergasies
-        fields = ['organization','importdate','app','jobtype','info','text','time','employee']
+        fields = ['organization','importdate','app','jobtype','info','text','time','employee','org_employee']
         widgets = {
             'jobtype': forms.Select(attrs={'class': 'block w-full px-4 py-2 border rounded-lg'}),
         }

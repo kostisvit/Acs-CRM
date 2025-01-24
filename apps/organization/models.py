@@ -110,7 +110,7 @@ class Ergasies(models.Model):
     time = models.FloatField(verbose_name='Διάρκεια',null=True, blank=True)
     org_employee = models.ForeignKey('Employee', on_delete=models.CASCADE, verbose_name='Πελάτης',null=True, blank=False)
     ticketid = models.CharField(max_length=50, verbose_name='Αίτημα OTS', blank=True)
-    old_id = models.IntegerField(verbose_name='old_id', null=True, blank=False)
+    old_id = models.IntegerField(verbose_name='old_id', null=True, blank=True)
     
     class Meta:
         indexes = [models.Index(fields=['importdate', 'employee'])]
@@ -128,11 +128,11 @@ class Ergasies(models.Model):
     def get_symbasi(self):
         return ",".join([str(p) for p in self.symbasi.all()])
 
-    def get_absolute_url(self):
-        return reverse('ergasia_update', args=[str(self.id)])
+    # def get_absolute_url(self):
+    #     return reverse('ergasia_update', args=[str(self.id)])
     
-    def get_absolute_url_copy_paste(self):
-        return reverse('ergasia_copy_paste', args=[str(self.id)])
+    # def get_absolute_url_copy_paste(self):
+    #     return reverse('ergasia_copy_paste', args=[str(self.id)])
 
     def get_absolute_url_delete(self):
         return reverse('delete_ergasia', args=[str(self.id)])
