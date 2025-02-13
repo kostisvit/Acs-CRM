@@ -65,7 +65,7 @@ class Organization(TimeStampedModel):
 
 
 
-class Employee(models.Model):
+class Employee(TimeStampedModel):
     organization = models.ForeignKey('Organization', on_delete=models.CASCADE, verbose_name='Πελάτης', null=True)
     firstname = models.CharField(max_length=150, verbose_name='Όνομα', null=True)
     lastname = models.CharField(max_length=150, verbose_name='Επώνυμο', null=True)
@@ -99,7 +99,7 @@ class Employee(models.Model):
         self.save()
 
 
-class Ergasies(models.Model):
+class Ergasies(TimeStampedModel):
     organization = models.ForeignKey('Organization', on_delete=models.CASCADE, verbose_name='Πελάτης')
     importdate = models.DateField(default=datetime.date.today, verbose_name='Ημ. Κατ.', db_index=True)
     app = models.CharField(max_length=100, choices=app_choice,verbose_name='Εφαρμογή', blank=True)

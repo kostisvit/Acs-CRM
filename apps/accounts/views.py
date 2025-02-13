@@ -14,6 +14,8 @@ from django.http import JsonResponse
 import datetime
 
 # Login user function
+
+
 def custom_login_view(request):
     if request.method == 'POST':
         form = EmailAuthenticationForm(request, data=request.POST)
@@ -23,14 +25,14 @@ def custom_login_view(request):
             user = authenticate(request, email=email, password=password)
             if user is not None:
                 login(request, user)
-                return redirect('home')  # Redirect to home page after successful login
+                # Redirect to home page after successful login
+                return redirect('home')
         else:
             # If the form is invalid, the error message will be shown on the form
             return render(request, 'apps/accounts/login.html', {'form': form})
     else:
         form = EmailAuthenticationForm()
     return render(request, 'apps/accounts/login.html', {'form': form})
-
 
 
 # Logout user function
@@ -43,21 +45,24 @@ def custom_logout(request):
 
 def adeia_list(request):
     today = datetime.date.today()
-    
-    adeia_list = Adeia.objects.filter(startdate__year=today.year,acs_employee=request.user)
+
+    adeia_list = Adeia.objects.filter(
+        startdate__year=today.year, acs_employee=request.user)
     adeia_filter = AdeiaFilter(request.GET, queryset=adeia_list)
-    
+
     paginator = Paginator(adeia_filter.qs, 10)  # 10 tasks per page
-    page_number = request.GET.get('page')  # Get the page number from the request
+    # Get the page number from the request
+    page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
-    
-    filter_params = request.GET.copy()  # Copy request.GET to preserve existing filters
+
+    # Copy request.GET to preserve existing filters
+    filter_params = request.GET.copy()
     if filter_params.get('page'):
         filter_params.pop('page')
-    form = AdeiaForm() 
+    form = AdeiaForm()
     show_modal = False
     if request.method == "POST":
-        form = AdeiaForm(request.POST) 
+        form = AdeiaForm(request.POST)
         if form.is_valid():
             form.author = request.user
             form.save()
@@ -66,24 +71,19 @@ def adeia_list(request):
             return JsonResponse({"success": False, "errors": form.errors})
     else:
         form = AdeiaForm(initial={'acs_employee': request.user})
-    
+
     context = {
         'adeia_list': page_obj,
         'filter': adeia_filter,
         'filter_params': filter_params.urlencode(),
-        'form': form,  
+        'form': form,
         'show_modal': show_modal,
     }
     return render(request, 'apps/accounts/adeia.html', context)
 
 
-
-class AcsProfile(LoginRequiredMixin,TemplateView):
+class AcsProfile(LoginRequiredMixin, TemplateView):
     template_name = "apps/accounts/profile.html"
-
-
-
-
 
 
 def update_profile(request):
@@ -92,11 +92,11 @@ def update_profile(request):
         if form.is_valid():
             form.save()
             messages.success(request, 'Your phone number has been updated.')
-            return redirect('profile')  # Change 'profile' to your desired redirect URL
+            # Change 'profile' to your desired redirect URL
+            return redirect('profile')
         else:
             messages.error(request, 'Please correct the error below.')
     else:
         form = UserUpdateForm(instance=request.user)
 
     return render(request, 'apps/accounts/profile.html', {'form': form})
-

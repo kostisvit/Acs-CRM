@@ -43,7 +43,7 @@ class OrganizationAdmin(ImportExportModelAdmin):
 
 
 class EmployeeAdmin(ImportExportModelAdmin):
-    list_display = ('id','organization', 'lastname', 'firstname','tmhma', 'phone', 'email', 'is_visible')
+    list_display = ('id','organization', 'lastname', 'firstname','tmhma', 'phone', 'email', 'is_visible','old_id','created','modified')
     list_filter = ['is_visible', 'tmhma', 'organization']
     search_fields = ['lastname']
     actions = ['make_visible', 'make_unvisible']
@@ -72,7 +72,7 @@ class ErgasiesResource(resources.ModelResource):
 
 class ErgasiesAdmin(ImportExportModelAdmin):
     date_hierarchy = 'importdate'
-    list_display = ('organization', 'importdate','app','employee','jobtype', 'info','org_employee','time','ticketid','old_id')
+    list_display = ('organization', 'importdate','app','employee','jobtype', 'info','org_employee','time','ticketid','old_id','created','modified')
     search_fields = ['organization','info' ]
     list_filter = ['employee', 'organization', 'jobtype', 'app']
     list_select_related = ['employee','organization']
@@ -83,7 +83,7 @@ class ErgasiesAdmin(ImportExportModelAdmin):
 
 
 class AppAdmin(admin.ModelAdmin):
-    list_display = ('title','description')
+    list_display = ('title','description','is_active','created','modified')
     
 
 class DepartmentAdmin(admin.ModelAdmin):

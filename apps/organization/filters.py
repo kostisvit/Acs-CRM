@@ -131,7 +131,7 @@ class TaskFilter(django_filters.FilterSet):
         model = Ergasies
         fields = ['organization', 'app', 'employee', 'jobtype', 'importdate']
 
-    # def __init__(self, *args, **kwargs):
-    #     super(TaskFilter, self).__init__(*args, **kwargs)
-    #     if self.data == {}:
-    #         self.queryset = self.queryset.none()
+    def __init__(self, *args, **kwargs):
+        super(TaskFilter, self).__init__(*args, **kwargs)
+        if self.data == {}:
+            self.queryset = self.queryset.none()

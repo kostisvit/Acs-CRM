@@ -101,14 +101,14 @@ def soft_delete_organization(request, pk):
     """Soft delete"""
     organization = get_object_or_404(Organization, pk=pk)
     organization.delete()
-    return redirect('pelatis')
+    return redirect('organization_list')
     
 @login_required
 def restore_organization(request, pk):
     """Restore a soft-deleted product."""
     organization = get_object_or_404(Organization, pk=pk)
     organization.restore()
-    return redirect('pelatis')
+    return redirect('organization_list')
 
 ##################################################################################
 
@@ -182,13 +182,13 @@ def soft_delete_contact(request, pk):
     """Soft delete"""
     employee = get_object_or_404(Employee, pk=pk)
     employee.delete()
-    return redirect('contact')
+    return redirect('org_employee')
 
 def restore_contact(request, pk):
     """Restore a soft-deleted product."""
     employee = get_object_or_404(Employee, pk=pk)
     employee.restore()
-    return redirect('contact')
+    return redirect('org_employee')
 
 ##################################################################################
 
@@ -199,7 +199,7 @@ def organization_tasks(request):
     today = datetime.date.today()
 
     # Step 1: Get the filtered queryset
-    task_list = Ergasies.objects.filter(importdate__year=today.year,employee=request.user)
+    task_list = Ergasies.objects.filter(employee=request.user)
     task_filter = TaskFilter(request.GET, queryset=task_list)
 
     # Step 2: Apply pagination
