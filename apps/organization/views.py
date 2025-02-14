@@ -55,7 +55,7 @@ def organization_list(request):
 
     # Step 4: Render the template with context
     context = {
-        'organization_list': page_obj,
+        'page_obj': page_obj,
         'filter': organization_filter,
         'filter_params': filter_params.urlencode(),
         'form': form,  # Pass the form (valid or with errors)
@@ -221,7 +221,7 @@ def organization_tasks(request):
         form = TaskForm()
     # Step 4: Render the template with context
     context = {
-        'task_list': page_obj,
+        'page_obj': page_obj,
         'filter': task_filter,
         'filter_params': filter_params.urlencode(),
         'form': form, # Pass the encoded filter query params
@@ -230,6 +230,38 @@ def organization_tasks(request):
 
     return render(request, 'apps/organization/organization_tasks.html', context)
 
+@login_required
+def edit_task(request, task_id):
+    if request.method == 'POST':
+        data = json.loads(request.body)
+        task = get_object_or_404(Ergasies, id=task_id)
+        task.info = data.get('info')
+        task.importdate =  data.get('importdate')
+        # ergasies.lastname = data.get('lastname')
+        # ergasies.tmhma = data.get('tmhma')
+        # ergasies.phone = data.get('phone')
+        # ergasies.cellphone = data.get('cellphone')
+        # ergasies.email = data.get('email')
+        # ergasies.secondary_email = data.get('secondary_email')
+        
+        # ergasies.is_visible = data.get('is_visible')
+        task.save()
+        return JsonResponse({'status': 'success'})
+
+    return JsonResponse({'status': 'failed'}, status=400)
+
+
+def soft_delete_task(request, pk):
+    """Soft delete"""
+    task = get_object_or_404(Ergasies, pk=pk)
+    task.delete()
+    return redirect('tasks')
+
+def restore_task(request, pk):
+    """Restore a soft-deleted product."""
+    task = get_object_or_404(Ergasies, pk=pk)
+    task.restore()
+    return redirect('tasks')
 
 ##################################################################################
 

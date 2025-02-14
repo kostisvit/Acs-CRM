@@ -20,8 +20,9 @@ urlpatterns = [
     path('acs-services/contact/', views.org_employee_list, name='org_employee'),
     path('acs-services/edit/contact/<int:employee_id>/',views.edit_contact, name='edit_contact'),
     path('acs-services/delete/contact/<int:pk>/',views.soft_delete_contact, name='soft_delete_contact'),
+    #Tasks
     path('acs-services/organization/tasks', views.organization_tasks, name='tasks'),
-
+    path('acs-services/edit/task/<int:task_id>/',views.edit_task, name='edit_task'),
     #Parameter
     path('acs-services/applications/', views.application_view, name='application_view'),
 #     path('acs-services/update/task/<int:pk>/',views.ergasia_update, name='ergasia_update'),
