@@ -145,7 +145,7 @@ def org_employee_list(request):
 
     # Step 4: Render the template with context
     context = {
-        'org_employee_list': page_obj,
+        'page_obj': page_obj,
         'filter': org_employee_filter,
         'filter_params': filter_params.urlencode(),
         'form': form,  # Pass the form (valid or with errors)
@@ -292,3 +292,9 @@ def api_dhmos(request, pk):
     employee_list = Employee.objects.all().filter(organization_id=pk,is_visible=True).order_by('lastname')
     employeesSerialized = serializers.serialize('json', employee_list, ensure_ascii=False)
     return JsonResponse(json.loads(employeesSerialized), safe=False)
+
+@login_required
+def api_dhmos_update(request, pk):
+    allepafes = Employee.objects.all().filter(organization_id=pk,is_visible=True).order_by('lastname')
+    epafesSerialized = serializers.serialize('json', allepafes, ensure_ascii=False)
+    return JsonResponse(json.loads(epafesSerialized), safe=False)

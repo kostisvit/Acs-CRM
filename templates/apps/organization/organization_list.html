@@ -70,19 +70,54 @@
             </tbody>
         </table>
     </div>
-        <!-- Centered Pagination Controls -->
-        <div class="flex justify-center items-center mt-6 space-x-2">
-            <!-- Previous Page Link -->
-            {% if page_obj.has_previous %}
-                <a href="?{{ request.GET.urlencode }}&page={{ page_obj.previous_page_number }}" 
-                class="px-4 py-2 bg-gray-200 text-gray-700 rounded hover:bg-gray-300 font-medium">
-                    Previous
+       <!-- Centered Pagination Controls -->
+<div class="flex justify-center items-center mt-6 space-x-2">
+    <!-- Previous Page Link -->
+    {% if page_obj.has_previous %}
+        <a href="?{{ request.GET.urlencode }}&page={{ page_obj.previous_page_number }}" 
+        class="px-4 py-2 bg-gray-200 text-gray-700 rounded hover:bg-gray-300 font-medium">
+            Previous
+        </a>
+    {% else %}
+        <span class="px-4 py-2 bg-gray-100 text-gray-400 rounded font-medium">Previous</span>
+    {% endif %}
+
+    <!-- Page Numbers with Limitation -->
+    {% with total_pages=page_obj.paginator.num_pages %}
+        {% if total_pages > 5 %}
+            {% if page_obj.number > 3 %}
+                <a href="?{{ request.GET.urlencode }}&page=1" 
+                class="px-4 py-2 bg-gray-200 text-gray-700 font-medium rounded hover:bg-gray-300">
+                    1
                 </a>
-            {% else %}
-                <span class="px-4 py-2 bg-gray-100 text-gray-400 rounded font-medium">Previous</span>
+                {% if page_obj.number > 4 %}
+                    <span class="px-4 py-2 text-gray-500">...</span>
+                {% endif %}
             {% endif %}
 
-            <!-- Page Numbers -->
+            {% for num in page_obj.paginator.page_range %}
+                {% if num >= page_obj.number|add:"-2" and num <= page_obj.number|add:"2" %}
+                    {% if page_obj.number == num %}
+                        <span class="px-4 py-2 bg-blue-700 text-white rounded font-medium">{{ num }}</span>
+                    {% else %}
+                        <a href="?{{ request.GET.urlencode }}&page={{ num }}" 
+                        class="px-4 py-2 bg-gray-200 text-gray-700 font-medium rounded hover:bg-gray-300">
+                            {{ num }}
+                        </a>
+                    {% endif %}
+                {% endif %}
+            {% endfor %}
+
+            {% if page_obj.number < total_pages|add:"-2" %}
+                {% if page_obj.number < total_pages|add:"-3" %}
+                    <span class="px-4 py-2 text-gray-500">...</span>
+                {% endif %}
+                <a href="?{{ request.GET.urlencode }}&page={{ total_pages }}" 
+                class="px-4 py-2 bg-gray-200 text-gray-700 font-medium rounded hover:bg-gray-300">
+                    {{ total_pages }}
+                </a>
+            {% endif %}
+        {% else %}
             {% for num in page_obj.paginator.page_range %}
                 {% if page_obj.number == num %}
                     <span class="px-4 py-2 bg-blue-700 text-white rounded font-medium">{{ num }}</span>
@@ -93,17 +128,27 @@
                     </a>
                 {% endif %}
             {% endfor %}
+        {% endif %}
+    {% endwith %}
+<!-- Next Page Link -->
+    {% if page_obj.has_next %}
+        <a href="?{{ request.GET.urlencode }}&page={{ page_obj.next_page_number }}" 
+        class="px-4 py-2 bg-gray-200 text-gray-700 rounded hover:bg-gray-300 font-medium">
+            Next
+        </a>
+    {% else %}
+        <span class="px-4 py-2 bg-gray-100 text-gray-400 rounded font-medium">Next</span>
+    {% endif %}
 
-            <!-- Next Page Link -->
-            {% if page_obj.has_next %}
-                <a href="?{{ request.GET.urlencode }}&page={{ page_obj.next_page_number }}" 
-                class="px-4 py-2 bg-gray-200 text-gray-700 rounded hover:bg-gray-300 font-medium">
-                    Next
-                </a>
-            {% else %}
-                <span class="px-4 py-2 bg-gray-100 text-gray-400 rounded font-medium">Next</span>
-            {% endif %}
-        </div>
+    <!-- Page Input Field -->
+    <form method="GET" action="" class="flex items-center">
+        <input type="number" name="page" min="1" max="{{ page_obj.paginator.num_pages }}" 
+        class="w-16 px-2 py-1 text-center border border-gray-300 rounded" placeholder="{{ page_obj.number }}">
+        <button type="submit" class="ml-2 px-4 py-2 bg-indigo-600 text-white rounded hover:bg-blue-600">
+            Go
+        </button>
+    </form>
+</div>
 <!--End Center pagination Controlss-->
 </div>
 <!-- Cards for smaller screens -->

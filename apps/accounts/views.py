@@ -73,7 +73,7 @@ def adeia_list(request):
         form = AdeiaForm(initial={'acs_employee': request.user})
 
     context = {
-        'adeia_list': page_obj,
+        'page_obj': page_obj,
         'filter': adeia_filter,
         'filter_params': filter_params.urlencode(),
         'form': form,

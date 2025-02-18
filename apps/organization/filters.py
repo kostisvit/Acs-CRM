@@ -126,10 +126,19 @@ class TaskFilter(django_filters.FilterSet):
             }
         )
     )
+    importdate = django_filters.NumberFilter(
+        lookup_expr='year',
+        label=False,
+        widget=forms.NumberInput(attrs={
+            'class': 'block text-center mt-1 block border border-gray-300 rounded-lg text-gray-700 font-medium py-2 sm:w-full md:w-1/3',  # Tailwind classes
+            'placeholder': 'Έτος...'
+            }
+        )
+    )
     
     class Meta:
         model = Ergasies
-        fields = ['organization', 'app', 'employee', 'jobtype', 'importdate']
+        fields = ['organization', 'app', 'employee', 'jobtype', 'importdate','importdate']
 
     def __init__(self, *args, **kwargs):
         super(TaskFilter, self).__init__(*args, **kwargs)

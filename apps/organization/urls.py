@@ -67,7 +67,7 @@ urlpatterns = [
 #     path('delete_hardware/<int:pk>/',HardwareDeleteView.as_view(), name='delete_hardware'),
 #     # chained selection ergasia_new
       path('api/ergasies/dhmoi-epafes/<int:pk>/', views.api_dhmos, name='api_dhmos'),
-#     path('api/ergasies-update/dhmoi-epafes/<int:pk>/', views.api_dhmos_update, name='api_dhmos_update'),
+      path('api/ergasies-update/dhmoi-epafes/<int:pk>/', views.api_dhmos_update, name='api_dhmos_update'),
 #     path('api/aithmata/dhmoi-epafes/<int:pk>/', views.api_aithma, name='api_aithma'),
 #     # path(r'api/prosfora/dhmoi-epafes/<int:pk>/', timologisi.views.api_dhmos_prosfora, name='api_dhmos_prosfora'),
 #     # charts
