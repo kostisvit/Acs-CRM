@@ -25,6 +25,7 @@ urlpatterns = [
     path('acs-services/edit/task/<int:task_id>/',views.edit_task, name='edit_task'),
     #Parameter
     path('acs-services/applications/', views.application_view, name='application_view'),
+    path('acs-services/edit/application/<int:app_id>/',views.application_edit, name='application_edit'),
 #     path('acs-services/update/task/<int:pk>/',views.ergasia_update, name='ergasia_update'),
 #     path('acs-services/update/new_task/<int:pk>/',views.ergasia_copy_paste, name='ergasia_copy_paste'),
 #     path('acs-services/carrier/days-off', AdeiaListView.as_view(), name='adeia'),

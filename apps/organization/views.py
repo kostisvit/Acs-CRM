@@ -278,7 +278,19 @@ def application_view(request):
     form = ApplicationForm()
     applications = Application.objects.all().order_by('-id')  # Show newest first
     return render(request, 'apps/parameters/application.html', {'form': form, 'applications': applications})
-    
+
+
+@login_required
+def application_edit(request, app_id):
+    if request.method == 'POST':
+        data = json.loads(request.body)
+        app = get_object_or_404(Application, id=app_id)
+        app.title = data.get('title')
+        app.description =  data.get('description')
+        app.save()
+        return JsonResponse({'status': 'success'})
+
+    return JsonResponse({'status': 'failed'}, status=400)
     
 
 
