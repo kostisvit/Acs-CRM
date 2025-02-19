@@ -191,7 +191,7 @@ def restore_contact(request, pk):
     return redirect('org_employee')
 
 ##################################################################################
-
+from django.contrib import messages
 # Λίστα Εργασιών Οργανισμού
 
 @login_required
@@ -216,9 +216,10 @@ def organization_tasks(request):
         form = TaskForm(request.POST)
         if form.is_valid():
             form.save()
+            messages.success(request, 'Task added successfully!')
             return redirect('tasks')
     else:
-        form = TaskForm()
+        form = TaskForm(initial={'employee': request.user})
     # Step 4: Render the template with context
     context = {
         'page_obj': page_obj,

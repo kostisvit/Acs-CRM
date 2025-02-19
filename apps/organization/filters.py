@@ -82,7 +82,7 @@ class OrgEmpoloyeeFilter(django_filters.FilterSet):
         if self.data == {}:
             self.queryset = self.queryset.none()
 
-
+from datetime import datetime
 class TaskFilter(django_filters.FilterSet):
     
     organization = django_filters.ModelChoiceFilter(
@@ -116,31 +116,41 @@ class TaskFilter(django_filters.FilterSet):
             'class': 'form-select text-center mt-1 block border border-gray-300 rounded-lg text-gray-700 font-medium py-2 sm:w-full  md:w-1/3',  # Added 'py-2' and width classes for consistency
         })
     )
-    importdate = django_filters.DateFromToRangeFilter(
+
+    importdate_year = django_filters.NumberFilter(
+        field_name="importdate",
+        lookup_expr='year',
+        label=False,
+        widget=forms.NumberInput(attrs={
+            'class': 'block text-center mt-1 border border-gray-300 rounded-lg text-gray-700 font-medium py-2 sm:w-full md:w-1/3',
+            'placeholder': 'Έτος...'
+        })
+    )
+
+    importdate_range = django_filters.DateFromToRangeFilter(
+        field_name="importdate",
         label=False,
         widget=django_filters.widgets.RangeWidget(
             attrs={
                 'placeholder': 'dd/mm/yyyy',
                 'type': 'date',
-                'class': 'form-input text-center mt-1 border border-gray-300 rounded-lg text-gray-700 font-medium py-2 inline-block mr-2',  # Smaller width and inline-block for horizontal alignment  # Tailwind form styles
-            }
-        )
-    )
-    importdate = django_filters.NumberFilter(
-        lookup_expr='year',
-        label=False,
-        widget=forms.NumberInput(attrs={
-            'class': 'block text-center mt-1 block border border-gray-300 rounded-lg text-gray-700 font-medium py-2 sm:w-full md:w-1/3',  # Tailwind classes
-            'placeholder': 'Έτος...'
+                'class': 'form-input text-center mt-1 border border-gray-300 rounded-lg text-gray-700 font-medium py-2 inline-block mr-2',
             }
         )
     )
     
+
+    
     class Meta:
         model = Ergasies
-        fields = ['organization', 'app', 'employee', 'jobtype', 'importdate','importdate']
+        fields = ['organization', 'app', 'employee', 'jobtype','importdate_year', 'importdate_range']
 
     def __init__(self, *args, **kwargs):
         super(TaskFilter, self).__init__(*args, **kwargs)
+        
+        # Get the current year
+        current_year = datetime.now().year
+        
+        # If no data is provided, filter tasks for the current year
         if self.data == {}:
-            self.queryset = self.queryset.none()
+            self.queryset = self.queryset.filter(importdate__year=current_year)

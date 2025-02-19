@@ -15,6 +15,16 @@
 
 <div class="divider divider-primary"></div>
 
+{% if messages %}
+    <div>
+        {% for message in messages %}
+            <div class="alert alert-{{ message.tags }}">
+                {{ message }}
+            </div>
+        {% endfor %}
+    </div>
+{% endif %}
+
 <!--Buttons-->
 <div class="gap-3 mt-3">
     <!-- Button to open modal -->
@@ -258,12 +268,12 @@
             </div>
 
             <!-- Button to Toggle Notes Section -->
-            <button type="button" id="toggleNotesButton" class="px-4 py-2 mt-4 bg-indigo-600 text-white rounded-lg">
+            <button type="button" id="toggleNotesButton" class="px-4 py-2 mt-4 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold rounded-lg">
                 Show Notes
             </button>
             </div>
             <div class="flex justify-end mt-6">
-                <button type="submit" class="px-4 py-2 w-full bg-green-600 text-white rounded-lg">
+                <button type="submit" class="px-4 py-2 w-full bg-green-600 hover:bg-green-700 text-white font-semibold rounded-lg">
                     Αποθήκευση
                 </button>
             </div>

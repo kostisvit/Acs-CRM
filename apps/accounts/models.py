@@ -83,6 +83,10 @@ class User(AbstractBaseUser, PermissionsMixin,TimeStampedModel):
     def total(self):  # Προσθέτει τον αριθμό ημερών άδειας του εργαζομένου με το υπόλοιπο του προηγούμενου έτους
         return self.days_sum + self.days_left
 
+    def remaining_days(self): # Παίρνει το σύνολο ημερων απο το πρηγουμενο και τρεχον έτος και αφαιρεί μέρες άδειας που έχουν χρησιμοποιηθεί
+        total_days = self.total()
+        used_days = Adeia.objects.filter(acs_employee=self).aggregate(Sum('days'))['days__sum'] or 0
+        return total_days - used_days
 
 
 class Adeia(TimeStampedModel):
@@ -90,7 +94,6 @@ class Adeia(TimeStampedModel):
     adeiatype = models.CharField(max_length=1,choices=adeia_choice, verbose_name='Τύπος Άδειας')
     startdate = models.DateField(default=datetime.date.today, verbose_name='Από')
     enddate = models.DateField(default=datetime.date.today, verbose_name='Έως')
-    #createddate = models.DateField(default=datetime.date.today, verbose_name='Ημ. Δημουργίας')
     days = models.IntegerField(verbose_name='Ημέρες', null=False, blank=False, default='0')
 
     class Meta:
