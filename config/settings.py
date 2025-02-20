@@ -1,5 +1,8 @@
 import os,sys
 from pathlib import Path
+from dotenv import load_dotenv
+
+load_dotenv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -13,9 +16,9 @@ sys.path.insert(0,os.path.join(BASE_DIR, 'apps'))
 SECRET_KEY = 'django-insecure-p#7t06do7%7f4!au9tm^+^068q+qpw7$@(gag5m!ypb7yq8u&d'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.getenv('DEBUG', 'False') == 'True'
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -28,11 +31,22 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     
+    #Internal
+    'accounts',
+    'pages',
+    'organization',
+    
     #External
     'tailwind',
     'theme',
-    'django_browser_reload'
+    'django_browser_reload',
+    'django_extensions',
+    'import_export',
+    'django_filters',
+    'widget_tweaks',
 ]
+
+AUTH_USER_MODEL = 'accounts.User'
 
 TAILWIND_APP_NAME = 'theme'
 
@@ -43,8 +57,11 @@ INTERNAL_IPS = [
 # Tailwind
 NPM_BIN_PATH = r"C:\Program Files\nodejs\npm.cmd"
 
+#NPM_BIN_PATH = "/usr/local/bin/npm"
+
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'django.middleware.locale.LocaleMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -52,6 +69,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django_browser_reload.middleware.BrowserReloadMiddleware',
+    'accounts.middleware.CheckFirstLoginMiddleware',
 ]
 
 ROOT_URLCONF = 'config.urls'
@@ -59,7 +77,7 @@ ROOT_URLCONF = 'config.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [BASE_DIR , 'templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -67,6 +85,11 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'organization.context_processor.organization_task_count',
+                'accounts.context_processor.training_count',
+                'accounts.context_processor.adeia_count',
+                'accounts.context_processor.task_count',
+                'pages.context_processor.user_companies',
             ],
         },
     },
@@ -108,14 +131,17 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/5.1/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'el-gr'  # Greek language
+TIME_ZONE = 'Europe/Athens'  # Athens timezone
 
-TIME_ZONE = 'UTC'
+USE_L10N = True  # Enable localization for date formats
+USE_TZ = True  # Enable timezone support
 
-USE_I18N = True
+DATE_FORMAT = 'd/m/Y'
+DATE_INPUT_FORMATS = ['%d/%m/%Y']
 
-USE_TZ = True
-
+LOGIN_REDIRECT_URL = '/'
+LOGOUT_REDIRECT_URL = 'login/'
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.1/howto/static-files/

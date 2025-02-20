@@ -1,0 +1,142 @@
+{% extends "_base.html" %}
+
+{% block content %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Application Form</title>
+    <script type="module">
+        import Alpine from 'https://cdn.jsdelivr.net/npm/alpinejs@latest/dist/module.esm.js';
+        window.Alpine = Alpine;
+        Alpine.start();
+      </script>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="py-10">
+    <div class="container mx-auto p-8">
+        <h1 class="text-2xl font-bold mb-4 text-gray-700">Εφαρμογές OTS</h1>
+        
+        <div x-data="appForm()">
+            <form method="POST" action="">
+                {% csrf_token %}
+                <template x-for="(app, index) in applications" :key="index">
+                    <div class="mb-4 flex space-x-4">
+                        <div class="flex-1">
+                            <label class="block text-sm font-medium text-gray-700">Όνομα εφαρμογής</label>
+                            <input type="text" name="title" class="form-input block w-full mt-1 border-gray-300 rounded-md shadow-sm" x-model="app.title" placeholder="Τίτλος">
+                        </div>
+                        <div class="flex-1">
+                            <label class="block text-sm font-medium text-gray-700">Περιγραφή</label>
+                            <textarea name="description" class="form-textarea block w-full mt-1 border-gray-300 rounded-md shadow-sm" x-model="app.description" placeholder="Περιγραφή"></textarea>
+                        </div>
+                        <div class="flex items-end">
+                            <button type="button" @click="removeApplication(index)" class="text-red-500 hover:text-red-700">&times;</button>
+                        </div>
+                    </div>
+                </template>
+                <!-- Submit -->
+                <div class="mt-4">
+                    <button type="button" @click="addApplication" class="bg-indigo-600 text-white text-xs font-medium py-2 px-4 rounded hover:bg-indigo-700">+ Προσθήκη</button>
+                    <button type="submit" class="bg-green-600 text-white text-xs font-medium py-2 px-4 rounded hover:bg-green-700">Αποθήκευση</button>
+                </div>
+            </form>
+        </div>
+        <!-- Display existing applications -->
+        <div class="mb-6 mt-4 p-4 bg-white shadow-md rounded-lg">
+            <h2 class="text-lg font-semibold mb-4 text-gray-800">Εφαρμογές OTS</h2>
+            <div class="space-y-2">
+                {% for app in applications %}
+                    <div class="flex items-center space-x-3 p-3 bg-gray-50 rounded-lg shadow-sm">
+                        {% if loop.first %}
+                            <!-- Title Column -->
+                            <div class="flex-1">
+                                <label class="block text-xs font-medium text-gray-600">Application Name</label>
+                                <input type="text" name="title" 
+                                       class="form-input block w-full mt-1 border border-gray-300 rounded-md shadow-sm text-sm px-2 py-1" 
+                                       value="{{ app.title }}" 
+                                       placeholder="Enter application name">
+                            </div>
+                            <!-- Description Column -->
+                            <div class="flex-1">
+                                <label class="block text-xs font-medium text-gray-600">Description</label>
+                                <textarea name="description" 
+                                          class="form-textarea block w-full mt-1 border border-gray-300 rounded-md shadow-sm text-sm px-2 py-1" 
+                                          placeholder="Enter description">{{ app.description }}</textarea>
+                            </div>
+                        {% else %}
+                            <!-- Fields for other rows (no labels) -->
+                            <div class="flex-1">
+                                <input type="text" name="title" 
+                                       class="form-input block w-full mt-1 border border-gray-300 rounded-md shadow-sm text-sm text-gray-700 px-2 py-1" 
+                                       value="{{ app.title }}" id="title-{{ app.id }}">
+                            </div>
+                            <div class="flex-1">
+                                <textarea name="description" 
+                                          class="form-textarea block w-full mt-1 border border-gray-300 rounded-md shadow-sm text-sm text-gray-700 px-2 py-1" 
+                                          id="description-{{ app.id }}">{{ app.description }}</textarea>
+                            </div>
+                        {% endif %}
+                        <div class="flex space-x-2">
+                            <a href="{{ task.get_absolute_url_delete }}" 
+                               class="bg-red-500 hover:bg-red-600 text-white text-xs font-medium py-2 px-3 rounded-md">Διαγραφή</a>
+                            <button onclick="saveChanges({{ app.id }})" 
+                                    class="bg-indigo-500 hover:bg-indigo-600 text-white text-xs font-medium py-1 px-3 rounded-md">Αποθήκευση</button>
+                        </div>
+                    </div>
+                {% empty %}
+                    <p class="text-gray-500 text-sm text-center">No applications found.</p>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    <script>
+        function saveChanges(appId) {
+            const title = document.getElementById(`title-${appId}`).value;
+            const description = document.getElementById(`description-${appId}`).value;
+    
+            fetch(`/acs-services/edit/application/${appId}/`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value,
+                },
+                body: JSON.stringify({
+                    title: title,
+                    description: description,
+    
+                }),
+            })
+            .then(response => response.json())
+            .then(data => {
+                alert('Contact updated successfully!');
+                // Optionally, update the UI here without a page reload
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Failed to update contact');
+            });
+        }
+    </script>
+    <script>
+        function appForm() {
+            return {
+                applications: [{
+                    title: '',
+                    description: ''
+                }],
+                addApplication() {
+                    this.applications.push({ title: '', description: '' });
+                },
+                removeApplication(index) {
+                    this.applications.splice(index, 1);
+                }
+            };
+        }
+    </script>
+</body>
+</html>
+
+
+{% endblock %}
