@@ -1,5 +1,6 @@
 import os,sys
 import dj_database_url
+import environ
 from django.conf import settings
 from pathlib import Path
 from dotenv import load_dotenv
@@ -10,6 +11,8 @@ load_dotenv()
 BASE_DIR = Path(__file__).resolve().parent.parent
 sys.path.insert(0,os.path.join(BASE_DIR, 'apps'))
 
+env = environ.Env()
+environ.Env.read_env(env_file=os.path.join(BASE_DIR, '.env'))
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
@@ -116,7 +119,7 @@ if settings.DEBUG:
 DATABASES = {
     'default': dj_database_url.config(
         # Replace this value with your local database's connection string.
-        default=os.env('DB_PATH'),
+        default=env('DB_PATH'),
         conn_max_age=600
     )
 }
