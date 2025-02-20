@@ -1,6 +1,7 @@
 import os,sys
 from pathlib import Path
 from dotenv import load_dotenv
+import environ
 import dj_database_url
 from django.conf import settings
 
@@ -23,7 +24,7 @@ environ.Env.read_env(env_file=os.path.join(BASE_DIR, '.env'))
 SECRET_KEY = os.getenv('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.getenv('DEBUG', 'False') == 'True'
+DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 
@@ -110,12 +111,12 @@ WSGI_APPLICATION = 'config.wsgi.application'
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
 # Deploy DB
-DATABASES = {
-        'default': dj_database_url.config(
-            default=env('DB_PATH'),
-            conn_max_age=600
-        )
-    }
+# DATABASES = {
+#         'default': dj_database_url.config(
+#             default=env('DB_PATH'),
+#             conn_max_age=600
+#         )
+#     }
 
 if settings.DEBUG:
         DATABASES = {
