@@ -1,7 +1,9 @@
 from pathlib import Path
 import os
+import sys
 
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
+sys.path.insert(0, os.path.join(BASE_DIR, "apps"))
 
 SECRET_KEY = os.environ.get("SECRET_KEY", "dev-secret-key")
 
@@ -40,6 +42,8 @@ TEMPLATES = [
         },
     },
 ]
+
+AUTH_USER_MODEL = "accounts.CustomUser"
 
 ROOT_URLCONF = "config.urls"
 
