@@ -17,7 +17,11 @@ INSTALLED_APPS = [
     "accounts",
     "pages",
     "django_extensions",
+    "tailwind",
+    "theme",
 ]
+
+TAILWIND_APP_NAME = "theme"
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
