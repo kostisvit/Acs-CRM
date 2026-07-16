@@ -20,7 +20,7 @@
 
 
 <body 
-    x-data="{ open:false, products:false }"
+    x-data="{ open:false, organizations:false }"
     class="bg-[#F8F8FF] text-gray-800">
 
 
@@ -102,7 +102,7 @@
                block px-4 py-3
                text-sm text-gray-700
                hover:bg-teal-300">
-                ⚙ Configuration
+                Ρυθμίσεις χρήστη
             </a>
 
             <a href="#"
@@ -110,12 +110,12 @@
                block px-4 py-3
                text-sm text-gray-700
                hover:bg-teal-300">
-                👤 Profile
+                Επεξεργασία προφίλ χρήστη
             </a>
 
             <div class="border-t"></div>
 
-            <form action="{% url 'logout' %}" method="POST">
+            <form action="{% url 'accounts:logout' %}" method="POST">
                 {% csrf_token %}
                 <button
                     type="submit"
@@ -187,11 +187,11 @@ Navigation
         </a>
     </li>
 
-    <!-- Products -->
+    <!-- Organizations-->
     <li class="border-b border-gray-200">
 
         <button
-        @click="products=!products"
+        @click="organizations=!organizations"
         class="
         w-full
         flex items-center justify-between
@@ -207,14 +207,14 @@ Navigation
 
             <span
             class="transition-transform duration-300"
-            :class="products ? 'rotate-180':''">
+            :class="organizations ? 'rotate-180':''">
                 ⌄
             </span>
 
         </button>
 
         <div
-        x-show="products"
+        x-show="organizations"
         x-collapse
         class="
         ml-6
@@ -234,7 +234,7 @@ Navigation
             hover:bg-teal-300
             hover:text-black
             transition">
-                Add Product
+                Οργανισμοί
             </a>
 
             <a href="#"
@@ -246,7 +246,7 @@ Navigation
             hover:bg-teal-300
             hover:text-black
             transition">
-                Inventory
+                Επαφές
             </a>
 
             <a href="#"
@@ -258,7 +258,19 @@ Navigation
             hover:bg-teal-300
             hover:text-black
             transition">
-                Categories
+                Εργασίες
+            </a>
+            
+            <a href="#"
+            class="
+            block
+            py-2 px-3
+            rounded-lg
+            text-gray-600
+            hover:bg-teal-300
+            hover:text-black
+            transition">
+                Εκπαιδεύσεις
             </a>
 
         </div>
@@ -267,7 +279,7 @@ Navigation
 
     <!-- Users -->
     <li class="border-b border-gray-200">
-        <a href="#"
+        <a href="{% url 'accounts:users' %}"
         class="
         flex items-center gap-3
         px-4 py-4

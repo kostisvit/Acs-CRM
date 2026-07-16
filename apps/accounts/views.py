@@ -30,3 +30,12 @@ def logout_view(request):
 
     logout(request)
     return redirect("login")
+
+
+def users_view(request):
+    # This view will display a list of users
+    from django.contrib.auth import get_user_model
+
+    User = get_user_model()
+    users = User.objects.all()
+    return render(request, "accounts/users.html", {"users": users})
