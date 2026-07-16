@@ -1,3 +1,5 @@
 from django.shortcuts import render
 
-# Create your views here.
+
+def organization_list(request):
+    return render(request, "organizations/list.html")
