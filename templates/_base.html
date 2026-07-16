@@ -44,7 +44,7 @@
 
         <div class="
             w-9 h-9 rounded-lg
-            bg-[#0B1F3A]
+            bg-teal-300
             flex items-center justify-center
             text-white font-bold">
 
@@ -101,7 +101,7 @@
                class="
                block px-4 py-3
                text-sm text-gray-700
-               hover:bg-gray-100">
+               hover:bg-teal-300">
                 ⚙ Configuration
             </a>
 
@@ -109,7 +109,7 @@
                class="
                block px-4 py-3
                text-sm text-gray-700
-               hover:bg-gray-100">
+               hover:bg-teal-300">
                 👤 Profile
             </a>
 
@@ -143,215 +143,155 @@
 
 <!-- Sidebar -->
 <aside
-
 class="
 fixed top-16 left-0 bottom-0
 w-64
-bg-[#0B1F3A]
-text-white
-shadow-xl
+bg-white
+text-gray-900
+shadow-lg
 transition-transform duration-300
-z-30"
-
-:class="open 
-? 'translate-x-0' 
+z-30
+font-['Inter',sans-serif]
+border-r border-gray-200
+"
+:class="open
+? 'translate-x-0'
 : '-translate-x-full md:translate-x-0'"
-
 >
-
 
 <div class="p-5">
 
-
 <p class="
-text-xs uppercase
-tracking-wider
-text-blue-200 mb-4">
-
+text-xs
+uppercase
+tracking-[0.18em]
+text-gray-500
+mb-5
+font-semibold">
 Navigation
-
 </p>
 
-
-
-<ul class="space-y-2">
-
-
-<!-- Dashboard -->
-
-<li>
-
-<a href="#"
-
-class="
-flex items-center gap-3
-px-4 py-3
-rounded-xl
-hover:bg-white/10">
-
-<span>◉</span>
-
-Dashboard
-
-</a>
-
-</li>
-
-
-
-
-<!-- Products submenu -->
-
-<li>
-
-
-<button
-@click="products=!products"
-
-class="
-w-full
-flex items-center justify-between
-px-4 py-3
-rounded-xl
-hover:bg-white/10">
-
-
-<div class="flex gap-3">
-
-<span>▣</span>
-
-Αρχείο
-
-</div>
-
-
-<span
-class="transition"
-:class="products ? 'rotate-180':''">
-
-⌄
-
-</span>
-
-
-</button>
-
-
-
-
-
-<div
-x-show="products"
-x-collapse
-
-class="
-mt-2
-ml-5
-border-l
-border-blue-300/30
-pl-4
-space-y-1">
-
-
-<a href="#"
-class="
-block py-2 px-3
-rounded-lg
-text-blue-100
-hover:bg-white/10">
-
-Add Product
-
-</a>
-
-
-
-<a href="#"
-class="
-block py-2 px-3
-rounded-lg
-text-blue-100
-hover:bg-white/10">
-
-Inventory
-
-</a>
-
-
-
-<a href="#"
-class="
-block py-2 px-3
-rounded-lg
-text-blue-100
-hover:bg-white/10">
-
-Categories
-
-</a>
-
-
-</div>
-
-
-</li>
-
-
-
-
-
-<!-- Users -->
-
-<li>
-
-<a href="#"
-
-class="
-flex items-center gap-3
-px-4 py-3
-rounded-xl
-hover:bg-white/10">
-
-
-<span>♟</span>
-
-Users
-
-
-</a>
-
-</li>
-
-
-
-
-
-<!-- Reports -->
-
-<li>
-
-<a href="#"
-
-class="
-flex items-center gap-3
-px-4 py-3
-rounded-xl
-hover:bg-white/10">
-
-
-<span>▤</span>
-
-Reports
-
-
-</a>
-
-</li>
-
-
+<ul>
+
+    <!-- Dashboard -->
+    <li class="border-b border-gray-200">
+        <a href="#"
+        class="
+        flex items-center gap-3
+        px-4 py-4
+        hover:bg-teal-300
+        transition
+        ">
+            <span class="text-gray-500">◉</span>
+            <span class="font-medium">Dashboard</span>
+        </a>
+    </li>
+
+    <!-- Products -->
+    <li class="border-b border-gray-200">
+
+        <button
+        @click="products=!products"
+        class="
+        w-full
+        flex items-center justify-between
+        px-4 py-4
+        hover:bg-teal-300
+        transition
+        ">
+
+            <div class="flex items-center gap-3">
+                <span class="text-gray-500">▣</span>
+                <span class="font-medium">Αρχείο</span>
+            </div>
+
+            <span
+            class="transition-transform duration-300"
+            :class="products ? 'rotate-180':''">
+                ⌄
+            </span>
+
+        </button>
+
+        <div
+        x-show="products"
+        x-collapse
+        class="
+        ml-6
+        border-l
+        border-gray-200
+        pl-4
+        py-2
+        space-y-1
+        ">
+
+            <a href="#"
+            class="
+            block
+            py-2 px-3
+            rounded-lg
+            text-gray-600
+            hover:bg-teal-300
+            hover:text-black
+            transition">
+                Add Product
+            </a>
+
+            <a href="#"
+            class="
+            block
+            py-2 px-3
+            rounded-lg
+            text-gray-600
+            hover:bg-teal-300
+            hover:text-black
+            transition">
+                Inventory
+            </a>
+
+            <a href="#"
+            class="
+            block
+            py-2 px-3
+            rounded-lg
+            text-gray-600
+            hover:bg-teal-300
+            hover:text-black
+            transition">
+                Categories
+            </a>
+
+        </div>
+
+    </li>
+
+    <!-- Users -->
+    <li class="border-b border-gray-200">
+        <a href="#"
+        class="
+        flex items-center gap-3
+        px-4 py-4
+        hover:bg-teal-300
+        transition">
+            <span class="text-gray-500">♟</span>
+            <span class="font-medium">Users</span>
+        </a>
+    </li>
+
+    <!-- Reports -->
+    <li class="border-b border-gray-200">
+        <a href="#"
+        class="
+        flex items-center gap-3
+        px-4 py-4
+        hover:bg-teal-300
+        transition">
+            <span class="text-gray-500">▤</span>
+            <span class="font-medium">Reports</span>
+        </a>
+    </li>
 
 </ul>
-
 
 </div>
 
