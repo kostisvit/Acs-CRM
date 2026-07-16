@@ -27,9 +27,9 @@
             User
           </th>
 
-          <th class="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wide text-gray-500">
+          {% comment %} <th class="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wide text-gray-500">
             Role
-          </th>
+          </th> {% endcomment %}
 
           <th class="hidden px-6 py-3 text-left text-xs font-semibold uppercase tracking-wide text-gray-500 md:table-cell">
             Status
@@ -37,6 +37,10 @@
 
           <th class="px-6 py-3 text-right text-xs font-semibold uppercase tracking-wide text-gray-500">
             Action
+          </th>
+          
+          <th class="px-6 py-3 text-right text-xs font-semibold uppercase tracking-wide text-gray-500">
+            Created
           </th>
         </tr>
       </thead>
@@ -52,7 +56,7 @@
 
               <div>
                 <p class="font-medium text-gray-900">
-                  {{ user.first_name }}
+                  {{ user.first_name }} {{ user.last_name }}
                 </p>
                 <p class="text-sm text-gray-500">
                   {{ user.email }}
@@ -61,13 +65,13 @@
             </div>
           </td>
 
-          <td class="px-6 py-4 text-sm text-gray-700">
+          {% comment %} <td class="px-6 py-4 text-sm text-gray-700">
             Developer
-          </td>
+          </td> {% endcomment %}
 
           <td class="hidden px-6 py-4 md:table-cell">
             <span class="rounded-full bg-green-100 px-3 py-1 text-xs font-medium text-green-700">
-              Active
+              {{ user.is_active|yesno:"Active,Inactive" }}
             </span>
           </td>
 
@@ -75,6 +79,10 @@
             <button class="text-sm font-medium text-blue-600 hover:text-blue-800">
               Edit
             </button>
+          </td>
+        
+          <td class="px-6 py-4 text-right text-sm text-gray-500">
+            {{ user.created|date:"d/m/Y H:i" }}
           </td>
         </tr>
 

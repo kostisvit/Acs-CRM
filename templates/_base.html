@@ -68,19 +68,9 @@
 <div class="relative group">
 
     <div class="flex items-center gap-4 cursor-pointer">
-
-        <span class="
-            hidden sm:block
-            text-sm text-gray-500">
-            {% if user.is_authenticated %}{{ user.email }}{% else %}Guest{% endif %}
-        </span>
-
-        <img
-            src="https://i.pravatar.cc/100"
-            class="
-            w-9 h-9 rounded-full
-            border-2 border-[#0B1F3A]">
-
+        <div class="flex h-10 w-10 items-center justify-center rounded-full bg-teal-300 font-medium">
+        {{ user.first_name|slice:":1"|upper }}{{ user.last_name|slice:":1"|upper }}
+        </div>
     </div>
 
 

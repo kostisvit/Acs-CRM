@@ -32,6 +32,7 @@ class CustomUserManager(BaseUserManager):
 
 
 class CustomUser(AbstractBaseUser, PermissionsMixin, TimeStampedModel):
+
     email = models.EmailField(unique=True)
 
     # Permissions/admin fields
