@@ -1,123 +1,89 @@
-{% extends "_base.html" %}
+{% extends '_base.html' %}
 
-{% block title %}Organizations{% endblock %}
+{% block title %}
+  Organizations
+{% endblock %}
 
 {% block content %}
-<!-- Toolbar -->
-<div class="rounded-xl border border-gray-200 bg-white p-4 shadow-sm">
+  <!-- Toolbar -->
+  <div class="rounded-xl border border-gray-200 bg-white p-4 shadow-sm">
     <div class="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+      <div>
+        <h2 class="text-lg font-semibold text-gray-900">Οργανισμοί</h2>
+        <p class="text-sm text-gray-500">Διαχείριση οργανισμών</p>
+      </div>
 
-        <div>
-            <h2 class="text-lg font-semibold text-gray-900">Οργανισμοί</h2>
-            <p class="text-sm text-gray-500">Διαχείριση οργανισμών</p>
-        </div>
+      <div class="flex flex-wrap items-center justify-end gap-3">
+        <!-- Search -->
+        <input type="text" placeholder="Search..." class="w-64 rounded-lg border border-gray-300 px-4 py-2 focus:border-teal-400 focus:ring-2 focus:ring-teal-300" />
 
-        <div class="flex flex-wrap items-center justify-end gap-3">
+        <!-- Export -->
+        <button class="rounded-lg border border-teal-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-teal-50">Export</button>
 
-            <!-- Search -->
-            <input
-                type="text"
-                placeholder="Search..."
-                class="w-64 rounded-lg border border-gray-300 px-4 py-2 focus:border-teal-400 focus:ring-2 focus:ring-teal-300">
-
-            <!-- Export -->
-            <button class="rounded-lg border border-teal-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-teal-50">
-                Export
-            </button>
-
-            <!-- New -->
-            <a href=""
-               class="rounded-lg bg-teal-300 px-5 py-2 text-sm font-semibold text-gray-900 hover:bg-teal-400">
-                + Νέος οργανισμός
-            </a>
-
-        </div>
-
+        <!-- New -->
+        <a href="" class="rounded-lg bg-teal-300 px-5 py-2 text-sm font-semibold text-gray-900 hover:bg-teal-400">+ Νέος οργανισμός</a>
+      </div>
     </div>
-</div>
+  </div>
 
-<!-- Space between toolbar and table -->
-<div class="mt-6"></div>
+  <!-- Space between toolbar and table -->
+  <div class="mt-6"></div>
 
-<!-- Table Card -->
-<div class="overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm">
-
+  <!-- Table Card -->
+  <div class="overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm">
     <div class="overflow-x-auto">
+      <table class="min-w-full divide-y divide-gray-200">
+        <thead class="bg-gray-50">
+          <tr>
+            <th class="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wide text-gray-500">Οργανισμός</th>
 
-        <table class="min-w-full divide-y divide-gray-200">
+            {% comment %} <th class="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wide text-gray-500">Role</th> {% endcomment %}
 
-                  <thead class="bg-gray-50">
-        <tr>
-          <th class="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wide text-gray-500">
-            User
-          </th>
+            <th class="hidden px-6 py-3 text-left text-xs font-semibold uppercase tracking-wide text-gray-500 md:table-cell">Status</th>
 
-          {% comment %} <th class="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wide text-gray-500">
-            Role
-          </th> {% endcomment %}
+            <th class="px-6 py-3 text-right text-xs font-semibold uppercase tracking-wide text-gray-500">Action</th>
 
-          <th class="hidden px-6 py-3 text-left text-xs font-semibold uppercase tracking-wide text-gray-500 md:table-cell">
-            Status
-          </th>
+            <th class="px-6 py-3 text-right text-xs font-semibold uppercase tracking-wide text-gray-500">Created</th>
+          </tr>
+        </thead>
 
-          <th class="px-6 py-3 text-right text-xs font-semibold uppercase tracking-wide text-gray-500">
-            Action
-          </th>
-          
-          <th class="px-6 py-3 text-right text-xs font-semibold uppercase tracking-wide text-gray-500">
-            Created
-          </th>
-        </tr>
-      </thead>
+        <tbody class="divide-y divide-gray-100 bg-white">
+          {% for org in organizations %}
+            <tr class="transition hover:bg-gray-50">
+              <td class="px-6 py-4">
+                <div class="flex items-center gap-3">
+                  <div class="flex h-10 w-10 items-center justify-center rounded-full bg-teal-300 font-medium">{{ org.initials }}</div>
 
-      <tbody class="divide-y divide-gray-100 bg-white">
-      {% for organization in organizations %}
-        <tr class="transition hover:bg-gray-50">
-          <td class="px-6 py-4">
-            <div class="flex items-center gap-3">
-              <div class="flex h-10 w-10 items-center justify-center rounded-full bg-teal-300 font-medium">
-                {{ user.first_name|slice:":1"|upper }}{{ user.last_name|slice:":1"|upper }}
-              </div>
+                  <div>
+                    <p class="font-medium text-gray-900">{{ org.org_name }}</p>
+                    <p class="text-sm text-gray-500">{{ org.org_address }}</p>
+                  </div>
+                </div>
+              </td>
 
-              <div>
-                <p class="font-medium text-gray-900">
-                  {{ user.first_name }} {{ user.last_name }}
-                </p>
-                <p class="text-sm text-gray-500">
-                  {{ user.email }}
-                </p>
-              </div>
-            </div>
-          </td>
+              {% comment %} <td class="px-6 py-4 text-sm text-gray-700">Developer</td> {% endcomment %}
 
-          {% comment %} <td class="px-6 py-4 text-sm text-gray-700">
-            Developer
-          </td> {% endcomment %}
+              <td class="hidden px-6 py-4 md:table-cell">
 
-          <td class="hidden px-6 py-4 md:table-cell">
-            <span class="rounded-full bg-green-100 px-3 py-1 text-xs font-medium text-green-700">
-              {{ user.is_active|yesno:"Active,Inactive" }}
-            </span>
-          </td>
+                  <span class="rounded-full px-3 py-1 text-xs font-medium
+                      {% if org.is_active %}
+                          bg-green-100 text-green-700
+                      {% else %}
+                          bg-red-300 text-red-700
+                      {% endif %}">
+                      {{ org.is_active|yesno:"Active,Inactive" }}
+                  </span>
+              </td>
 
-          <td class="px-6 py-4 text-right">
-            <button class="text-sm font-medium text-blue-600 hover:text-blue-800">
-              Edit
-            </button>
-          </td>
-        
-          <td class="px-6 py-4 text-right text-sm text-gray-500">
-            {{ user.created|date:"d/m/Y H:i" }}
-          </td>
-        </tr>
+              <td class="px-6 py-4 text-right">
+                <button class="text-sm font-medium text-blue-600 hover:text-blue-800">Edit</button>
+              </td>
 
-{% endfor %}
-      </tbody>
-
-        </table>
-
+              <td class="px-6 py-4 text-right text-sm text-gray-500">{{ org.created|date:'d/m/Y H:i' }}</td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
     </div>
-
-</div>
-    
+  </div>
 {% endblock %}

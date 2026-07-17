@@ -15,8 +15,10 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "accounts",
+    "organizations",
     "pages",
     "django_extensions",
+    "simple_history",
     "tailwind",
     "theme",
 ]
@@ -66,7 +68,7 @@ ROOT_URLCONF = "config.urls"
 WSGI_APPLICATION = "config.wsgi.application"
 
 LANGUAGE_CODE = "en-us"
-TIME_ZONE = "UTC"
+TIME_ZONE = "Europe/Athens"
 USE_I18N = True
 USE_TZ = True
 
