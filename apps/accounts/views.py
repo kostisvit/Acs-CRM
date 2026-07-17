@@ -2,6 +2,9 @@ from django.contrib.auth import authenticate, login
 from django.shortcuts import render, redirect
 from django.contrib.auth import logout
 from .forms import EmailLoginForm
+from django.contrib.auth import get_user_model
+
+User = get_user_model()
 
 
 def login_view(request):
@@ -29,13 +32,9 @@ def login_view(request):
 def logout_view(request):
 
     logout(request)
-    return redirect("login")
+    return redirect("accounts:login")
 
 
 def users_view(request):
-    # This view will display a list of users
-    from django.contrib.auth import get_user_model
-
-    User = get_user_model()
     users = User.objects.all()
     return render(request, "accounts/users.html", {"users": users})
