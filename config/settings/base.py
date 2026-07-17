@@ -55,6 +55,10 @@ AUTHENTICATION_BACKENDS = [
     "django.contrib.auth.backends.ModelBackend",
 ]
 
+EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
+
+DEFAULT_FROM_EMAIL = "admin@acsservices.gr"
+
 LOGIN_URL = "login"
 
 ROOT_URLCONF = "config.urls"
