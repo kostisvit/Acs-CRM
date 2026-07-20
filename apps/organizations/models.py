@@ -39,7 +39,15 @@ class Organization(TimeStampedModel):
 
     @property
     def initials(self):
-        return "".join(word[0] for word in self.org_name.split())
+        words = self.org_name.split()
+
+        if not words:
+            return ""
+
+        if len(words) == 1:
+            return words[0][0].upper()
+
+        return (words[0][0] + words[-1][0]).upper()
 
     def get_absolute_url(self):
         return reverse("organization_update", args=[str(self.id)])  # type: ignore

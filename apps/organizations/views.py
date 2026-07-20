@@ -1,9 +1,118 @@
-from django.shortcuts import render
-from apps.organizations.models import Organization
 
+import csv
+from io import BytesIO 
+from django.http import HttpResponse
+from django.shortcuts import render, redirect
+from openpyxl import Workbook
+from apps.organizations.models import Organization
+from django.contrib.auth.decorators import login_required
+from django.contrib import messages
+from django.core.paginator import Paginator
+from .forms import CSVUploadForm
+
+@login_required
 def organization_list(request):
-    organizations = Organization.objects.all()
+    organizations = Organization.objects.all().order_by('-created')
+
+    paginator = Paginator(organizations, 10)  # 10 organizations per page
+
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+
     context = {
-        'organizations':organizations
+        'organizations': page_obj,
     }
+
     return render(request, "organizations/list.html", context)
+
+
+
+
+def export_errors_excel(errors):
+    wb = Workbook()
+    ws = wb.active
+    ws.title = "Import Errors"
+
+    # Header
+    ws.append(["Line", "Error"])
+
+    # Data
+    for error in errors:
+        line, message = error.split(": ", 1)
+        ws.append([line.replace("Line ", ""), message])
+
+    output = BytesIO()
+    wb.save(output)
+    output.seek(0)
+
+    response = HttpResponse(
+        output,
+        content_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+    )
+
+    response["Content-Disposition"] = 'attachment; filename="import_errors.xlsx"'
+
+    return response
+
+
+@login_required
+def import_customers(request):
+    if request.method == "POST":
+        form = CSVUploadForm(request.POST, request.FILES)
+
+        if form.is_valid():
+            csv_file = request.FILES["csv_file"]
+
+            if not csv_file.name.endswith(".csv"):
+                messages.error(request, "Please upload a CSV file.")
+                return redirect("import_customers")
+
+            decoded = csv_file.read().decode("utf-8").splitlines()
+            reader = csv.DictReader(decoded)
+
+            imported = 0
+            errors = []
+
+            def str_to_bool(value):
+                return str(value).strip().lower() in ("true", "1", "yes", "y")
+
+            for line, row in enumerate(reader, start=2):
+                try:
+                    Organization.objects.update_or_create(
+                        org_name=row["name"],
+                        defaults={
+                            "org_address": row["address"],
+                            "org_city": row["city"],
+                            "org_phone": row["phone"],
+                            "org_remote": str_to_bool(row["teamviewer"]),
+                            "org_email": row["email"],
+                            "org_site": row["website"],
+                            "org_info": row["info"],
+                            "is_visible": str_to_bool(row["is_visible"]),
+                        },
+                    )
+
+                    imported += 1
+
+                except Exception as e:
+                    errors.append(f"Line {line}: {e}")
+
+            # Export errors to Excel
+            if errors:
+                messages.warning(
+                    request,
+                    f"{imported} rows imported. Some rows failed. Downloading error report."
+                )
+                return export_errors_excel(errors)
+
+            messages.success(
+                request,
+                f"{imported} customers imported successfully."
+            )
+
+            return redirect("organizations:organization_list")
+
+    else:
+        form = CSVUploadForm()
+
+    return render(request, "data/import.html", {"form": form})
