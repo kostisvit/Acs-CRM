@@ -12,18 +12,31 @@ from .forms import CSVUploadForm
 
 @login_required
 def organization_list(request):
+
     organizations = Organization.objects.all().order_by('-created')
 
-    paginator = Paginator(organizations, 10)  # 10 organizations per page
+    paginator = Paginator(organizations, 12)
 
-    page_number = request.GET.get('page')
-    page_obj = paginator.get_page(page_number)
+    page_obj = paginator.get_page(request.GET.get("page"))
 
-    context = {
-        'organizations': page_obj,
-    }
 
-    return render(request, "organizations/list.html", context)
+    if request.headers.get("HX-Request"):
+        return render(
+            request,
+            "organizations/_cards.html",
+            {
+                "organizations": page_obj
+            }
+        )
+
+
+    return render(
+        request,
+        "organizations/list.html",
+        {
+            "organizations": page_obj
+        }
+    )
 
 
 
