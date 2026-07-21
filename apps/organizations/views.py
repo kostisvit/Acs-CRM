@@ -1,6 +1,6 @@
 
 import csv
-from io import BytesIO 
+from io import BytesIO
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from openpyxl import Workbook
@@ -9,38 +9,66 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.core.paginator import Paginator
 from .forms import CSVUploadForm
+from django.db.models import Q
+
 
 @login_required
 def organization_list(request):
 
-    organizations = Organization.objects.all().order_by('-created')
+    search = request.GET.get("q", "")
+    is_visible = request.GET.get("is_visible", "")
+
+    organizations = Organization.objects.all().order_by("org_name")
+
+
+    # Search filter
+    if search:
+        organizations = organizations.filter(
+            Q(org_name__icontains=search) |
+            Q(org_city__icontains=search) |
+            Q(org_phone__icontains=search)
+        )
+
+
+    # Visibility filter
+    if is_visible == "true":
+        organizations = organizations.filter(
+            is_visible=True
+        )
+
+    elif is_visible == "false":
+        organizations = organizations.filter(
+            is_visible=False
+        )
+
 
     paginator = Paginator(organizations, 12)
 
-    page_obj = paginator.get_page(request.GET.get("page"))
+    page_obj = paginator.get_page(
+        request.GET.get("page", 1)
+    )
 
 
+    context = {
+        "organizations": page_obj,
+        "search": search,
+        "is_visible": is_visible,
+        "is_htmx": request.headers.get("HX-Request"),
+    }
     if request.headers.get("HX-Request"):
         return render(
             request,
             "organizations/_cards.html",
-            {
-                "organizations": page_obj
-            }
+            context
         )
-
-
     return render(
         request,
         "organizations/list.html",
-        {
-            "organizations": page_obj
-        }
+        context
     )
 
 
-
-
+@login_required
 def export_errors_excel(errors):
     wb = Workbook()
     ws = wb.active
