@@ -3,14 +3,16 @@ import csv
 from io import BytesIO
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
+from django.urls import reverse_lazy
 from openpyxl import Workbook
 from apps.organizations.models import Organization
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.core.paginator import Paginator
-from .forms import CSVUploadForm
+from .forms import CSVUploadForm, OrganizationForm
 from django.db.models import Q
-
+from django.contrib.messages.views import SuccessMessageMixin
+from django.views.generic import UpdateView
 
 @login_required
 def organization_list(request):
@@ -66,6 +68,21 @@ def organization_list(request):
         "organizations/list.html",
         context
     )
+
+
+
+
+class OrganizationUpdateView(SuccessMessageMixin, UpdateView):
+    model = Organization
+    form_class = OrganizationForm
+    template_name = "organizations/detail.html"
+    success_url = reverse_lazy("organizations:organization_list")
+    success_message = "Ο πελάτης ενημερώθηκε επιτυχώς."
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["title"] = "Επεξεργασία Πελάτη"
+        return context
 
 
 @login_required
@@ -125,7 +142,7 @@ def import_customers(request):
                             "org_address": row["address"],
                             "org_city": row["city"],
                             "org_phone": row["phone"],
-                            "org_remote": str_to_bool(row["teamviewer"]),
+                            "org_remote": row["teamviewer"],
                             "org_email": row["email"],
                             "org_site": row["website"],
                             "org_info": row["info"],
