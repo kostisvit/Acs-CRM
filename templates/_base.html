@@ -20,7 +20,7 @@
 
 
 <body 
-    x-data="{ open:false, organizations:false, acs:false }"
+    x-data="{ open:false, organizations:false, acs:false, config:false }"
     class="bg-[#F8F8FF] text-gray-800">
 
 
@@ -324,6 +324,64 @@ border-r border-gray-200
         </div>
 
     </li>
+    
+    <!-- Ρυθμίσεις-->
+    <li class="border-b border-gray-200">
+
+        <button
+        @click="config=!config"
+        class="
+        w-full
+        flex items-center justify-between
+        px-4 py-4
+        hover:bg-teal-300
+        transition
+        ">
+
+            <div class="flex items-center gap-3">
+                <span class="text-gray-500">▣</span>
+                <span class="font-medium">Ρυθμίσεις</span>
+            </div>
+
+            <span
+            class="transition-transform duration-300"
+            :class="config ? 'rotate-180':''">
+                ⌄
+            </span>
+
+        </button>
+
+        <div
+        x-show="config"
+        x-collapse
+        class="
+        ml-6
+        border-l
+        border-gray-200
+        pl-4
+        py-2
+        space-y-1
+        ">
+
+            <a href="{% url 'parameters:parameters' %}"
+            class="
+            block
+            py-2 px-3
+            rounded-lg
+            text-gray-600
+            hover:bg-teal-300
+            hover:text-black
+            transition">
+                Παραμετρικά
+            </a>
+
+
+
+        </div>
+
+    </li>
+    
+    
     <!-- Users -->
     <li class="border-b border-gray-200">
         <a href="{% url 'accounts:users' %}"

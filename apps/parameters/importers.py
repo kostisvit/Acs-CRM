@@ -1,6 +1,6 @@
 import csv
 from apps.organizations.models import Organization
-from apps.parameters.models import JobType
+from apps.parameters.models import JobType, OtsSoftware
 
 def str_to_bool(value):
     return str(value).strip().lower() in ("true", "1", "yes", "y")
@@ -62,6 +62,16 @@ class JobTypeImporter(BaseImporter):
         )
 
 
+class OtsSoftwareImporter(BaseImporter):
+    model = OtsSoftware
+
+    def import_row(self, row):
+        self.model.objects.update_or_create(
+            name=row["name"],
+            defaults={
+                "is_active": str_to_bool(row["is_active"]),
+            },
+        )
 
 IMPORTERS = {
     "customers": {
@@ -71,5 +81,9 @@ IMPORTERS = {
     "job_types": {
         "class": JobTypeImporter,
         "label": "Τύποι Εργασίας",
+    },
+    "ots_software": {
+        "class": OtsSoftwareImporter,
+        "label": "Λογισμικό OTS",
     },
 }

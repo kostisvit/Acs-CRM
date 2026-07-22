@@ -4,12 +4,63 @@ from django.shortcuts import redirect, render
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from openpyxl import Workbook
-from apps.organizations.forms import CSVUploadForm
 from .importers import IMPORTERS
-from django.http import Http404
+from .models import JobType, OtsSoftware
+import json
+from django.http import JsonResponse
+
+
+@login_required
+def parameters_view(request):
+    return render(
+        request,
+        "parameters/parameters.html",
+
+    )
+
+@login_required
+def jobtype_view(request):
+    job_types =  JobType.objects.all()
+    return render(
+        request,
+        "parameters/_job_type.html",
+        {
+            "job_types": job_types
+        }
+
+    )
+
+def add_job_type(request):
+
+    data = json.loads(request.body)
+
+
+    job_type = JobType.objects.create(
+        name=data["name"],
+        is_active=data.get("is_active", True)
+    )
+
+
+    return JsonResponse({
+        "id": job_type.id,
+        "name": job_type.name,
+        "is_active": job_type.is_active
+    })
 
 
 
+
+@login_required
+def ots_software_view(request):
+    ots_software = OtsSoftware.objects.all()
+    return render(
+        request,
+        "parameters/_ots_software.html",
+        {
+            "ots_software": ots_software
+        }
+
+    )
 
 
 @login_required

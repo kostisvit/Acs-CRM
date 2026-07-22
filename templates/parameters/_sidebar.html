@@ -1,0 +1,84 @@
+<!-- Parameters Sidebar -->
+<aside class="
+    w-64
+    bg-white
+    border-r
+    border-gray-200
+    rounded-lg
+    shadow-sm
+">
+
+    <div class="p-5 border-b border-gray-200">
+        <h2 class="text-lg font-semibold">
+            Παραμετρικά
+        </h2>
+        <p class="text-sm text-gray-500">
+            Διαχείριση των τιμών αναζήτησης του συστήματος
+        </p>
+    </div>
+
+    <nav class="py-2">
+
+        <!-- Job Types -->
+        <a href="{% url 'parameters:job_types' %}"
+           class="
+           flex items-center gap-3
+           px-5 py-3
+          hover:bg-teal-300
+           font-medium">
+
+            <span>⚙️</span>
+            <span>Είδος Εργασίας</span>
+        </a>
+
+        <!-- Applications -->
+        <a href="{% url 'parameters:ots_software' %}"
+           class="
+           flex items-center gap-3
+           px-5 py-3
+           hover:bg-teal-300
+           transition">
+
+            <span>📦</span>
+            <span>Εφαρμογές OTS</span>
+        </a>
+
+        <!-- Environments -->
+        <a href="#"
+           class="
+           flex items-center gap-3
+           px-5 py-3
+           hover:bg-teal-300
+           transition">
+
+            <span>🌍</span>
+            <span>Environments</span>
+        </a>
+
+        <!-- Priorities -->
+        <a href="#"
+           class="
+           flex items-center gap-3
+           px-5 py-3
+           hover:bg-teal-300
+           transition">
+
+            <span>⭐</span>
+            <span>Priorities</span>
+        </a>
+
+        <!-- Servers -->
+        <a href="#"
+           class="
+           flex items-center gap-3
+           px-5 py-3
+           hover:bg-teal-300
+           transition">
+
+            <span>🖥️</span>
+            <span>Servers</span>
+        </a>
+
+    </nav>
+
+</aside>
