@@ -17,6 +17,7 @@ INSTALLED_APPS = [
     "accounts",
     "organizations",
     "pages",
+    "parameters",
     "django_extensions",
     "simple_history",
     "tailwind",
