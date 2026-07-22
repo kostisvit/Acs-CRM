@@ -41,48 +41,44 @@ def export_errors_excel(errors):
 
 
 @login_required
-def import_csv(request, import_type):
-    importer_class = IMPORTERS.get(import_type)
-
-    if importer_class is None:
-        raise Http404("Unknown import type")
-
+def import_csv(request):
     if request.method == "POST":
-        form = CSVUploadForm(request.POST, request.FILES)
+        importer_name = request.POST.get("importer")
 
-        if form.is_valid():
-            csv_file = request.FILES["csv_file"]
+        importer_data = IMPORTERS.get(importer_name)
 
-            if not csv_file.name.endswith(".csv"):
-                messages.error(request, "Please upload a CSV file.")
-                return redirect(request.path)
+        if not importer_data:
+            messages.error(request, "Invalid importer")
+            return redirect("parameters:import")
 
-            importer = importer_class()
+        csv_file = request.FILES.get("file")
 
-            imported, errors = importer.import_file(csv_file)
+        if not csv_file:
+            messages.error(request, "No CSV file selected")
+            return redirect("parameters:import")
 
-            if errors:
-                messages.warning(
-                    request,
-                    f"{imported} rows imported. Some rows failed."
-                )
-                return export_errors_excel(errors)
+        importer_class = importer_data["class"]
 
-            messages.success(
+        importer = importer_class()
+        imported, errors = importer.import_file(csv_file)
+
+        messages.success(
+            request,
+            f"Imported {imported} records"
+        )
+
+        if errors:
+            messages.warning(
                 request,
-                f"{imported} rows imported successfully."
+                "\n".join(errors)
             )
 
-            return redirect("organizations:organization_list")
-
-    else:
-        form = CSVUploadForm()
+        return redirect("parameters:import")
 
     return render(
         request,
         "data/import.html",
         {
-            "form": form,
-            "import_type": import_type,
-        },
+            "importers": IMPORTERS
+        }
     )

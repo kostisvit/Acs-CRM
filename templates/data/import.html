@@ -39,10 +39,29 @@
                 <label class="block text-sm font-medium text-gray-700 mb-2">
                     Upload CSV / Excel File
                 </label>
+                <div class="mb-4">
+                    <label 
+                        for="importer"
+                        class="mb-2 block text-sm font-medium text-gray-700"
+                    >
+                        Επιλογή τύπου εισαγωγής:
+                    </label>
 
+                    <select 
+                        id="importer"
+                        name="importer"
+                        class="block w-full rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm text-gray-700 shadow-sm transition focus:border-blue-500 focus:ring-2 focus:ring-blue-500"
+                    >
+    {% for key, importer in importers.items %}
+        <option value="{{ key }}">
+            {{ importer.label }}
+        </option>
+    {% endfor %}
+                    </select>
+                </div>
                 <input 
                     type="file" 
-                    name="csv_file" 
+                    name="file" 
                     accept=".csv,.xlsx"
                     class="block w-full text-sm text-gray-600
                            border border-gray-300 rounded-lg
@@ -50,7 +69,8 @@
                            focus:outline-none
                            focus:ring-2 focus:ring-blue-500
                            focus:border-blue-500
-                           p-2"
+                           p-2
+                           shadow-sm"
                 >
             </div>
 

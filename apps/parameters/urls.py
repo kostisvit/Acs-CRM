@@ -4,10 +4,5 @@ from . import views
 app_name = "parameters"
 
 urlpatterns = [
-        path(
-        "import/customers/",
-        views.import_csv,
-        {"import_type": "customers"},
-        name="import_customers",
-    ),
+  path("import-data/",views.import_csv,name="import",)
 ]

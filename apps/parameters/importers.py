@@ -1,5 +1,6 @@
 import csv
 from apps.organizations.models import Organization
+from apps.parameters.models import JobType
 
 def str_to_bool(value):
     return str(value).strip().lower() in ("true", "1", "yes", "y")
@@ -48,10 +49,27 @@ class CustomerImporter(BaseImporter):
                 "is_visible": str_to_bool(row["is_visible"]),
             },
         )
-        
+
+class JobTypeImporter(BaseImporter):
+    model = JobType
+
+    def import_row(self, row):
+        self.model.objects.update_or_create(
+            name=row["name"],
+            defaults={
+                "is_active": str_to_bool(row["is_active"]),
+            },
+        )
 
 
 
 IMPORTERS = {
-    "customers": CustomerImporter,
+    "customers": {
+        "class": CustomerImporter,
+        "label": "Οργανισμοί",
+    },
+    "job_types": {
+        "class": JobTypeImporter,
+        "label": "Τύποι Εργασίας",
+    },
 }
