@@ -48,6 +48,3 @@ class Organization(TimeStampedModel):
             return words[0][0].upper()
 
         return (words[0][0] + words[-1][0]).upper()
-
-    def get_absolute_url(self):
-        return reverse("organization_update", args=[str(self.id)])  # type: ignore
