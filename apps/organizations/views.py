@@ -1,18 +1,15 @@
-
-import csv
-from io import BytesIO
-from django.http import HttpResponse
-from django.shortcuts import render, redirect
+from django.shortcuts import render
 from django.urls import reverse_lazy
-from openpyxl import Workbook
 from apps.organizations.models import Organization
 from django.contrib.auth.decorators import login_required
-from django.contrib import messages
 from django.core.paginator import Paginator
-from .forms import CSVUploadForm, OrganizationForm
+from .forms import OrganizationForm
 from django.db.models import Q
 from django.contrib.messages.views import SuccessMessageMixin
 from django.views.generic import UpdateView
+
+
+# Organization list view and update view
 
 @login_required
 def organization_list(request):
@@ -83,3 +80,6 @@ class OrganizationUpdateView(SuccessMessageMixin, UpdateView):
         context = super().get_context_data(**kwargs)
         context["title"] = "Επεξεργασία Πελάτη"
         return context
+
+
+# Employee list view and update view
