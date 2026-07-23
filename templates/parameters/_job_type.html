@@ -29,10 +29,10 @@
 
             <div>
                 <h2 class="text-lg font-semibold text-gray-800">
-                    Job Types
+                    Τύποι Εργασίας
                 </h2>
                 <p class="text-sm text-gray-500">
-                    Available job execution types
+                    Διαθέσιμοι τύποι εκτέλεσης εργασιών
                 </p>
             </div>
 
@@ -69,7 +69,7 @@
                         ">
                         
                         <span class="text-lg">+</span>
-                        Add Job Type
+                        Νέα εγγραφή
 
                     </button>
 
@@ -120,62 +120,53 @@
 </div>
 
 {% endblock %}
-<div id="jobModal"
-     class="hidden fixed inset-0 bg-black/40 flex items-center justify-center">
+<!-- Modal -->
+<div
+    id="jobModal"
+    class="hidden fixed inset-0 z-[9999] flex items-center justify-center bg-black/50">
 
-    <div class="bg-white rounded-xl p-6 w-full max-w-md">
+    <div class="bg-white rounded-xl p-6 w-full max-w-md shadow-xl">
 
         <h2 class="text-lg font-semibold mb-5">
-            Add Job Type
+            Προσθήκη νέου τύπου εργασίας
         </h2>
-
 
         <!-- Name -->
         <label class="block text-sm font-medium text-gray-700 mb-2">
-            Name
+            Τίτλος
         </label>
 
-        <input id="jobName"
-               type="text"
-               class="w-full border rounded-lg px-3 py-2 mb-4"
-               placeholder="Job type name">
-
+        <input
+            id="jobName"
+            type="text"
+            class="w-full border rounded-lg px-3 py-2 mb-4"
+            placeholder="Εισάγετε τον τίτλο του τύπου εργασίας">
 
         <!-- Active -->
         <label class="flex items-center gap-2 mb-5">
-
-            <input id="jobActive"
-                   type="checkbox"
-                   checked
-                   class="rounded">
+            <input
+                id="jobActive"
+                type="checkbox"
+                checked
+                class="rounded">
 
             <span class="text-sm text-gray-700">
-                Active
+                Ενεργό
             </span>
-
         </label>
 
-
         <div class="flex justify-end gap-3">
-
             <button
                 onclick="closeModal()"
                 class="px-4 py-2 border rounded-lg">
-                Cancel
+                Ακύρωση
             </button>
-
 
             <button
                 onclick="saveJobType()"
-                class="
-                bg-teal-600
-                text-white
-                px-4
-                py-2
-                rounded-lg">
-                Save
+                class="bg-teal-600 text-white px-4 py-2 rounded-lg">
+                Αποθήκευση
             </button>
-
         </div>
 
     </div>
