@@ -4,7 +4,7 @@ from .models import Organization, Employee
 
 @admin.register(Organization)
 class OrganizationAdmin(admin.ModelAdmin):
-    list_display = ["org_name", "org_address", "org_city", "org_phone"]
+    list_display = ["org_name", "org_address", "org_city", "org_phone","source_id"]
     search_fields = ["org_name", "org_address", "org_city"]
 
 

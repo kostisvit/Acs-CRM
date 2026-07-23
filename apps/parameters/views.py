@@ -63,7 +63,6 @@ def ots_software_view(request):
     )
 
 
-@login_required
 def export_errors_excel(errors):
     wb = Workbook()
     ws = wb.active
@@ -90,7 +89,6 @@ def export_errors_excel(errors):
 
     return response
 
-
 @login_required
 def import_csv(request):
     if request.method == "POST":
@@ -111,18 +109,26 @@ def import_csv(request):
         importer_class = importer_data["class"]
 
         importer = importer_class()
-        imported, errors = importer.import_file(csv_file)
+        result = importer.import_file(csv_file)
+
+        imported = result["imported"]
+        csv_records = result["csv_records"]
+        errors = result["errors"]
+
+        if imported < csv_records:
+            messages.warning(
+                request,
+                f"Imported {imported}/{csv_records} records. "
+                f"{csv_records - imported} records failed."
+            )
+
+            # Export failed rows
+            return export_errors_excel(errors)
 
         messages.success(
             request,
-            f"Imported {imported} records"
+            f"Successfully imported all {imported} records"
         )
-
-        if errors:
-            messages.warning(
-                request,
-                "\n".join(errors)
-            )
 
         return redirect("parameters:import")
 

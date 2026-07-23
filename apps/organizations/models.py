@@ -18,6 +18,8 @@ class Organization(TimeStampedModel):
     org_info = models.TextField(max_length=1000, verbose_name="Πληροφορίες", blank=True)
     is_visible = models.BooleanField(default=True, verbose_name="Κατάσταση")
 
+    source_id = models.IntegerField(null=True, unique=True)
+
     history = HistoricalRecords()
 
     class Meta:

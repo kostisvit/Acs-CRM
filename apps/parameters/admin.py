@@ -10,7 +10,7 @@ class JobTypeAdmin(admin.ModelAdmin):
   
 @admin.register(OrgDepartment)
 class OrgDepartmentAdmin(admin.ModelAdmin): 
-    list_display = ("name", "is_active", "created", "modified")
+    list_display = ("name", "is_active", "created", "modified","source_id")
     list_filter = ("is_active",)
     search_fields = ("name",)
 
