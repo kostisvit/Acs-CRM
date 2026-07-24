@@ -71,6 +71,8 @@ class AcsAdeia(TimeStampedModel):
     )
     is_active = models.BooleanField(default=True, verbose_name="Ενεργή")
 
+    source_id = models.IntegerField(null=True, unique=True)
+    
     class Meta:
         verbose_name = "ACS Τύπος Άδειας"
         verbose_name_plural = "ACS Τύποι Άδειας"
