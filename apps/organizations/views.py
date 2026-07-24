@@ -7,6 +7,7 @@ from .forms import OrganizationForm
 from django.db.models import Q
 from django.contrib.messages.views import SuccessMessageMixin
 from django.views.generic import UpdateView
+from django.contrib import messages
 
 
 # Organization list view and update view
@@ -149,6 +150,7 @@ def soft_delete_organization(request,pk):
     obj = get_object_or_404(Organization, pk=pk)
     obj.is_active = False
     obj.save(update_fields=["is_active"])
+    messages.success(request, f'Ο Οργανισμός "{obj.org_name}" έχει απενεργοποιηθεί.')
     return redirect("organizations:organization_list")
 
 
@@ -156,4 +158,5 @@ def soft_delete_employee(request,pk):
     obj = get_object_or_404(Employee, pk=pk)
     obj.is_active = False
     obj.save(update_fields=["is_active"])
+    messages.success(request, f'Ο/H υπάλληλος "{obj.lastname} {obj.firstname}" του Οργανισμού "{obj.organization}" έχει απενεργοποιηθεί.')
     return redirect("organizations:employee_list")

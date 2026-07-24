@@ -163,5 +163,18 @@
     {% include 'organizations/employee/_load_more.html' %}
   </div>
 </div>
+<script>
+    setTimeout(() => {
+        const messages = document.getElementById("messages");
 
+        if (messages) {
+            messages.style.transition = "opacity 0.5s ease";
+            messages.style.opacity = "0";
+
+            setTimeout(() => {
+                messages.remove();
+            }, 500);
+        }
+    }, 3000);
+</script>
 {% endblock %}
