@@ -1,3 +1,4 @@
+import re
 from django.db import models
 from django_extensions.db.models import TimeStampedModel
 from simple_history.models import HistoricalRecords
@@ -40,7 +41,10 @@ class Organization(TimeStampedModel):
 
     @property
     def initials(self):
-        words = self.org_name.split()
+        # Remove symbols and keep only letters/spaces
+        clean_name = re.sub(r'[^\w\s]', '', self.org_name)
+
+        words = clean_name.split()
 
         if not words:
             return ""
@@ -77,6 +81,21 @@ class Employee(TimeStampedModel):
 
     def __str__(self):
         return (self.lastname or "") + " " + (self.firstname or "")
+
+    @property
+    def initials(self):
+        full_name = f"{self.firstname or ''} {self.lastname or ''}".strip()
+
+        if not full_name:
+            return ""
+
+        words = full_name.split()
+
+        if len(words) == 1:
+            return words[0][0].upper()
+
+        return (words[0][0] + words[-1][0]).upper()
+
 
     def soft_delete(self):
         self.is_visible = False

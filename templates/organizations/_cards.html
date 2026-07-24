@@ -2,7 +2,25 @@
 {% for org in organizations %}
   <div class="rounded-xl border border-gray-200 bg-white p-5 shadow-sm transition hover:shadow-md">
     <div class="flex items-center gap-4">
-      <div class="flex h-12 w-12 items-center justify-center rounded-full bg-teal-300 font-semibold text-gray-800">{{ org.initials }}</div>
+            <div class="flex h-12 w-12 items-center justify-center rounded-full font-semibold text-gray-800
+          {% cycle 
+              'bg-blue-300'
+              'bg-green-300'
+              'bg-purple-300'
+              'bg-pink-300'
+              'bg-yellow-300'
+              'bg-indigo-300'
+              'bg-red-300'
+          %}">
+    
+        <div class="flex h-12 w-12 items-center justify-center rounded-full font-semibold text-gray-800
+        {% cycle 'bg-blue-300' 'bg-green-300' 'bg-purple-300' 'bg-pink-300' 'bg-yellow-300' 'bg-indigo-300' 'bg-red-300' %}">
+        
+        {{ org.initials }}
+
+        </div>
+
+      </div>
 
       <div>
         <h3 class="font-semibold text-gray-900">{{ org.org_name }}</h3>
@@ -37,7 +55,7 @@
     </div>
 
     <div class="mt-5 flex justify-end">
-      <a href="{% url 'organizations:organization_update' org.pk %}" class="rounded-lg bg-blue-50 px-4 py-2 text-sm font-medium text-blue-600 hover:bg-blue-100">Επεξεργασία</a>
+      <a href="{% url 'organizations:organization_update' org.pk %}" class="rounded-lg bg-teal-600 px-4 py-2 text-sm font-medium text-white hover:bg-teal-700">Επεξεργασία</a>
     </div>
   </div>
 {% empty %}

@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.urls import reverse_lazy
-from apps.organizations.models import Organization
+from apps.organizations.models import Organization, Employee
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
 from .forms import OrganizationForm
@@ -17,8 +17,10 @@ def organization_list(request):
     search = request.GET.get("q", "")
     is_visible = request.GET.get("is_visible", "")
 
-    organizations = Organization.objects.all().order_by("org_name")
+    organizations = Organization.objects.all().order_by("?")
 
+    if is_visible == "":
+        organizations = organizations.filter(is_visible=True)
 
     # Search filter
     if search:
@@ -83,3 +85,59 @@ class OrganizationUpdateView(SuccessMessageMixin, UpdateView):
 
 
 # Employee list view and update view
+@login_required
+def employee_list(request):
+
+    search = request.GET.get("q", "")
+    is_active = request.GET.get("is_active", "")
+
+    employees = Employee.objects.all().order_by('?')
+
+
+    if is_active == "":
+        employees = employees.filter(is_active=True)
+
+    # Search filter
+    if search:
+        employees = employees.filter(
+            Q(last_name__icontains=search) |
+            Q(phone__icontains=search)
+        )
+
+
+    # Visibility filter
+    if is_active == "true":
+        employees = employees.filter(
+            is_active=True
+        )
+
+    elif is_active == "false":
+        employees = employees.filter(
+            is_active=False
+        )
+
+
+    paginator = Paginator(employees, 12)
+
+    page_obj = paginator.get_page(
+        request.GET.get("page", 1)
+    )
+
+
+    context = {
+        "employees": page_obj,
+        "search": search,
+        #"employees": employees,
+        "is_htmx": request.headers.get("HX-Request"),
+    }
+    if request.headers.get("HX-Request"):
+        return render(
+            request,
+            "organizations/employee/_cards.html",
+            context
+        )
+    return render(
+        request,
+        "organizations/employee/list.html",
+        context
+    )

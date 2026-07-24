@@ -1,5 +1,167 @@
 {% extends '_base.html' %}
 
 {% block content %}
+<!-- Toolbar -->
+  <div class="rounded-xl border border-gray-200 bg-white p-4 shadow-sm">
+    <div class="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+      <div>
+        <h2 class="text-lg font-semibold text-gray-900">Επαφές</h2>
+        <p class="text-sm text-gray-500">Λίστα επαφών Οργανισμών</p>
+      </div>
+
+      <div class="flex flex-wrap items-center justify-end gap-3">
+          <!-- Search -->
+        <form
+            hx-get="{% url 'organizations:employee_list' %}"
+            hx-target="#employee-list"
+            hx-swap="innerHTML"
+            hx-push-url="true"
+            hx-trigger="keyup changed delay:500ms">
+
+            <input
+                type="text"
+                name="q"
+                value="{{ search }}"
+                placeholder="Αναζήτηση..."
+                class="w-64 rounded-lg border border-gray-300 px-4 py-2 focus:border-teal-400 focus:ring-2 focus:ring-teal-300"
+            />
+
+        </form>
+
+        <!-- Export -->
+        <button class="rounded-lg border border-teal-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-teal-50">Export</button>
+
+        <!-- New -->
+        <a href="" class="rounded-lg bg-teal-300 px-5 py-2 text-sm font-semibold text-gray-900 hover:bg-teal-400">+ Νέος εγγραφή</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Space between toolbar and table -->
+  <div class="mt-6"></div>
+    <div 
+      x-data="{ openFilter:false }"
+      @htmx:after-request.window="openFilter = false">
+
+
+      <!-- Header -->
+
+      <div class="mb-6 flex items-center justify-between">
+
+
+          <button
+              @click="openFilter=true"
+              class="rounded-xl bg-teal-600 px-6 py-3 text-white hover:bg-teal-700 text-sm font-semibold">
+
+              Φίλτρα
+
+          </button>
+
+      </div>
+
+
+
+    <!-- FILTER MODAL -->
+
+    <div
+        x-show="openFilter"
+        x-transition
+        class="fixed inset-0 z-50 flex items-center justify-center bg-black/40"
+        style="display:none">
+
+
+        <div
+            @click.outside="openFilter=false"
+            class="w-full max-w-md rounded-xl bg-white p-6 shadow-xl">
+
+
+            <div class="mb-6 flex items-center justify-between">
+
+
+                <h2 class="text-xl font-semibold">
+                    Φίλτρα αναζήτησης
+                </h2>
+
+
+                <button
+                    @click="openFilter=false"
+                    class="text-gray-500 hover:text-gray-900">
+
+                    ✕
+
+                </button>
+
+
+            </div>
+
+
+
+
+      <form
+          hx-get="{% url 'organizations:employee_list' %}"
+          hx-target="#employee-list"
+          hx-swap="innerHTML"
+          hx-push-url="true"
+          class="space-y-5">
+
+          <input
+              type="text"
+              name="q"
+              value="{{ search }}"
+              placeholder="Αναζήτηση επαφής..."
+              class="w-full rounded-lg border px-4 py-3">
+
+
+          <select name="is_active"
+              class="w-full rounded-lg border px-4 py-3">
+
+              <option value="">
+                  All
+              </option>
+
+              <option value="true"
+                  {% if is_active == "true" %}selected{% endif %}>
+                  Active
+              </option>
+
+              <option value="false"
+                  {% if is_active == "false" %}selected{% endif %}>
+                  Inactive
+              </option>
+
+          </select>
+
+
+          <button type="submit" class="w-full rounded-lg bg-teal-600 py-3 text-white hover:bg-teal-700">
+              Apply
+          </button>
+
+      </form>
+
+
+    </div>
+
+
+    </div>
+  <!-- Table Card -->
+<div id="employee-wrapper">
+  {% if messages %}
+    <div id="messages" class="max-w-5xl mx-auto mt-6">
+        {% for message in messages %}
+            <div class="mb-4 rounded-lg border border-green-300 bg-green-100 px-4 py-3 text-green-800">
+                {{ message }}
+            </div>
+        {% endfor %}
+    </div>
+  {% endif %}
+  
+  <div id="employee-list" class="grid grid-cols-1 gap-5 md:grid-cols-3">
+    {% include 'organizations/employee/_cards.html' %}
+  </div>
+
+  <div id="load-more-container">
+    {% include 'organizations/employee/_load_more.html' %}
+  </div>
+</div>
 
 {% endblock %}
