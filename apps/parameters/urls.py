@@ -9,5 +9,6 @@ urlpatterns = [
   path("job-types/add/", views.add_job_type, name="add_job_type"),
   path("ots-software/", views.ots_software_view, name="ots_software"),
   path("organization-departments", views.org_department_view, name="org_department"),
+  path("acs-adeia", views.acs_adeia_type_view, name="acs_adeia_type"),
   path("import-data/",views.import_csv,name="import",)
 ]
