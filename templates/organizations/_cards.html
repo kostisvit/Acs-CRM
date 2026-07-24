@@ -55,12 +55,21 @@
     </div>
 
     <div class="mt-5 flex items-center justify-between">
+      {% if org.is_active  %}
       <a
         href="{% url 'organizations:soft_delete_organization' org.pk %}"
         class="rounded-lg bg-red-600 px-4 py-2 text-sm font-medium text-white hover:bg-red-700"
       >
         Διαγραφή
       </a>
+      {% else %}
+      <a
+        href="{% url 'organizations:restore_organization' org.pk %}"
+        class="rounded-lg bg-red-600 px-4 py-2 text-sm font-medium text-white hover:bg-red-700"
+      >
+        Ενεργοποίηση
+      </a>
+      {% endif%}
 
       <a
         href="{% url 'organizations:organization_update' org.pk %}"

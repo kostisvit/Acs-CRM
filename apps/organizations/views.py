@@ -35,12 +35,12 @@ def organization_list(request):
     # Visibility filter
     if is_active == "true":
         organizations = organizations.filter(
-            is_visible=True
+            is_active=True
         )
 
     elif is_active == "false":
         organizations = organizations.filter(
-            is_visible=False
+            is_active=False
         )
 
 
@@ -144,14 +144,22 @@ def employee_list(request):
     )
 
 
-# Soft delete for Organization & Employee
+# Soft delete and restore for Organization & Employee
 
 def soft_delete_organization(request,pk):
     obj = get_object_or_404(Organization, pk=pk)
-    obj.is_active = False
+    obj.is_active = not obj.is_active
     obj.save(update_fields=["is_active"])
-    messages.success(request, f'Ο Οργανισμός "{obj.org_name}" έχει απενεργοποιηθεί.')
+    messages.success(request, f'Ο Οργανισμός "{obj.org_name}" απενεργοποιήθηκε.')
     return redirect("organizations:organization_list")
+
+def restore_organization(request,pk):
+    obj = get_object_or_404(Organization, pk=pk)
+    obj.is_active = True
+    obj.save(update_fields=["is_active"])
+    messages.success(request, f'Ο Οργανισμός "{obj.org_name}" ενεργοποιήθηκε.')
+    return redirect("organizations:organization_list")
+
 
 
 def soft_delete_employee(request,pk):
@@ -159,4 +167,11 @@ def soft_delete_employee(request,pk):
     obj.is_active = False
     obj.save(update_fields=["is_active"])
     messages.success(request, f'Ο/H υπάλληλος "{obj.lastname} {obj.firstname}" του Οργανισμού "{obj.organization}" έχει απενεργοποιηθεί.')
+    return redirect("organizations:employee_list")
+
+def restore_employee(request,pk):
+    obj = get_object_or_404(Employee, pk=pk)
+    obj.is_active = True
+    obj.save(update_fields=["is_active"])
+    messages.success(request, f'Ο/H υπάλληλος "{obj.lastname} {obj.firstname}" του Οργανισμού "{obj.organization}" έχει εργοποιηθεί.')
     return redirect("organizations:employee_list")
