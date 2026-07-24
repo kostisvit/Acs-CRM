@@ -100,7 +100,7 @@ def employee_list(request):
     # Search filter
     if search:
         employees = employees.filter(
-            Q(last_name__icontains=search) |
+            Q(lastname__icontains=search) |
             Q(phone__icontains=search)
         )
 
