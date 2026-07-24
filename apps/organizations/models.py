@@ -98,9 +98,9 @@ class Employee(TimeStampedModel):
 
 
     def soft_delete(self):
-        self.is_visible = False
+        self.is_active = False
         self.save()
 
     def restore(self):
-        self.is_visible = True
+        self.is_active = True
         self.save()

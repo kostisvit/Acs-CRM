@@ -143,10 +143,17 @@ def employee_list(request):
     )
 
 
-# Soft delete for Organization
+# Soft delete for Organization & Employee
 
 def soft_delete_organization(request,pk):
     obj = get_object_or_404(Organization, pk=pk)
     obj.is_active = False
     obj.save(update_fields=["is_active"])
     return redirect("organizations:organization_list")
+
+
+def soft_delete_employee(request,pk):
+    obj = get_object_or_404(Employee, pk=pk)
+    obj.is_active = False
+    obj.save(update_fields=["is_active"])
+    return redirect("organizations:employee_list")
