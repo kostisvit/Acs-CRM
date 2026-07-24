@@ -16,6 +16,19 @@ class JobType(TimeStampedModel):
         return self.name
 
 
+class OtsSoftware(TimeStampedModel):
+    name = models.CharField(max_length=100, unique=True,
+                            verbose_name="Όνομα Εφαρμογής")
+    is_active = models.BooleanField(default=True, verbose_name="Ενεργή")
+
+    class Meta:
+        verbose_name = "Λογισμικό Οργανισμού"
+        verbose_name_plural = "Λογισμικό Οργανισμού"
+
+    def __str__(self):
+        return self.name
+
+
 class OrgDepartment(TimeStampedModel):
     name = models.CharField(
         max_length=100,
@@ -81,14 +94,4 @@ class AcsAdeia(TimeStampedModel):
         return self.name
 
 
-class OtsSoftware(TimeStampedModel):
-    name = models.CharField(max_length=100, unique=True,
-                            verbose_name="Όνομα Εφαρμογής")
-    is_active = models.BooleanField(default=True, verbose_name="Ενεργή")
 
-    class Meta:
-        verbose_name = "Λογισμικό Οργανισμού"
-        verbose_name_plural = "Λογισμικό Οργανισμού"
-
-    def __str__(self):
-        return self.name

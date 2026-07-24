@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404, redirect
 from django.urls import reverse_lazy
 from apps.organizations.models import Organization, Employee
 from django.contrib.auth.decorators import login_required
@@ -15,12 +15,12 @@ from django.views.generic import UpdateView
 def organization_list(request):
 
     search = request.GET.get("q", "")
-    is_visible = request.GET.get("is_visible", "")
+    is_active = request.GET.get("is_active", "")
 
     organizations = Organization.objects.all().order_by("?")
 
-    if is_visible == "":
-        organizations = organizations.filter(is_visible=True)
+    if is_active == "":
+        organizations = organizations.filter(is_active=True)
 
     # Search filter
     if search:
@@ -32,12 +32,12 @@ def organization_list(request):
 
 
     # Visibility filter
-    if is_visible == "true":
+    if is_active == "true":
         organizations = organizations.filter(
             is_visible=True
         )
 
-    elif is_visible == "false":
+    elif is_active == "false":
         organizations = organizations.filter(
             is_visible=False
         )
@@ -53,7 +53,7 @@ def organization_list(request):
     context = {
         "organizations": page_obj,
         "search": search,
-        "is_visible": is_visible,
+        "is_active": is_active,
         "is_htmx": request.headers.get("HX-Request"),
     }
     if request.headers.get("HX-Request"):
@@ -76,7 +76,7 @@ class OrganizationUpdateView(SuccessMessageMixin, UpdateView):
     form_class = OrganizationForm
     template_name = "organizations/detail.html"
     success_url = reverse_lazy("organizations:organization_list")
-    success_message = "Ο πελάτης ενημερώθηκε επιτυχώς."
+    success_message = "Ο Οργανισμός ενημερώθηκε με επιτυχία."
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -141,3 +141,12 @@ def employee_list(request):
         "organizations/employee/list.html",
         context
     )
+
+
+# Soft delete for Organization
+
+def soft_delete_organization(request,pk):
+    obj = get_object_or_404(Organization, pk=pk)
+    obj.is_active = False
+    obj.save(update_fields=["is_active"])
+    return redirect("organizations:organization_list")

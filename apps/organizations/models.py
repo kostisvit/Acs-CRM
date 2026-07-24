@@ -17,7 +17,7 @@ class Organization(TimeStampedModel):
     org_email = models.EmailField(blank=True)
     org_site = models.URLField(max_length=250, blank=True, null=True)
     org_info = models.TextField(max_length=1000, verbose_name="Πληροφορίες", blank=True)
-    is_visible = models.BooleanField(default=True, verbose_name="Κατάσταση")
+    is_active = models.BooleanField(default=True, verbose_name="Κατάσταση")
 
     source_id = models.IntegerField(null=True, unique=True)
 
@@ -32,11 +32,11 @@ class Organization(TimeStampedModel):
         return self.org_name
 
     def soft_delete(self):
-        self.is_visible = False
+        self.is_active = False
         self.save()
 
     def restore(self):
-        self.is_visible = True
+        self.is_active = True
         self.save()
 
     @property
