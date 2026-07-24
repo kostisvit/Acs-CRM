@@ -1,6 +1,6 @@
 import csv
 from apps.organizations.models import Organization, Employee
-from apps.parameters.models import JobType, OtsSoftware, OrgDepartment
+from apps.parameters.models import JobType, OtsSoftware, OrgDepartment, AcsAdeia
 from abc import ABC, abstractmethod
 
 def str_to_bool(value):
@@ -159,6 +159,21 @@ class OrgDepartmentImporter(BaseImporter):
             },
         )
 
+
+class AcsAdeiaTypeImporter(BaseImporter):
+    model = AcsAdeia
+
+    def import_row(self, row):
+        self.model.objects.update_or_create(
+            source_id=row["id"],
+            name=row["name"],
+            adeianame_id=row["adeianame_id"],
+            defaults={
+                "is_active": str_to_bool(row["is_active"]),
+            },
+            
+        )
+
 IMPORTERS = {
     "customers": {
         "class": OrganizationImporter,
@@ -180,4 +195,8 @@ IMPORTERS = {
         "class": OrgDepartmentImporter,
         "label": "Διευθύνσεις Οργανισμού",
     },
+    "acsadeiatype": {
+        "class": AcsAdeiaTypeImporter,
+        "label": "Είδος άδειας"
+    }
 }
