@@ -5,7 +5,7 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from openpyxl import Workbook
 from .importers import IMPORTERS
-from .models import JobType, OtsSoftware
+from .models import JobType, OtsSoftware, OrgDepartment
 import json
 from django.http import JsonResponse
 
@@ -57,6 +57,19 @@ def ots_software_view(request):
             "ots_software": ots_software
         }
 
+    )
+
+# Organization department view
+
+@login_required
+def org_department_view(request):
+    org_department = OrgDepartment.objects.all()
+    return render(
+        request,
+        "parameters/_org_department.html",
+        {
+            "org_department": org_department
+        }
     )
 
 
