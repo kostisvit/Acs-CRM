@@ -18,6 +18,9 @@ def parameters_view(request):
 
     )
 
+
+# Job type view and create job type view
+
 @login_required
 def jobtype_view(request):
     job_types =  JobType.objects.all()
@@ -31,24 +34,18 @@ def jobtype_view(request):
     )
 
 def add_job_type(request):
-
     data = json.loads(request.body)
-
-
     job_type = JobType.objects.create(
         name=data["name"],
         is_active=data.get("is_active", True)
     )
-
-
     return JsonResponse({
-        "id": job_type.id,
         "name": job_type.name,
         "is_active": job_type.is_active
     })
 
 
-
+# Ots software view
 
 @login_required
 def ots_software_view(request):
@@ -62,6 +59,8 @@ def ots_software_view(request):
 
     )
 
+
+# Import csv view
 
 def export_errors_excel(errors):
     wb = Workbook()

@@ -26,8 +26,6 @@
            px-5 py-3
           hover:bg-teal-300
            font-medium">
-
-            <span>⚙️</span>
             <span>Εργασία</span>
         </a>
 
@@ -38,8 +36,6 @@
            px-5 py-3
            hover:bg-teal-300
            transition">
-
-            <span>📦</span>
             <span>Εφαρμογές OTS</span>
         </a>
 
@@ -50,8 +46,6 @@
            px-5 py-3
            hover:bg-teal-300
            transition">
-
-            <span>🌍</span>
             <span>Διευθύνσεις Οργανισμού</span>
         </a>
 
@@ -62,8 +56,6 @@
            px-5 py-3
            hover:bg-teal-300
            transition">
-
-            <span>⭐</span>
             <span>Priorities</span>
         </a>
 
@@ -74,9 +66,17 @@
            px-5 py-3
            hover:bg-teal-300
            transition">
-
-            <span>🖥️</span>
             <span>Servers</span>
+        </a>
+        
+        <!-- Import data -->
+        <a href="{% url 'parameters:import' %}"
+           class="
+           flex items-center gap-3
+           px-5 py-3
+           hover:bg-teal-300
+           transition">
+            <span>Import CSV</span>
         </a>
 
     </nav>
