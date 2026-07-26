@@ -94,13 +94,13 @@ def export_errors_excel(errors):
     ws = wb.active
     ws.title = "Import Errors"
 
-    # Header
     ws.append(["Line", "Error"])
 
-    # Data
     for error in errors:
-        line, message = error.split(": ", 1)
-        ws.append([line.replace("Line ", ""), message])
+        line = error.get("line", "")
+        message = error.get("error", "")
+
+        ws.append([line, message])
 
     output = BytesIO()
     wb.save(output)

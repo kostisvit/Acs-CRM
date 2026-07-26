@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Organization, Employee
+from .models import Organization, Employee, Tasks
 
 
 @admin.register(Organization)
@@ -14,3 +14,10 @@ class EmployeeAdmin(admin.ModelAdmin):
     search_fields = ["organization","lastname"]
     list_filter = ["is_active", "org_department", "organization"]
 
+
+
+@admin.register(Tasks)
+class TaskAdmin(admin.ModelAdmin):
+    list_display = ['organization','importdate','org_app','job_type_acs','acs_employee','task_time','org_employee','created','modified']
+    search_fields = ["organization","task_info"]
+    list_filter = ["organization", "acs_employee"]

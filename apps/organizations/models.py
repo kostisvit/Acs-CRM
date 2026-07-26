@@ -1,5 +1,8 @@
 import re
+import datetime
+from django.conf import settings
 from django.db import models
+from django.db.models import Sum
 from django_extensions.db.models import TimeStampedModel
 from simple_history.models import HistoricalRecords
 
@@ -104,3 +107,66 @@ class Employee(TimeStampedModel):
     def restore(self):
         self.is_active = True
         self.save()
+
+
+
+class Tasks(TimeStampedModel):
+    organization = models.ForeignKey("Organization", on_delete=models.CASCADE, verbose_name="Οργανισμός")
+    importdate = models.DateField(default=datetime.date.today, verbose_name="Ημ. Κατ.", db_index=True)
+    org_app = models.ForeignKey(
+        "parameters.OtsSoftware",
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        verbose_name="Εφαρμογή OTS",
+    )
+    job_type_acs = models.ForeignKey(
+        "parameters.JobType",
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        verbose_name="Τύπος Εργασίας ACS",
+    )
+    task_info = models.TextField(max_length=1000, verbose_name="Περιγραφή εργασίας")
+    task_note = models.TextField(max_length=1000, verbose_name="Σημειώσεις", blank=True)
+    acs_employee = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        max_length=100,
+        verbose_name="Υπάλληλος",
+        on_delete=models.CASCADE,
+    )
+    task_time = models.DecimalField(verbose_name="Διάρκεια εργασίας", max_digits=5, decimal_places=2)
+    org_employee = models.ForeignKey(
+        "Employee",
+        on_delete=models.CASCADE,
+        verbose_name="Υπάλληλος",
+        null=True,
+        blank=True,
+    )
+    ticketid = models.CharField(max_length=50, verbose_name="Αίτημα OTS", blank=True)
+
+    history = HistoricalRecords()
+
+    class Meta:
+        indexes = [models.Index(fields=["importdate", "acs_employee"])]
+        verbose_name = "Εργασίες Οργανισμού"
+        verbose_name_plural = "Εργασίες Οργανισμού"
+        ordering = ["importdate"]
+        constraints = [
+        models.UniqueConstraint(
+            fields=["ticketid"],
+            name="unique_ticketid"
+        )
+    ]
+
+    def __str__(self):
+        return str(self.organization)
+
+    def task_time_count(self):  # Ώρες εργασίας ανα χρήστη
+        today = datetime.date.today()
+        return (
+            Tasks.objects.all()
+            .filter(importdate__year=today.year, acs_employee=self.acs_employee)
+            .aggregate(task_time_sum=Sum("task_time"))
+            .get("task_time_sum")
+        )

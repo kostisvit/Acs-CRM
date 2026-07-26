@@ -67,7 +67,7 @@ class OrganizationImporter(BaseImporter):
                 "org_email": row["email"],
                 "org_site": row["website"],
                 "org_info": row["info"],
-                "is_visible": str_to_bool(row["is_visible"]),
+                "is_active": str_to_bool(row["is_visible"]),
             },
         )
 
@@ -173,6 +173,9 @@ class AcsAdeiaTypeImporter(BaseImporter):
             },
             
         )
+        
+
+
 
 IMPORTERS = {
     "customers": {
