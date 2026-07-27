@@ -14,6 +14,8 @@ class EmployeeAdmin(admin.ModelAdmin):
     search_fields = ["organization","lastname"]
     list_filter = ["is_active", "org_department", "organization"]
 
+    def delete_queryset(self, request, queryset):
+        queryset.update(is_active=False)
 
 
 @admin.register(Tasks)

@@ -48,6 +48,7 @@ TEMPLATES = [
                 "django.contrib.messages.context_processors.messages",
                 # Custom context processor for organization, contacts, tasks and day off count
                 "apps.organizations.context_processor.organization_count",
+                "apps.organizations.context_processor.org_employees_count",
             ],
         },
     },

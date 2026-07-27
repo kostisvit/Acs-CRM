@@ -5,6 +5,7 @@ from django.db import models
 from django.db.models import Sum
 from django_extensions.db.models import TimeStampedModel
 from simple_history.models import HistoricalRecords
+from django.core.validators import MinValueValidator
 
 
 class Organization(TimeStampedModel):
@@ -112,7 +113,7 @@ class Employee(TimeStampedModel):
 
 
 class Tasks(TimeStampedModel):
-    organization = models.ForeignKey("Organization", on_delete=models.CASCADE, verbose_name="Οργανισμός")
+    organization = models.ForeignKey("Organization", on_delete=models.PROTECT, verbose_name="Οργανισμός")
     importdate = models.DateField(default=datetime.date.today, verbose_name="Ημ. Κατ.", db_index=True)
     org_app = models.ForeignKey(
         "parameters.OtsSoftware",
@@ -132,14 +133,13 @@ class Tasks(TimeStampedModel):
     task_note = models.TextField(max_length=1000, verbose_name="Σημειώσεις", blank=True)
     acs_employee = models.ForeignKey(
         settings.AUTH_USER_MODEL,
-        max_length=100,
         verbose_name="Υπάλληλος",
-        on_delete=models.CASCADE,
+        on_delete=models.PROTECT,
     )
-    task_time = models.DecimalField(verbose_name="Διάρκεια εργασίας", max_digits=5, decimal_places=2)
+    task_time = models.DecimalField(verbose_name="Διάρκεια εργασίας", max_digits=5, decimal_places=2,validators=[MinValueValidator(0)],)
     org_employee = models.ForeignKey(
         "Employee",
-        on_delete=models.CASCADE,
+        on_delete=models.PROTECT,
         verbose_name="Υπάλληλος",
         null=True,
         blank=True,
@@ -151,10 +151,13 @@ class Tasks(TimeStampedModel):
     history = HistoricalRecords()
 
     class Meta:
-        indexes = [models.Index(fields=["importdate", "acs_employee"])]
+        indexes = [
+            models.Index(fields=["organization", "importdate"]),
+            models.Index(fields=["acs_employee", "importdate"]),
+        ]
         verbose_name = "Εργασίες Οργανισμού"
         verbose_name_plural = "Εργασίες Οργανισμού"
-        ordering = ["importdate"]
+        ordering = ["-importdate"]
         constraints = [
         models.UniqueConstraint(
             fields=["ticketid"],
