@@ -1,5 +1,5 @@
 import csv
-from apps.organizations.models import Organization, Employee, Tasks
+from apps.organizations.models import Organization, Employee, Task
 from apps.parameters.models import JobType, OtsSoftware, OrgDepartment, AcsAdeia
 from abc import ABC, abstractmethod
 from decimal import Decimal
@@ -203,7 +203,7 @@ class AcsAdeiaTypeImporter(BaseImporter):
 
 
 class TaskImporter(BaseImporter):
-    model = Tasks
+    model = Task
 
     def import_row(self, row):
 

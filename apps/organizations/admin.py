@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Organization, Employee, Tasks
+from .models import Organization, Employee, Task
 
 
 @admin.register(Organization)
@@ -18,7 +18,7 @@ class EmployeeAdmin(admin.ModelAdmin):
         queryset.update(is_active=False)
 
 
-@admin.register(Tasks)
+@admin.register(Task)
 class TaskAdmin(admin.ModelAdmin):
     list_display = ['organization','importdate','org_app','job_type_acs','acs_employee','task_time','org_employee','created','modified']
     search_fields = ["organization","task_info"]

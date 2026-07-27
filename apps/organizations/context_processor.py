@@ -1,6 +1,6 @@
 import datetime
 from django.db.models import Sum
-from apps.organizations.models import Organization, Employee, Tasks
+from apps.organizations.models import Organization, Employee, Task
 
 # Custom context processor for organization, contacts, tasks and day off count
 def organization_count(request):
@@ -30,18 +30,18 @@ def user_work_time(request):
     groups = request.user.groups.values_list("name", flat=True)
 
     if "manager" in groups:
-        queryset = Tasks.objects.filter(
+        queryset = Task.objects.filter(
             importdate__year=today.year
         )
 
     elif "employee" in groups:
-        queryset = Tasks.objects.filter(
+        queryset = Task.objects.filter(
             acs_employee=request.user,
             importdate__year=today.year
         )
 
     else:
-        queryset = Tasks.objects.none()
+        queryset = Task.objects.none()
 
     user_work_time = queryset.aggregate(
         total=Sum("task_time")

@@ -112,7 +112,7 @@ class Employee(TimeStampedModel):
 
 
 
-class Tasks(TimeStampedModel):
+class Task(TimeStampedModel):
     organization = models.ForeignKey("Organization", on_delete=models.PROTECT, verbose_name="Οργανισμός")
     importdate = models.DateField(default=datetime.date.today, verbose_name="Ημ. Κατ.", db_index=True)
     org_app = models.ForeignKey(
@@ -171,7 +171,7 @@ class Tasks(TimeStampedModel):
     def task_time_count(self):  # Ώρες εργασίας ανα χρήστη
         today = datetime.date.today()
         return (
-            Tasks.objects.all()
+            Task.objects.all()
             .filter(importdate__year=today.year, acs_employee=self.acs_employee)
             .aggregate(task_time_sum=Sum("task_time"))
             .get("task_time_sum")
