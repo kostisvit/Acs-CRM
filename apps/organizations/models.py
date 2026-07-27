@@ -60,12 +60,12 @@ class Organization(TimeStampedModel):
 
 
 class Employee(TimeStampedModel):
-    organization = models.ForeignKey("Organization", on_delete=models.CASCADE, verbose_name="Οργανισμός", null=True)
-    firstname = models.CharField(max_length=150, verbose_name="Όνομα", null=True)
-    lastname = models.CharField(max_length=150, verbose_name="Επώνυμο", null=True)
+    organization = models.ForeignKey("Organization", on_delete=models.CASCADE, related_name="employees",verbose_name="Οργανισμός", null=True)
+    firstname = models.CharField(max_length=150, verbose_name="Όνομα", blank=True)
+    lastname = models.CharField(max_length=150, verbose_name="Επώνυμο", blank=True)
     phone = models.CharField(max_length=100, verbose_name="Τηλέφωνο", blank=False)
     cellphone = models.CharField(max_length=30, verbose_name="Κινητό", blank=True)
-    email = models.EmailField(blank=True, null=True)
+    email = models.EmailField(blank=True, null=True,db_index=True)
     secondary_email = models.EmailField(blank=True, null=True)
     info = models.TextField(max_length=1000, verbose_name="Πληροφορίες", blank=True)
     is_active = models.BooleanField(default=True, verbose_name="Κατάσταση")
@@ -83,9 +83,15 @@ class Employee(TimeStampedModel):
     class Meta:
         verbose_name = "Υπάλληλοι Οργανισμού"
         verbose_name_plural = "Υπάλληλοι Οργανισμού"
+        ordering = ["lastname", "firstname"]
 
     def __str__(self):
         return (self.lastname or "") + " " + (self.firstname or "")
+
+    def save(self, *args, **kwargs):
+        if self.email:
+            self.email = self.email.lower()
+        super().save(*args, **kwargs)
 
     @property
     def initials(self):

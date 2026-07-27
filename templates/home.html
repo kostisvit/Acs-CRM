@@ -37,11 +37,11 @@ Dashboard Home
 
           <div class="rounded-xl bg-pink-500 p-6 shadow transition hover:shadow-lg">
             <h3 class="text-lg font-semibold">Εργασίες {% now "Y" %}</h3>
-            <p class="mt-2 text-3xl font-bold">342</p>
+            <p class="mt-2 text-3xl font-bold">{{ user_work_count }}</p>
           </div>
 
           <div class="rounded-xl bg-orange-600 p-6 shadow transition hover:shadow-lg">
-            <h3 class="text-lg font-semibold">Completed Tasks</h3>
+            <h3 class="text-lg font-semibold">Ώρες Εργασιών</h3>
             <p class="mt-2 text-3xl font-bold">{{ user_work_time }}</p>
           </div>
 
