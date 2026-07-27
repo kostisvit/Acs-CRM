@@ -42,6 +42,8 @@ class CustomUser(AbstractBaseUser, PermissionsMixin, TimeStampedModel):
     # Optional profile fields
     first_name = models.CharField(max_length=150, blank=True)
     last_name = models.CharField(max_length=150, blank=True)
+    
+    must_change_password = models.BooleanField(default=False)
 
     USERNAME_FIELD = "email"
     REQUIRED_FIELDS = []

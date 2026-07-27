@@ -28,6 +28,7 @@ class CustomUserAdmin(UserAdmin):
                 "is_active",
                 "is_staff",
                 "is_superuser",
+                "must_change_password",
                 "groups",
                 "user_permissions",
             )
@@ -48,6 +49,7 @@ class CustomUserAdmin(UserAdmin):
                 "password2",
                 "is_active",
                 "is_staff",
+                "must_change_password",
             ),
         }),
     )
