@@ -10,52 +10,46 @@ Dashboard Home
 {% block content %}
 
 
-<div class="
-bg-white
-rounded-2xl
-shadow-sm
-border
-border-gray-100
-p-8">
+<div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-8">
 
 
-<h2 id="welcome" class="
-text-2xl
-font-bold
-text-[#0B1F3A]">
-
-</h2>
+  <h2 id="welcome" class="text-2xl font-bold text-[#0B1F3A] mb-8"></h2>
 
 
-<p class="
-mt-3
-text-gray-500">
+  <div class="mt-3">
+    <h2 class="text-xl font-semibold mb-6">Σύνοψη Οργανισμών</h2>
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+      
+      <div class="rounded-xl bg-teal-300 p-6 shadow transition hover:shadow-lg">
+        <h3 class="text-lg font-semibold">Οργανισμοί</h3>
+        <p class="mt-2 text-3xl font-bold">{{ total_organization }}</p>
+      </div>
 
-<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+      <div class="rounded-xl bg-teal-300 p-6 shadow transition hover:shadow-lg">
+        <h3 class="text-lg font-semibold">Επαφές</h3>
+        <p class="mt-2 text-3xl font-bold">{{ total_employees }}</p>
+      </div>
+
+    </div>
+      <div class="mt-3">
+        <h2 class="text-xl font-semibold mb-6">Η Δραστηριότητά μου</h2>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+
+          <div class="rounded-xl bg-pink-500 p-6 shadow transition hover:shadow-lg">
+            <h3 class="text-lg font-semibold">Εργασίες {% now "Y" %}</h3>
+            <p class="mt-2 text-3xl font-bold">342</p>
+          </div>
+
+          <div class="rounded-xl bg-orange-600 p-6 shadow transition hover:shadow-lg">
+            <h3 class="text-lg font-semibold">Completed Tasks</h3>
+            <p class="mt-2 text-3xl font-bold">{{ user_work_time }}</p>
+          </div>
+
+      </div>
+
+  </div>
   
-  <div class="rounded-xl bg-teal-300 p-6 shadow">
-    <h3 class="text-lg font-semibold">Οργανισμοί</h3>
-    <p class="mt-2 text-3xl font-bold">{{ total_organization }}</p>
-  </div>
-
-  <div class="rounded-xl bg-emerald-300 p-6 shadow">
-    <h3 class="text-lg font-semibold">Επαφές</h3>
-    <p class="mt-2 text-3xl font-bold">{{ total_employees }}</p>
-  </div>
-
-  <div class="rounded-xl bg-pink-500 p-6 shadow">
-    <h3 class="text-lg font-semibold">Εργασίες {% now "Y" %}</h3>
-    <p class="mt-2 text-3xl font-bold">342</p>
-  </div>
-
-  <div class="rounded-xl bg-orange-600 p-6 shadow">
-    <h3 class="text-lg font-semibold">Completed Tasks</h3>
-    <p class="mt-2 text-3xl font-bold">{{ user_work_time }}</p>
-  </div>
-
-</div>
-
-</p>
+  
 
 
 </div>
