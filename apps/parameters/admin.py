@@ -4,7 +4,7 @@ from .models import JobType, OrgDepartment, TrainingType, TrainingPlace, OtsSoft
 
 @admin.register(JobType)
 class JobTypeAdmin(admin.ModelAdmin):
-    list_display = ("name", "is_active", "created", "modified")
+    list_display = ("name", "is_active", "created", "modified","source_id")
     list_filter = ("is_active",)
     search_fields = ("name",)
   
@@ -28,7 +28,7 @@ class TrainingPlaceAdmin(admin.ModelAdmin):
     
 @admin.register(OtsSoftware)
 class OtsSoftwareAdmin(admin.ModelAdmin): 
-    list_display = ("name", "is_active", "created", "modified")
+    list_display = ("name", "is_active", "created", "modified","source_id")
     list_filter = ("is_active",)
     search_fields = ("name",) 
 

@@ -10,7 +10,7 @@ class OrganizationAdmin(admin.ModelAdmin):
 
 @admin.register(Employee)
 class EmployeeAdmin(admin.ModelAdmin):
-    list_display = ["organization", "firstname", "lastname","phone","cellphone","email","secondary_email","is_active","org_department"]
+    list_display = ["organization", "firstname", "lastname","phone","cellphone","email","secondary_email","is_active","org_department","source_id"]
     search_fields = ["organization","lastname"]
     list_filter = ["is_active", "org_department", "organization"]
 

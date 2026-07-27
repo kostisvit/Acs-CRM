@@ -76,6 +76,7 @@ class Employee(TimeStampedModel):
         verbose_name="Τμήμα Οργανισμού",
     )
 
+    source_id = models.IntegerField(null=True, unique=True)
     history = HistoricalRecords()
 
     class Meta:
@@ -144,6 +145,8 @@ class Tasks(TimeStampedModel):
         blank=True,
     )
     ticketid = models.CharField(max_length=50, verbose_name="Αίτημα OTS", blank=True)
+
+    source_id = models.IntegerField(null=True, unique=True)
 
     history = HistoricalRecords()
 

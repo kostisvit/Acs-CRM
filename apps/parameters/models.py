@@ -8,6 +8,8 @@ class JobType(TimeStampedModel):
     )
     is_active = models.BooleanField(default=True)
 
+    source_id = models.IntegerField(null=True, unique=True)
+
     class Meta:
         verbose_name = "Τύπος Εργασίας"
         verbose_name_plural = "Τύπος Εργασίας"
@@ -21,6 +23,8 @@ class OtsSoftware(TimeStampedModel):
                             verbose_name="Όνομα Εφαρμογής")
     is_active = models.BooleanField(default=True, verbose_name="Ενεργή")
 
+    source_id = models.IntegerField(null=True, unique=True)
+    
     class Meta:
         verbose_name = "Λογισμικό Οργανισμού"
         verbose_name_plural = "Λογισμικό Οργανισμού"
