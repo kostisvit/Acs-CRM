@@ -65,4 +65,4 @@ class CustomUserAdmin(UserAdmin):
     @admin.register(Adeia)
     class AdeiaAdmin(admin.ModelAdmin):
         model = Adeia
-        list_display = ["acs_employee","acs_adeiatype", "startdate","enddate"]
+        list_display = ["acs_employee","acs_adeiatype", "startdate","enddate","source_id"]

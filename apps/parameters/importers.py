@@ -1,13 +1,13 @@
-import csv
+import csv, datetime
 from apps.organizations.models import Organization, Employee, Task
 from apps.parameters.models import JobType, OtsSoftware, OrgDepartment, AcsAdeia
 from abc import ABC, abstractmethod
 from decimal import Decimal
 from django.contrib.auth import get_user_model
 from decimal import InvalidOperation
+from accounts.models import Adeia
 
-
-User = get_user_model()
+CustomUser = get_user_model()
 
 def str_to_bool(value):
     return str(value).strip().lower() in ("true", "1", "yes", "y")
@@ -253,7 +253,7 @@ class TaskImporter(BaseImporter):
         if "@" not in email:
             email = f"{email}@acsservices.gr"
 
-        acs_employee, created = User.objects.get_or_create(
+        acs_employee, created = CustomUser.objects.get_or_create(
             email=email,
             defaults={
                 "first_name": employee_code,
@@ -293,7 +293,30 @@ class TaskImporter(BaseImporter):
             },
         )
         
+class AdeiaImporter(BaseImporter):
+    model = Adeia
 
+    def import_row(self, row):
+        employee, created = CustomUser.objects.get_or_create(
+            id=row["employee"],
+            defaults={
+                "email": f"employee_{row['employee']}@example.com",
+            }
+        )
+
+        self.model.objects.update_or_create(
+            source_id=row["id"],
+            defaults={
+                "acs_employee": employee,
+                "acs_adeiatype_id": row.get("acsadeiatype"),
+                "startdate": datetime.datetime.strptime(
+                    row["startdate"], "%Y-%m-%d"
+                ).date() if row.get("startdate") else None,
+                "enddate": datetime.datetime.strptime(
+                    row["enddate"], "%Y-%m-%d"
+                ).date() if row.get("enddate") else None,
+            },
+        )
 
 
 IMPORTERS = {
@@ -324,5 +347,9 @@ IMPORTERS = {
     "tasks":{
         "class": TaskImporter,
         "label": "Εργασίες"
+    },
+        "adeia":{
+        "class": AdeiaImporter,
+        "label": "Άδειες εργαζομένων"
     }
 }

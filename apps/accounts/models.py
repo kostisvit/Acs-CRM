@@ -71,6 +71,8 @@ class Adeia(TimeStampedModel):
     startdate = models.DateField(default=datetime.date.today, verbose_name="Από")
     enddate = models.DateField(default=datetime.date.today, verbose_name="Έως")
 
+    source_id = models.IntegerField(null=True, unique=True)
+
     class Meta:
         indexes = [models.Index(fields=["acs_employee"])]
         verbose_name = "ACS Άδειες"
