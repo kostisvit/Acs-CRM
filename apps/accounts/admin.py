@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 from django.contrib.auth.forms import ReadOnlyPasswordHashField
-from .models import CustomUser
+from .models import CustomUser, Adeia
 from django import forms
 
 class CustomUserChangeForm(forms.ModelForm):
@@ -61,3 +61,8 @@ class CustomUserAdmin(UserAdmin):
     )
 
     ordering = ("email",)
+
+    @admin.register(Adeia)
+    class AdeiaAdmin(admin.ModelAdmin):
+        model = Adeia
+        list_display = ["acs_employee","acs_adeiatype", "startdate","enddate"]

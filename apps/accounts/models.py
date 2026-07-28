@@ -2,7 +2,10 @@ from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin
 from django.contrib.auth.base_user import BaseUserManager
 from django.db import models
 from django_extensions.db.models import TimeStampedModel
-
+from django.urls import reverse
+from django.conf import settings
+import datetime
+from django.core.exceptions import ValidationError
 
 class CustomUserManager(BaseUserManager):
     def create_user(self, email, password=None, **extra_fields):
@@ -52,3 +55,40 @@ class CustomUser(AbstractBaseUser, PermissionsMixin, TimeStampedModel):
 
     def __str__(self):
         return f"{self.first_name} {self.last_name}".strip() or self.email
+
+
+
+
+class Adeia(TimeStampedModel):
+    acs_employee = models.ForeignKey(settings.AUTH_USER_MODEL,verbose_name="Υπάλληλος", on_delete=models.CASCADE)
+    acs_adeiatype = models.ForeignKey(
+        "parameters.AcsAdeia",
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        verbose_name="Τύπος Άδειας",
+    )
+    startdate = models.DateField(default=datetime.date.today, verbose_name="Από")
+    enddate = models.DateField(default=datetime.date.today, verbose_name="Έως")
+
+    class Meta:
+        indexes = [models.Index(fields=["acs_employee"])]
+        verbose_name = "ACS Άδειες"
+        verbose_name_plural = "ACS Άδειες"
+
+    @property
+    def days(self):
+        return (self.enddate - self.startdate).days + 1
+
+    def clean(self):
+        if self.enddate < self.startdate:
+            raise ValidationError("End date cannot be before start date.")
+
+        if self.days < 0:
+            raise ValidationError("Days cannot be negative.")
+
+    def get_absolute_url(self):
+        return reverse("acs_adeia_update", args=[str(self.id)])  # type: ignore
+
+    def get_absolute_url_delete(self):
+        return reverse("acs_adeia_delete", args=[str(self.id)])  # type: ignore
