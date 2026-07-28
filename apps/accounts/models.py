@@ -51,4 +51,4 @@ class CustomUser(AbstractBaseUser, PermissionsMixin, TimeStampedModel):
     objects = CustomUserManager()
 
     def __str__(self):
-        return self.email
+        return f"{self.first_name} {self.last_name}".strip() or self.email

@@ -1,6 +1,6 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.urls import reverse_lazy
-from apps.organizations.models import Organization, Employee
+from apps.organizations.models import Organization, Employee, Task
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
 from .forms import OrganizationForm
@@ -175,3 +175,63 @@ def restore_employee(request,pk):
     obj.save(update_fields=["is_active"])
     messages.success(request, f'Ο/H υπάλληλος "{obj.lastname} {obj.firstname}" του Οργανισμού "{obj.organization}" έχει εργοποιηθεί.')
     return redirect("organizations:employee_list")
+
+
+
+# Task List
+def task_list(request):
+    if request.method == "POST":
+        mode = request.POST.get("view_mode")
+
+        if mode in ["cards", "table"]:
+            request.session["task_view"] = mode
+
+    search = request.GET.get("q", "")
+
+    tasks = Task.objects.all()
+
+    # if is_active == "":
+    #     organizations = task.filter(is_active=True)
+
+    # Search filter
+    # if search:
+    #     task = task.filter(
+    #         Q(task_info__icontains=search) |
+    #     )
+
+
+    # Visibility filter
+    # if is_active == "true":
+    #     organizations = organizations.filter(
+    #         is_active=True
+    #     )
+
+    # elif is_active == "false":
+    #     organizations = organizations.filter(
+    #         is_active=False
+    #     )
+
+
+    paginator = Paginator(tasks, 12)
+
+    page_obj = paginator.get_page(
+        request.GET.get("page", 1)
+    )
+
+
+    context = {
+        "tasks": page_obj,
+        "search": search,
+        "is_htmx": request.headers.get("HX-Request"),
+    }
+    if request.headers.get("HX-Request"):
+        return render(
+            request,
+            "organizations/task/_cards.html",
+            context
+        )
+    return render(
+        request,
+        "organizations/task/list.html",
+        context
+    )

@@ -12,5 +12,7 @@ urlpatterns = [
     path("employees/", views.employee_list, name="employee_list"),
     path("employee-delete/<int:pk>", views.soft_delete_employee, name="soft_delete_employee"),
     path("resstore-employee/<int:pk>", views.restore_employee, name="restore_employee"),
+    path("task/", views.task_list, name="task_list"),
+    
     
 ]

@@ -150,7 +150,7 @@ class Task(TimeStampedModel):
         null=True,
         blank=True,
     )
-    ticketid = models.CharField(max_length=50, verbose_name="Αίτημα OTS", blank=True)
+    ticketid = models.CharField(max_length=50, verbose_name="Αίτημα OTS", null=True, blank=True)
 
     source_id = models.IntegerField(null=True, unique=True)
 
@@ -164,12 +164,6 @@ class Task(TimeStampedModel):
         verbose_name = "Εργασίες Οργανισμού"
         verbose_name_plural = "Εργασίες Οργανισμού"
         ordering = ["-importdate"]
-        constraints = [
-        models.UniqueConstraint(
-            fields=["ticketid"],
-            name="unique_ticketid"
-        )
-    ]
 
     def __str__(self):
         return str(self.organization)

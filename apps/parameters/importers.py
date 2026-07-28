@@ -287,7 +287,7 @@ class TaskImporter(BaseImporter):
                 "acs_employee": acs_employee,
                 "task_time": task_time,
                 "org_employee": org_employee,
-                "ticketid": row.get("ticketid") or f"IMPORT-{row['id']}",
+                "ticketid": row.get("ticketid",""),
                 "created": row["created"],
                 "modified": row["modified"],
             },
