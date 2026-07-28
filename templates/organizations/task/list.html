@@ -60,32 +60,24 @@
             Φίλτρα
 
         </button>
-<form method="post">
+      <form method="post">
         {% csrf_token %}
 
-        <button 
-            name="view_mode"
-            value="cards"
-            class="px-3 py-2 rounded-l-md border 
-            {% if request.session.task_view == 'cards' or not request.session.task_view %}
-                bg-indigo-600 text-white
-            {% else %}
-                bg-white text-slate-700
-            {% endif %}">
-            Cards
-        </button>
+      <button 
+          name="view_mode"
+          value="{% if request.session.task_view == 'cards' or not request.session.task_view %}table{% else %}cards{% endif %}"
+          class="px-3 py-2 rounded-md border bg-white text-slate-700">
 
-        <button 
-            name="view_mode"
-            value="table"
-            class="px-3 py-2 rounded-r-md border border-l-0
-            {% if request.session.task_view == 'table' %}
-                bg-indigo-600 text-white
-            {% else %}
-                bg-white text-slate-700
-            {% endif %}">
-            Table
-        </button>
+          {% if request.session.task_view == 'cards' or not request.session.task_view %}
+              <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+          <path d="M3 3h6v6H3V3zm8 0h6v6h-6V3zM3 11h6v6H3v-6zm8 0h6v6h-6v-6z"/>
+            </svg>
+                {% else %}
+                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                <path d="M3 4h14v2H3V4zm0 5h14v2H3V9zm0 5h14v2H3v-2z"/>
+            </svg>
+                {% endif %}
+      </button>
 
     </form>
     </div>
@@ -103,7 +95,7 @@
 
         <div
             @click.outside="openFilter=false"
-            class="w-full max-w-md rounded-xl bg-white p-6 shadow-xl">
+            class="w-full max-w-6xl rounded-xl bg-white p-6 shadow-xl">
 
 
             <div class="mb-6 flex items-center justify-between">
@@ -128,46 +120,132 @@
 
 
 
-<form
-    hx-get="{% url 'organizations:task_list' %}"
-    hx-target="#organization-list"
-    hx-swap="innerHTML"
-    hx-push-url="true"
-    class="space-y-5">
-
-    <input
-        type="text"
-        name="q"
-        value="{{ search }}"
-        placeholder="Αναζήτηση εργασίας..."
-        class="w-full rounded-lg border px-4 py-3">
+            <form
+                hx-get="{% url 'organizations:task_list' %}"
+                hx-target="#organization-list"
+                hx-swap="innerHTML"
+                hx-push-url="true"
+                class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
 
 
-    <select name="is_active"
-        class="w-full rounded-lg border px-4 py-3">
-
-        <option value="">
-            All
-        </option>
-
-        <option value="true"
-            {% if is_active == "true" %}selected{% endif %}>
-            Active
-        </option>
-
-        <option value="false"
-            {% if is_active == "false" %}selected{% endif %}>
-            Inactive
-        </option>
-
-    </select>
+                <input
+                    type="text"
+                    name="q"
+                    value="{{ search }}"
+                    placeholder="Αναζήτηση εργασίας..."
+                    class="rounded-lg border px-4 py-3">
 
 
-    <button type="submit" class="w-full rounded-lg bg-teal-600 py-3 text-white hover:bg-teal-700">
-        Apply
-    </button>
+                <select name="organization"
+                        class="rounded-lg border px-4 py-3">
 
-</form>
+                    <option value="">Όλοι οι οργανισμοί</option>
+
+                    {% for org in organizations %}
+                        <option value="{{ org.pk }}"
+                            {% if organization_id == org.pk|stringformat:"s" %}
+                                selected
+                            {% endif %}>
+                            {{ org }}
+                        </option>
+                    {% endfor %}
+
+                </select>
+
+
+                <select name="org_app"
+                        class="rounded-lg border px-4 py-3">
+
+                    <option value="">Όλες οι εφαρμογές OTS</option>
+
+                    {% for app in org_apps %}
+                        <option value="{{ app.pk }}"
+                            {% if org_app_id == app.pk|stringformat:"s" %}
+                                selected
+                            {% endif %}>
+                            {{ app }}
+                        </option>
+                    {% endfor %}
+
+                </select>
+
+
+                <select name="job_type_acs"
+                        class="rounded-lg border px-4 py-3">
+
+                    <option value="">Όλοι οι τύποι εργασίας</option>
+
+                    {% for job in job_types %}
+                        <option value="{{ job.pk }}"
+                            {% if job_type_id == job.pk|stringformat:"s" %}
+                                selected
+                            {% endif %}>
+                            {{ job }}
+                        </option>
+                    {% endfor %}
+
+                </select>
+
+
+                <select name="acs_employee"
+                        class="rounded-lg border px-4 py-3">
+
+                    <option value="">Όλοι οι υπάλληλοι ACS</option>
+
+                    {% for emp in acs_employees %}
+                        <option value="{{ emp.pk }}"
+                            {% if acs_employee_id == emp.pk|stringformat:"s" %}
+                                selected
+                            {% endif %}>
+                            {{ emp }}
+                        </option>
+                    {% endfor %}
+
+                </select>
+
+
+                <select name="org_employee"
+                        class="rounded-lg border px-4 py-3">
+
+                    <option value="">Όλοι οι υπάλληλοι οργανισμού</option>
+
+                    {% for emp in org_employees %}
+                        <option value="{{ emp.pk }}"
+                            {% if org_employee_id == emp.pk|stringformat:"s" %}
+                                selected
+                            {% endif %}>
+                            {{ emp }}
+                        </option>
+                    {% endfor %}
+
+                </select>
+
+
+                <input
+                    type="text"
+                    name="ticketid"
+                    value="{{ ticketid }}"
+                    placeholder="Αίτημα OTS"
+                    class="rounded-lg border px-4 py-3">
+
+
+                <input
+                    type="date"
+                    name="importdate"
+                    value="{{ importdate }}"
+                    class="rounded-lg border px-4 py-3">
+
+
+                <button
+                    type="submit"
+                    class="rounded-lg bg-teal-600 px-4 py-3 text-white hover:bg-teal-700">
+
+                    Apply
+
+                </button>
+
+
+            </form>
 
 
         </div>
@@ -186,7 +264,7 @@
     </div>
   {% endif %}
   
-  <div id="organization-list" >
+  <div id="task-list" >
     {% include 'organizations/task/_cards.html' %}
   </div>
 

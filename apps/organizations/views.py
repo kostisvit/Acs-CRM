@@ -8,8 +8,10 @@ from django.db.models import Q
 from django.contrib.messages.views import SuccessMessageMixin
 from django.views.generic import UpdateView
 from django.contrib import messages
+from apps.parameters.models import OtsSoftware,JobType
+from django.contrib.auth import get_user_model
 
-
+User = get_user_model()
 # Organization list view and update view
 
 @login_required
@@ -179,6 +181,10 @@ def restore_employee(request,pk):
 
 
 # Task List
+from django.db.models import Q
+from django.core.paginator import Paginator
+
+
 def task_list(request):
     if request.method == "POST":
         mode = request.POST.get("view_mode")
@@ -186,31 +192,48 @@ def task_list(request):
         if mode in ["cards", "table"]:
             request.session["task_view"] = mode
 
+    # Filters
     search = request.GET.get("q", "")
+    organization_id = request.GET.get("organization", "")
+    org_app_id = request.GET.get("org_app", "")
+    job_type_id = request.GET.get("job_type_acs", "")
+    acs_employee_id = request.GET.get("acs_employee", "")
+    org_employee_id = request.GET.get("org_employee", "")
+    ticketid = request.GET.get("ticketid", "")
+    importdate = request.GET.get("importdate", "")
 
     tasks = Task.objects.all()
 
-    # if is_active == "":
-    #     organizations = task.filter(is_active=True)
+    if organization_id:
+        tasks = tasks.filter(organization_id=organization_id)
 
-    # Search filter
-    # if search:
-    #     task = task.filter(
-    #         Q(task_info__icontains=search) |
-    #     )
+    if org_app_id:
+        tasks = tasks.filter(org_app_id=org_app_id)
 
+    if job_type_id:
+        tasks = tasks.filter(job_type_acs_id=job_type_id)
 
-    # Visibility filter
-    # if is_active == "true":
-    #     organizations = organizations.filter(
-    #         is_active=True
-    #     )
+    if acs_employee_id:
+        tasks = tasks.filter(acs_employee_id=acs_employee_id)
 
-    # elif is_active == "false":
-    #     organizations = organizations.filter(
-    #         is_active=False
-    #     )
+    if org_employee_id:
+        tasks = tasks.filter(org_employee_id=org_employee_id)
 
+    if ticketid:
+        tasks = tasks.filter(ticketid__icontains=ticketid)
+
+    if importdate:
+        tasks = tasks.filter(importdate=importdate)
+
+    # Search all text fields
+    if search:
+        tasks = tasks.filter(
+            Q(task_info__icontains=search)
+            | Q(task_note__icontains=search)
+            | Q(ticketid__icontains=search)
+        )
+
+    tasks = tasks.order_by("-importdate")
 
     paginator = Paginator(tasks, 12)
 
@@ -218,18 +241,34 @@ def task_list(request):
         request.GET.get("page", 1)
     )
 
-
     context = {
         "tasks": page_obj,
         "search": search,
+        "query_string": request.GET.urlencode(),
+        "organization_id": organization_id,
+        "org_app_id": org_app_id,
+        "job_type_id": job_type_id,
+        "acs_employee_id": acs_employee_id,
+        "org_employee_id": org_employee_id,
+        "ticketid": ticketid,
+        "importdate": importdate,
+
+        "organizations": Organization.objects.all(),
+        "org_apps": OtsSoftware.objects.all(),
+        "job_types": JobType.objects.all(),
+        "acs_employees": get_user_model().objects.all(),
+        "org_employees": Employee.objects.all(),
+
         "is_htmx": request.headers.get("HX-Request"),
     }
+
     if request.headers.get("HX-Request"):
         return render(
             request,
             "organizations/task/_cards.html",
             context
         )
+
     return render(
         request,
         "organizations/task/list.html",
