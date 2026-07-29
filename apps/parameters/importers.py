@@ -6,6 +6,7 @@ from decimal import Decimal
 from django.contrib.auth import get_user_model
 from decimal import InvalidOperation
 from accounts.models import Adeia
+from django.db.models import Q
 
 CustomUser = get_user_model()
 
@@ -55,7 +56,78 @@ class BaseImporter(ABC):
             "errors": errors,
         }
     
-  
+class UserImporter(BaseImporter):
+    model = get_user_model()
+
+    USER_MAPPING = {
+        "kostasvit": "kostasvit@acsservices.gr",
+        "athanasia": "akarakousi@acsservices.gr",
+        "geo": "gmav@acsservices.gr",
+        "kostas": "kvitiniotis@acsservices.gr",
+        "amaz": "amaz@acsservices.gr",
+        "stauros": "stauros@acsservices.gr",
+        "eirini": "etourgeli@acsservices.gr",
+        "gmpek": "gmpekiaris@acsservices.gr",
+        "panagiotis": "ptsellos@acsservices.gr",
+        "vmazioti": "vmazioti@acsservices.gr",
+        "alexis": "amav@acsservices.gr",
+        
+    }
+
+    def import_row(self, row):
+        username = row["username"]  # or row["id"], whatever identifies them
+
+        email = self.USER_MAPPING.get(username)
+
+        if not email:
+            raise ValueError(f"No email mapping found for {username}")
+
+        user, created = self.model.objects.update_or_create(
+            source_id=row["id"],
+            defaults={
+                #"username": username,
+                "email": email,
+                "first_name": row.get("first_name", ""),
+                "last_name": row.get("last_name", ""),
+                "is_active": str_to_bool(row["is_active"]),
+                "is_staff": str_to_bool(row["is_staff"]),
+                "is_superuser": str_to_bool(row["is_superuser"]),
+            },
+        )
+
+        if row.get("password"):
+            user.password = row["password"]
+            user.save(update_fields=["password"])
+
+        return user
+
+# class UserImporter(BaseImporter):
+#     model = get_user_model()
+
+#     def import_row(self, row):
+#         email = row["email"].lower().strip()
+
+#         user, created = self.model.objects.update_or_create(
+#             source_id=row["id"],
+#             email=email,
+#             defaults={
+#                 #"username": email,  # only if your custom model still has username
+#                 "first_name": row.get("first_name", ""),
+#                 "last_name": row.get("last_name", ""),
+#                 "is_active": str_to_bool(row["is_active"]),
+#                 "is_staff": str_to_bool(row["is_staff"]),
+#                 "is_superuser": str_to_bool(row["is_superuser"]),
+#                 # "date_joined": row["date_joined"],
+#                 # "last_login": row.get("last_login"),
+#             },
+#         )
+
+#         # preserve the old password hash
+#         if row.get("password"):
+#             user.password = row["password"]
+#             user.save(update_fields=["password"])
+
+#         return user  
   
   
 class OrganizationImporter(BaseImporter):
@@ -204,6 +276,20 @@ class AcsAdeiaTypeImporter(BaseImporter):
 
 class TaskImporter(BaseImporter):
     model = Task
+                # map old username -> new email
+    # USER_EMAIL_MAP = {
+    #     "kostasvit": "kostasvit@acsservices.gr",
+    #     "athanasia": "akarakousi@acsservices.gr",
+    #     "geo": "gmav@acsservices.gr",
+    #     "kostas": "kvitiniotis@acsservices.gr",
+    #     "amaz": "amaz@acsservices.gr",
+    #     "stauros": "stauros@acsservices.gr",
+    #     "eirini": "etourgeli@acsservices.gr",
+    #     "gmpek": "gmpekiaris@acsservices.gr",
+    #     "panagiotis": "ptsellos@acsservices.gr",
+    #     "vmazioti": "vmazioti@acsservices.gr",
+    #     "alexis": "amav@acsservices.gr",
+    #         }
 
     def import_row(self, row):
 
@@ -243,27 +329,49 @@ class TaskImporter(BaseImporter):
                 source_id=int(row["org_employee"])
             ).first()
 
-        # ACS User uses email, not username
+        # Employee does NOT have source_id, use id
+        org_employee = None
+        if row.get("org_employee") and row["org_employee"].strip():
+            org_employee = Employee.objects.filter(
+                source_id=int(row["org_employee"])
+            ).first()
+
+
+# ACS User uses email, not username
         employee_code = row.get("employee", "").strip()
 
         if not employee_code:
             raise ValueError("Missing ACS employee")
 
-        email = employee_code
-        if "@" not in email:
-            email = f"{email}@acsservices.gr"
+        USER_EMAIL_MAP = {
+            "kostasvit": "kostasvit@acsservices.gr",
+            "athanasia": "akarakousi@acsservices.gr",
+            "geo": "gmav@acsservices.gr",
+            "kostas": "kvitiniotis@acsservices.gr",
+            "amaz": "amaz@acsservices.gr",
+            "stauros": "stauros@acsservices.gr",
+            "eirini": "etourgeli@acsservices.gr",
+            "gmpek": "gmpekiaris@acsservices.gr",
+            "panagiotis": "ptsellos@acsservices.gr",
+            "vmazioti": "vmazioti@acsservices.gr",
+            "alexis": "amav@acsservices.gr",
+        }
 
-        acs_employee, created = CustomUser.objects.get_or_create(
-            email=email,
-            defaults={
-                "first_name": employee_code,
-                "is_active": True,
-            }
-        )
+        email = USER_EMAIL_MAP.get(employee_code)
 
-        if created:
-            acs_employee.set_unusable_password()
-            acs_employee.save()
+        if not email:
+            raise ValueError(
+                f"No email mapping found for employee: {employee_code}"
+            )
+
+        acs_employee = CustomUser.objects.filter(
+            email=email
+        ).first()
+
+        if not acs_employee:
+            raise ValueError(
+                f"User does not exist: {email}"
+            )
 
         # Convert time safely
         try:
@@ -297,29 +405,89 @@ class AdeiaImporter(BaseImporter):
     model = Adeia
 
     def import_row(self, row):
-        employee, created = CustomUser.objects.get_or_create(
-            id=row["employee"],
-            defaults={
-                "email": f"employee_{row['employee']}@example.com",
-            }
-        )
+        employee_code = str(row.get("employee", "")).strip()
+
+        if not employee_code:
+            raise ValueError(
+                f"Missing employee code for Adeia row {row['id']}"
+            )
+
+        try:
+            acs_employee = CustomUser.objects.get(
+                source_id=int(employee_code)
+            )
+
+        except CustomUser.DoesNotExist:
+            username = str(row.get("username", "")).strip().lower()
+
+            if not username:
+                username = employee_code.lower()
+
+            email = username
+
+            if "@" not in email:
+                email = f"{email}@acsservices.gr"
+
+            try:
+                # User already imported from auth_user
+                acs_employee = CustomUser.objects.get(email=email)
+
+                # attach old ACS id
+                acs_employee.source_id = int(employee_code)
+                acs_employee.save(update_fields=["source_id"])
+
+            except CustomUser.DoesNotExist:
+                # Create only if really missing
+                acs_employee = CustomUser.objects.create(
+                    source_id=int(employee_code),
+                    email=email,
+                    first_name=row.get("first_name", employee_code),
+                    last_name=row.get("last_name", ""),
+                    is_active=True,
+                )
+
+                acs_employee.set_unusable_password()
+                acs_employee.save()
+
+        acsadeiatype = None
+
+        if row.get("acsadeiatype") and row["acsadeiatype"].strip():
+            acsadeiatype = AcsAdeia.objects.filter(
+                source_id=int(row["acsadeiatype"])
+            ).first()
+
+        def parse_date(value):
+            if not value:
+                return None
+
+            value = value.strip()
+
+            if not value:
+                return None
+
+            for fmt in ("%Y-%m-%d", "%d/%m/%Y", "%d-%m-%Y"):
+                try:
+                    return datetime.datetime.strptime(value, fmt).date()
+                except ValueError:
+                    continue
+
+            raise ValueError(f"Unknown date format: {value}")
 
         self.model.objects.update_or_create(
             source_id=row["id"],
             defaults={
-                "acs_employee": employee,
-                "acs_adeiatype_id": row.get("acsadeiatype"),
-                "startdate": datetime.datetime.strptime(
-                    row["startdate"], "%Y-%m-%d"
-                ).date() if row.get("startdate") else None,
-                "enddate": datetime.datetime.strptime(
-                    row["enddate"], "%Y-%m-%d"
-                ).date() if row.get("enddate") else None,
+                "acs_employee": acs_employee,
+                "acs_adeiatype": acsadeiatype,
+                "startdate": parse_date(row.get("startdate")),
+                "enddate": parse_date(row.get("enddate")),
             },
         )
-
-
+        
 IMPORTERS = {
+    "users": {
+        "class": UserImporter,
+        "label": "Χρήστες",
+    },
     "customers": {
         "class": OrganizationImporter,
         "label": "Οργανισμοί",

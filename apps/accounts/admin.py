@@ -58,6 +58,7 @@ class CustomUserAdmin(UserAdmin):
         "email",
         "is_staff",
         "is_active",
+        "source_id",
     )
 
     ordering = ("email",)
@@ -66,3 +67,5 @@ class CustomUserAdmin(UserAdmin):
     class AdeiaAdmin(admin.ModelAdmin):
         model = Adeia
         list_display = ["acs_employee","acs_adeiatype", "startdate","enddate","source_id"]
+        search_fields = ["acs_employee"]
+        list_filter = ["acs_employee", "created"]

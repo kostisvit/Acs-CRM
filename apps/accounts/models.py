@@ -48,6 +48,8 @@ class CustomUser(AbstractBaseUser, PermissionsMixin, TimeStampedModel):
     
     must_change_password = models.BooleanField(default=False)
 
+    source_id = models.IntegerField(null=True, unique=True)
+    
     USERNAME_FIELD = "email"
     REQUIRED_FIELDS = []
 
