@@ -99,7 +99,7 @@ class AcsAdeia(TimeStampedModel):
 
 
 
-class OfficialHoliday(models.Model):
+class OfficialHoliday(TimeStampedModel):
     date = models.DateField(unique=True)
     description = models.CharField(max_length=200)
 
