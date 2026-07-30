@@ -21,15 +21,35 @@
 
       </div>
 
-      <div>
-        <h3 class="font-semibold text-gray-900">
-          {{ emp.firstname }} {{ emp.lastname }}
-        </h3>
+<div>
+  <div class="flex items-center gap-2">
+    <h3 class="font-semibold text-gray-900">
+      {{ emp.firstname }} {{ emp.lastname }}
+    </h3>
 
-        <p class="text-sm text-gray-500">
-          {{ emp.org_department }}
-        </p>
-      </div>
+    <a
+      href="#"
+      class="rounded-md p-2 text-slate-400 hover:bg-indigo-100 hover:text-teal-600 transition"
+      title="Επεξεργασία"
+    >
+      <!-- Heroicons Pencil -->
+            <svg xmlns="http://www.w3.org/2000/svg"
+                 fill="none"
+                 viewBox="0 0 24 24"
+                 stroke-width="1.8"
+                 stroke="currentColor"
+                 class="h-5 w-5">
+                <path stroke-linecap="round"
+                      stroke-linejoin="round"
+                      d="M16.862 4.487a2.25 2.25 0 0 1 3.182 3.182L7.5 20.213 3 21l.787-4.5 13.075-12.013Z"/>
+            </svg>
+    </a>
+  </div>
+
+  <p class="text-sm text-gray-500">
+    {{ emp.org_department }}
+  </p>
+</div>
     </div>
 
     <div class="mt-5 space-y-2 text-sm text-gray-600">
@@ -78,7 +98,7 @@
 
     </div>
 
-    <div class="mt-5 flex items-center justify-between">
+    <div class="mt-5 flex justify-end">
       {% if emp.is_active  %}
       <a
         href="{% url 'organizations:soft_delete_employee' emp.pk %}"
@@ -94,12 +114,6 @@
         Ενεργοποίηση
       </a>
       {%endif %}
-      <a
-        href="#"
-        class="rounded-lg bg-teal-600 px-4 py-2 text-sm font-medium text-white hover:bg-teal-700"
-      >
-        Επεξεργασία
-      </a>
     </div>
   </div>
 
