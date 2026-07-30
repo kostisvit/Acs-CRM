@@ -42,12 +42,7 @@ Dashboard Home
 
           <div class="rounded-xl bg-orange-600 p-6 shadow transition hover:shadow-lg">
             <h3 class="text-lg font-semibold">Ώρες Εργασιών</h3>
-            <p class="mt-2 text-3xl font-bold">{{ user_work_time }}</p>
-          </div>
-        
-          <div class="rounded-xl bg-cyan-600 p-6 shadow transition hover:shadow-lg">
-            <h3 class="text-lg font-semibold">Άδεια {% now "Y" %}</h3>
-            <p class="mt-2 text-3xl font-bold">#</p>
+            <p class="mt-2 text-3xl font-bold">{{ user_work_time|floatformat:2 }}</p>
           </div>
 
       </div>
