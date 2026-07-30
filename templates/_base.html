@@ -11,11 +11,8 @@
 <script defer src="https://unpkg.com/alpinejs"></script>
 <script src="https://unpkg.com/htmx.org@2.0.4"></script>
 <script src="https://cdn.tailwindcss.com"></script>
-<title>
-    {% block title %}
-    Acs Services
-    {% endblock %}
-</title>
+
+<title>Acs Services|{% block title %}{% endblock %}</title>
 
 </head>
 
@@ -151,7 +148,7 @@ border-r border-gray-200
 : '-translate-x-full md:translate-x-0'"
 >
 
-<div class="p-5">
+<div class="py-5">
 
 <ul>
 
@@ -160,6 +157,7 @@ border-r border-gray-200
         <a href="/"
         class="
         flex items-center gap-3
+        w-full
         px-4 py-4
         hover:bg-teal-300
         transition
