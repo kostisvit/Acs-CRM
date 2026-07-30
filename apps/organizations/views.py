@@ -10,6 +10,7 @@ from django.views.generic import UpdateView
 from django.contrib import messages
 from apps.parameters.models import OtsSoftware,JobType
 from django.contrib.auth import get_user_model
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 User = get_user_model()
 # Organization list view and update view
@@ -74,7 +75,7 @@ def organization_list(request):
 
 
 
-class OrganizationUpdateView(SuccessMessageMixin, UpdateView):
+class OrganizationUpdateView(LoginRequiredMixin,SuccessMessageMixin, UpdateView):
     model = Organization
     form_class = OrganizationForm
     template_name = "organizations/detail.html"
@@ -181,10 +182,6 @@ def restore_employee(request,pk):
 
 
 # Task List
-from django.db.models import Q
-from django.core.paginator import Paginator
-
-
 def task_list(request):
     if request.method == "POST":
         mode = request.POST.get("view_mode")
