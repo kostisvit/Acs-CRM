@@ -253,7 +253,7 @@ def task_list(request):
         "organizations": Organization.objects.all(),
         "org_apps": OtsSoftware.objects.all(),
         "job_types": JobType.objects.all(),
-        "acs_employees": get_user_model().objects.all(),
+        "acs_employees": get_user_model().objects.filter(groups__name="employee"),
         "org_employees": Employee.objects.all(),
 
         "is_htmx": request.headers.get("HX-Request"),

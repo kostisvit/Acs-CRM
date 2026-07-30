@@ -486,38 +486,38 @@ class AdeiaImporter(BaseImporter):
 IMPORTERS = {
     "users": {
         "class": UserImporter,
-        "label": "Χρήστες",
+        "label": "1-Χρήστες ACS",
     },
     "customers": {
         "class": OrganizationImporter,
-        "label": "Οργανισμοί",
+        "label": "7-Οργανισμοί",
     },
     "employees": {
         "class": EmployeeImporter,
-        "label": "Επαφές Οργανισμών",
+        "label": "8-Επαφές Οργανισμών",
     },
     "job_types": {
         "class": JobTypeImporter,
-        "label": "Τύποι Εργασίας",
+        "label": "4-Τύποι Εργασίας",
     },
     "ots_software": {
         "class": OtsSoftwareImporter,
-        "label": "Λογισμικό OTS",
+        "label": "5-Λογισμικό OTS",
     },
     "org_department": {
         "class": OrgDepartmentImporter,
-        "label": "Διευθύνσεις Οργανισμού",
+        "label": "6-Διευθύνσεις Οργανισμού",
     },
     "acsadeiatype": {
         "class": AcsAdeiaTypeImporter,
-        "label": "Είδος άδειας"
+        "label": "2-Είδος άδειας"
     },
     "tasks":{
         "class": TaskImporter,
-        "label": "Εργασίες"
+        "label": "10-Εργασίες"
     },
         "adeia":{
         "class": AdeiaImporter,
-        "label": "Άδειες εργαζομένων"
+        "label": "3-Άδειες εργαζομένων ACS"
     }
 }
