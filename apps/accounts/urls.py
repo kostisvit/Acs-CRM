@@ -1,5 +1,5 @@
 from django.urls import path, reverse_lazy
-from .views import login_view, logout_view, users_view,FirstPasswordChangeView,MyLeaveListView
+from .views import login_view, logout_view, users_view,FirstPasswordChangeView,MyLeaveListView,profile
 from django.contrib.auth import views as auth_views
 
 app_name = "accounts"
@@ -13,6 +13,7 @@ urlpatterns = [
         MyLeaveListView.as_view(),
         name="my_leave_dashboard"
     ),
+    path("profile/", profile, name="profile"),
     path("change-password/", FirstPasswordChangeView.as_view(), name="change_password",),
     
     path(

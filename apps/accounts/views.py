@@ -1,7 +1,7 @@
 from django.contrib.auth import authenticate, login
 from django.shortcuts import render, redirect
 from django.contrib.auth import logout
-from .forms import EmailLoginForm,CustomPasswordChangeForm
+from .forms import EmailLoginForm,CustomPasswordChangeForm,UserProfileForm
 from django.contrib.auth import get_user_model
 from .models import Adeia
 from django.contrib.auth.views import PasswordChangeView
@@ -10,6 +10,7 @@ from django.db.models import Sum
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import ListView
 from datetime import date
+from django.contrib import messages
 import datetime
 
 User = get_user_model()
@@ -238,3 +239,24 @@ class MyLeaveListView(LoginRequiredMixin, ListView):
 
 
         return context
+
+
+
+
+def profile(request):
+    user = request.user
+
+    if request.method == "POST":
+        form = UserProfileForm(request.POST, request.FILES, instance=user)
+
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Profile updated successfully.")
+            return redirect("accounts:profile")
+
+    else:
+        form = UserProfileForm(instance=user)
+
+    return render(request, "accounts/profile.html", {
+        "form": form
+    })
