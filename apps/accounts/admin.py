@@ -21,7 +21,8 @@ class CustomUserAdmin(UserAdmin):
             "fields": ("email", 
                         "password",
                         "first_name",
-                        "last_name",)
+                        "last_name",
+                        "allowed_leave_days",)
         }),
         ("Permissions", {
             "fields": (
@@ -49,6 +50,7 @@ class CustomUserAdmin(UserAdmin):
                 "password2",
                 "is_active",
                 "is_staff",
+                "allowed_leave_days",
                 "must_change_password",
             ),
         }),

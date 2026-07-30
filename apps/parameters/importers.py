@@ -5,7 +5,7 @@ from abc import ABC, abstractmethod
 from decimal import Decimal
 from django.contrib.auth import get_user_model
 from decimal import InvalidOperation
-from accounts.models import Adeia
+from apps.accounts.models import Adeia
 from django.db.models import Q
 
 CustomUser = get_user_model()

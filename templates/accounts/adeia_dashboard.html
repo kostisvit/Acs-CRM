@@ -1,0 +1,332 @@
+{% extends "_base.html" %}
+
+{% block content %}
+
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+
+    <!-- Header -->
+    <div class="mb-8">
+        <h1 class="text-3xl font-bold text-gray-900">
+            Πίνακας Αδειών
+        </h1>
+        <p class="mt-2 text-gray-600">
+            Παρακολούθηση διαθέσιμων και χρησιμοποιημένων ημερών άδειας
+        </p>
+    </div>
+
+
+    <!-- Leave Balance Cards -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+
+        <!-- Total -->
+        <div class="bg-white shadow rounded-xl p-6 border">
+            <div class="flex items-center justify-between">
+                <h3 class="text-sm font-medium text-gray-500">
+                    Δικαιούμενες Ημέρες
+                </h3>
+                <span class="text-blue-600 text-2xl">
+                    📅
+                </span>
+            </div>
+
+            <p class="mt-4 text-4xl font-bold text-gray-900">
+                {{ days_sum }}
+            </p>
+
+            <p class="text-sm text-gray-500 mt-2">
+                ημέρες ετήσιας άδειας
+            </p>
+        </div>
+
+
+        <!-- Used -->
+        <div class="bg-white shadow rounded-xl p-6 border">
+            <div class="flex items-center justify-between">
+                <h3 class="text-sm font-medium text-gray-500">
+                    Χρησιμοποιημένες
+                </h3>
+                <span class="text-yellow-500 text-2xl">
+                    ⏳
+                </span>
+            </div>
+
+            <p class="mt-4 text-4xl font-bold text-gray-900">
+                {{ days_used }}
+            </p>
+
+            <p class="text-sm text-gray-500 mt-2">
+                ημέρες φέτος
+            </p>
+        </div>
+
+
+        <!-- Remaining -->
+        <div class="bg-white shadow rounded-xl p-6 border">
+            <div class="flex items-center justify-between">
+                <h3 class="text-sm font-medium text-gray-500">
+                    Υπόλοιπο
+                </h3>
+
+                <span class="text-green-600 text-2xl">
+                    ✔
+                </span>
+            </div>
+
+            <p class="mt-4 text-4xl font-bold 
+                {% if days_left > 0 %}
+                    text-green-600
+                {% else %}
+                    text-red-600
+                {% endif %}
+            ">
+                {{ days_left }}
+            </p>
+
+            <p class="text-sm text-gray-500 mt-2">
+                διαθέσιμες ημέρες
+            </p>
+        </div>
+
+    </div>
+
+
+
+    <!-- Progress Bar -->
+
+    <div class="bg-white shadow rounded-xl p-6 mb-8 border">
+
+        <div class="flex justify-between mb-2">
+
+            <span class="text-sm font-medium text-gray-700">
+                Χρήση ετήσιας άδειας
+            </span>
+
+            <span class="text-sm text-gray-500">
+                {{ days_used }}/{{ days_sum }}
+            </span>
+
+        </div>
+
+
+        <div class="w-full bg-gray-200 rounded-full h-4">
+
+            <div
+                class="bg-blue-600 h-4 rounded-full"
+                style="
+                width:
+                {% widthratio days_used days_sum 100 %}
+                %
+                ">
+            </div>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- Leave Type Summary -->
+
+    <div class="bg-white shadow rounded-xl border mb-8">
+
+        <div class="px-6 py-4 border-b">
+            <h2 class="text-lg font-semibold text-gray-900">
+                Σύνοψη Αδειών
+            </h2>
+        </div>
+
+
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 p-6">
+
+
+            {% include "components/leave_card.html" with title="Κανονική" value=adeia_total %}
+
+            {% include "components/leave_card.html" with title="Αναρρωτική" value=adeia_anarotiki_total %}
+
+            {% include "components/leave_card.html" with title="Εορταστική" value=adeia_eortastiki_total %}
+
+            {% include "components/leave_card.html" with title="Κυοφορίας" value=adeia_kioforias_total %}
+
+            {% include "components/leave_card.html" with title="Μητρότητας" value=adeia_mitrothtas_total %}
+
+            {% include "components/leave_card.html" with title="Πατρότητας" value=adeia_patrothtas_total %}
+
+            {% include "components/leave_card.html" with title="Γάμου" value=adeia_gamou_total %}
+
+            {% include "components/leave_card.html" with title="Γονική" value=adeia_goniki_total %}
+
+            {% include "components/leave_card.html" with title="Άνευ Αποδοχών" value=adeia_anef_apodoxon_total %}
+
+
+        </div>
+
+    </div>
+
+
+
+
+    <!-- Leave History -->
+
+    <div class="bg-white shadow rounded-xl border">
+
+
+        <div class="px-6 py-4 border-b flex justify-between">
+
+            <h2 class="text-lg font-semibold text-gray-900">
+                Ιστορικό Αδειών
+            </h2>
+
+        </div>
+
+
+
+        <div class="overflow-x-auto">
+
+            <table class="min-w-full divide-y divide-gray-200">
+
+
+                <thead class="bg-gray-50">
+
+                    <tr>
+
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                            Τύπος
+                        </th>
+
+
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                            Από
+                        </th>
+
+
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                            Έως
+                        </th>
+
+
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                            Ημέρες
+                        </th>
+
+
+                    </tr>
+
+                </thead>
+
+
+
+                <tbody class="bg-white divide-y divide-gray-200">
+
+
+                {% for adeia in adeia_list %}
+
+                    <tr class="hover:bg-gray-50">
+
+
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+
+                            {{ adeia.acs_adeiatype.name }}
+
+                        </td>
+
+
+
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
+
+                            {{ adeia.startdate|date:"d/m/Y" }}
+
+                        </td>
+
+
+
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
+
+                            {{ adeia.enddate|date:"d/m/Y" }}
+
+                        </td>
+
+
+
+                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+
+                            {{ adeia.working_days }}
+
+                        </td>
+
+
+                    </tr>
+
+
+                {% empty %}
+
+                    <tr>
+                        <td colspan="4"
+                            class="px-6 py-8 text-center text-gray-500">
+
+                            Δεν υπάρχουν καταχωρημένες άδειες.
+
+                        </td>
+                    </tr>
+
+                {% endfor %}
+
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+
+
+        <!-- Pagination -->
+
+        {% if is_paginated %}
+
+        <div class="px-6 py-4 border-t flex justify-center gap-2">
+
+
+            {% if page_obj.has_previous %}
+
+                <a href="?page={{ page_obj.previous_page_number }}"
+                   class="px-4 py-2 rounded bg-gray-100 hover:bg-gray-200">
+                    Προηγούμενη
+                </a>
+
+            {% endif %}
+
+
+
+            <span class="px-4 py-2 text-gray-600">
+
+                Σελίδα {{ page_obj.number }}
+                από {{ page_obj.paginator.num_pages }}
+
+            </span>
+
+
+
+            {% if page_obj.has_next %}
+
+                <a href="?page={{ page_obj.next_page_number }}"
+                   class="px-4 py-2 rounded bg-gray-100 hover:bg-gray-200">
+
+                    Επόμενη
+
+                </a>
+
+            {% endif %}
+
+
+        </div>
+
+        {% endif %}
+
+
+    </div>
+
+
+</div>
+
+
+{% endblock %}

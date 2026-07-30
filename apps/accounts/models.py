@@ -6,6 +6,7 @@ from django.urls import reverse
 from django.conf import settings
 import datetime
 from django.core.exceptions import ValidationError
+from apps.parameters.models import OfficialHoliday
 
 class CustomUserManager(BaseUserManager):
     def create_user(self, email, password=None, **extra_fields):
@@ -45,6 +46,8 @@ class CustomUser(AbstractBaseUser, PermissionsMixin, TimeStampedModel):
     # Optional profile fields
     first_name = models.CharField(max_length=150, blank=True)
     last_name = models.CharField(max_length=150, blank=True)
+
+    allowed_leave_days = models.PositiveIntegerField(default=25)
     
     must_change_password = models.BooleanField(default=False)
 
@@ -76,20 +79,51 @@ class Adeia(TimeStampedModel):
     source_id = models.IntegerField(null=True, unique=True)
 
     class Meta:
-        indexes = [models.Index(fields=["acs_employee"])]
+        indexes = [models.Index(fields=["acs_employee","startdate"])]
         verbose_name = "ACS Άδειες"
         verbose_name_plural = "ACS Άδειες"
 
-    @property
-    def days(self):
-        return (self.enddate - self.startdate).days + 1
+    def working_days(self):
+        days = 0
+        current = self.startdate
+
+        holidays = OfficialHoliday.objects.filter(
+            date__range=(self.startdate, self.enddate)
+        ).values_list("date", flat=True)
+
+        holidays = set(holidays)
+
+        while current <= self.enddate:
+            if (
+                current.weekday() < 5
+                and current not in holidays
+            ):
+                days += 1
+
+            current += datetime.timedelta(days=1)
+
+        return days
 
     def clean(self):
-        if self.enddate < self.startdate:
-            raise ValidationError("End date cannot be before start date.")
+        super().clean()
 
-        if self.days < 0:
-            raise ValidationError("Days cannot be negative.")
+        overlap = Adeia.objects.filter(
+            acs_employee=self.acs_employee,
+            startdate__lte=self.enddate,
+            enddate__gte=self.startdate,
+        ).exclude(pk=self.pk)
+
+        if overlap.exists():
+            raise ValidationError(
+                "Υπάρχει ήδη άδεια για αυτό το διάστημα."
+            )
+
+    # def clean(self):
+    #     if self.enddate < self.startdate:
+    #         raise ValidationError("End date cannot be before start date.")
+
+    #     if self.days < 0:
+    #         raise ValidationError("Days cannot be negative.")
 
     def get_absolute_url(self):
         return reverse("acs_adeia_update", args=[str(self.id)])  # type: ignore
