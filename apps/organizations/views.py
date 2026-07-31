@@ -1,19 +1,22 @@
-from django.shortcuts import render, get_object_or_404, redirect
-from django.urls import reverse_lazy
-from apps.organizations.models import Organization, Employee, Task
-from django.contrib.auth.decorators import login_required
-from django.core.paginator import Paginator
-from .forms import OrganizationForm
-from django.db.models import Q
-from django.contrib.messages.views import SuccessMessageMixin
-from django.views.generic import UpdateView
 from django.contrib import messages
-from apps.parameters.models import OtsSoftware,JobType
 from django.contrib.auth import get_user_model
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.messages.views import SuccessMessageMixin
+from django.core.paginator import Paginator
+from django.db.models import Q
+from django.shortcuts import get_object_or_404, redirect, render
+from django.urls import reverse_lazy
+from django.views.generic import UpdateView
+
+from apps.organizations.models import Employee, Organization, Task
+from apps.parameters.models import JobType, OtsSoftware
+
+from .forms import EmployeeForm, OrganizationForm
 
 User = get_user_model()
 # Organization list view and update view
+
 
 @login_required
 def organization_list(request):
@@ -34,7 +37,6 @@ def organization_list(request):
             Q(org_phone__icontains=search)
         )
 
-
     # Visibility filter
     if is_active == "true":
         organizations = organizations.filter(
@@ -46,13 +48,11 @@ def organization_list(request):
             is_active=False
         )
 
-
     paginator = Paginator(organizations, 12)
 
     page_obj = paginator.get_page(
         request.GET.get("page", 1)
     )
-
 
     context = {
         "organizations": page_obj,
@@ -73,9 +73,7 @@ def organization_list(request):
     )
 
 
-
-
-class OrganizationUpdateView(LoginRequiredMixin,SuccessMessageMixin, UpdateView):
+class OrganizationUpdateView(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
     model = Organization
     form_class = OrganizationForm
     template_name = "organizations/detail.html"
@@ -97,7 +95,6 @@ def employee_list(request):
 
     employees = Employee.objects.all().order_by('?')
 
-
     if is_active == "":
         employees = employees.filter(is_active=True)
 
@@ -107,7 +104,6 @@ def employee_list(request):
             Q(lastname__icontains=search) |
             Q(phone__icontains=search)
         )
-
 
     # Visibility filter
     if is_active == "true":
@@ -120,18 +116,16 @@ def employee_list(request):
             is_active=False
         )
 
-
     paginator = Paginator(employees, 12)
 
     page_obj = paginator.get_page(
         request.GET.get("page", 1)
     )
 
-
     context = {
         "employees": page_obj,
         "search": search,
-        #"employees": employees,
+        # "employees": employees,
         "is_htmx": request.headers.get("HX-Request"),
     }
     if request.headers.get("HX-Request"):
@@ -147,16 +141,31 @@ def employee_list(request):
     )
 
 
+class EmployeeUpdateView(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
+    model = Employee
+    form_class = EmployeeForm
+    template_name = "organizations/employee/detail.html"
+    success_url = reverse_lazy("organizations:employee_list")
+    success_message = "Ο Οργανισμός ενημερώθηκε με επιτυχία."
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["title"] = "Επεξεργασία Επαφής"
+        return context
+
 # Soft delete and restore for Organization & Employee
 
-def soft_delete_organization(request,pk):
+
+def soft_delete_organization(request, pk):
     obj = get_object_or_404(Organization, pk=pk)
     obj.is_active = not obj.is_active
     obj.save(update_fields=["is_active"])
-    messages.success(request, f'Ο Οργανισμός "{obj.org_name}" απενεργοποιήθηκε.')
+    messages.success(
+        request, f'Ο Οργανισμός "{obj.org_name}" απενεργοποιήθηκε.')
     return redirect("organizations:organization_list")
 
-def restore_organization(request,pk):
+
+def restore_organization(request, pk):
     obj = get_object_or_404(Organization, pk=pk)
     obj.is_active = True
     obj.save(update_fields=["is_active"])
@@ -164,21 +173,22 @@ def restore_organization(request,pk):
     return redirect("organizations:organization_list")
 
 
-
-def soft_delete_employee(request,pk):
+def soft_delete_employee(request, pk):
     obj = get_object_or_404(Employee, pk=pk)
     obj.is_active = False
     obj.save(update_fields=["is_active"])
-    messages.success(request, f'Ο/H υπάλληλος "{obj.lastname} {obj.firstname}" του Οργανισμού "{obj.organization}" έχει απενεργοποιηθεί.')
+    messages.success(
+        request, f'Ο/H υπάλληλος "{obj.lastname} {obj.firstname}" του Οργανισμού "{obj.organization}" έχει απενεργοποιηθεί.')
     return redirect("organizations:employee_list")
 
-def restore_employee(request,pk):
+
+def restore_employee(request, pk):
     obj = get_object_or_404(Employee, pk=pk)
     obj.is_active = True
     obj.save(update_fields=["is_active"])
-    messages.success(request, f'Ο/H υπάλληλος "{obj.lastname} {obj.firstname}" του Οργανισμού "{obj.organization}" έχει εργοποιηθεί.')
+    messages.success(
+        request, f'Ο/H υπάλληλος "{obj.lastname} {obj.firstname}" του Οργανισμού "{obj.organization}" έχει εργοποιηθεί.')
     return redirect("organizations:employee_list")
-
 
 
 # Task List

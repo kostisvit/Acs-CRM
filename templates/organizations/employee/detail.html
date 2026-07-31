@@ -1,6 +1,6 @@
 {% extends '_base.html' %}
 
-{% block title %}{{ organization.org_name }}{% endblock %}
+{% block title %}{{ employee }}{% endblock %}
 
 
 {% block content %}
@@ -11,17 +11,17 @@
     <div class="flex items-center justify-between mb-8">
         <div>
             <h1 class="flex flex-wrap items-center gap-3 text-3xl font-bold text-gray-900">
-                Επεξεργασία Οργανισμού
+                Επεξεργασία Επαφής
                 <span class="max-w-full truncate rounded-full bg-blue-100 px-3 py-1 text-base font-medium text-blue-700">
-                    {{ organization.org_name }}
+                    {{ employee }}
                 </span>
             </h1>
             <p class="mt-1 text-sm text-gray-500">
-                Ενημερώστε τα στοιχεία του οργανισμού.
+                Ενημερώστε τα στοιχεία του πελάτη.
             </p>
         </div>
 
-        <a href="{% url 'organizations:organization_list' %}"
+        <a href="{% url 'organizations:employee_list' %}"
            class="rounded-lg border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50">
             ← Επιστροφή
         </a>
@@ -35,7 +35,7 @@
             <!-- Company Information -->
             <div class="border-b border-gray-200 px-8 py-6">
                 <h2 class="text-lg font-semibold text-gray-900">
-                    Στοιχεία Οργανισμού
+                    Στοιχεία Επαφής
                 </h2>
             </div>
 
@@ -43,53 +43,41 @@
 
                 <div>
                     <label class="mb-2 block text-sm font-medium text-gray-700">
-                        Πελάτης
+                        Επώνυμο
                     </label>
-                    {{ form.org_name }}
+                    {{ form.lastname }}
                 </div>
 
                 <div>
                     <label class="mb-2 block text-sm font-medium text-gray-700">
-                        Τηλέφωνο
+                        Όνομα
                     </label>
-                    {{ form.org_phone }}
+                    {{ form.firstname }}
                 </div>
-
                 <div>
                     <label class="mb-2 block text-sm font-medium text-gray-700">
-                        Διεύθυνση
+                        Οργανισμός
                     </label>
-                    {{ form.org_address }}
+                    {{ form.organization }}
                 </div>
-
                 <div>
                     <label class="mb-2 block text-sm font-medium text-gray-700">
-                        Πόλη
+                        Κινητό
                     </label>
-                    {{ form.org_city }}
+                    {{ form.cellphone }}
                 </div>
-
                 <div>
                     <label class="mb-2 block text-sm font-medium text-gray-700">
-                        Email
+                        Ηλεκτρονικό Ταχυδρομείο
                     </label>
-                    {{ form.org_email }}
+                    {{ form.email }}
                 </div>
-
                 <div>
                     <label class="mb-2 block text-sm font-medium text-gray-700">
-                        Website
+                        Εναλλακτική Διεύθυνση
                     </label>
-                    {{ form.org_site }}
+                    {{ form.secondary_email }}
                 </div>
-
-                <div>
-                    <label class="mb-2 block text-sm font-medium text-gray-700">
-                        TeamViewer
-                    </label>
-                    {{ form.org_remote }}
-                </div>
-
                 <div class="flex items-center gap-3 pt-8">
                     {{ form.is_active }}
                     <label id="status-label" class="text-sm font-medium text-gray-700">
@@ -100,8 +88,7 @@
                         {% endif %}
                     </label>
                 </div>
-
-            </div>
+              </div>
 
             <!-- Notes -->
             <div class="border-t border-gray-200 px-8 py-6">
@@ -110,7 +97,7 @@
                     Πληροφορίες
                 </label>
 
-                {{ form.org_info }}
+                {{ form.info }}
 
             </div>
 

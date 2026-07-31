@@ -1,4 +1,5 @@
-import csv, datetime
+import csv
+import datetime
 from apps.organizations.models import Organization, Employee, Task
 from apps.parameters.models import JobType, OtsSoftware, OrgDepartment, AcsAdeia
 from abc import ABC, abstractmethod
@@ -9,6 +10,7 @@ from apps.accounts.models import Adeia
 from django.db.models import Q
 
 CustomUser = get_user_model()
+
 
 def str_to_bool(value):
     return str(value).strip().lower() in ("true", "1", "yes", "y")
@@ -55,7 +57,8 @@ class BaseImporter(ABC):
             "csv_records": csv_records,
             "errors": errors,
         }
-    
+
+
 class UserImporter(BaseImporter):
     model = get_user_model()
 
@@ -71,7 +74,7 @@ class UserImporter(BaseImporter):
         "panagiotis": "ptsellos@acsservices.gr",
         "vmazioti": "vmazioti@acsservices.gr",
         "alexis": "amav@acsservices.gr",
-        
+
     }
 
     def import_row(self, row):
@@ -85,7 +88,7 @@ class UserImporter(BaseImporter):
         user, created = self.model.objects.update_or_create(
             source_id=row["id"],
             defaults={
-                #"username": username,
+                # "username": username,
                 "email": email,
                 "first_name": row.get("first_name", ""),
                 "last_name": row.get("last_name", ""),
@@ -101,35 +104,7 @@ class UserImporter(BaseImporter):
 
         return user
 
-# class UserImporter(BaseImporter):
-#     model = get_user_model()
 
-#     def import_row(self, row):
-#         email = row["email"].lower().strip()
-
-#         user, created = self.model.objects.update_or_create(
-#             source_id=row["id"],
-#             email=email,
-#             defaults={
-#                 #"username": email,  # only if your custom model still has username
-#                 "first_name": row.get("first_name", ""),
-#                 "last_name": row.get("last_name", ""),
-#                 "is_active": str_to_bool(row["is_active"]),
-#                 "is_staff": str_to_bool(row["is_staff"]),
-#                 "is_superuser": str_to_bool(row["is_superuser"]),
-#                 # "date_joined": row["date_joined"],
-#                 # "last_login": row.get("last_login"),
-#             },
-#         )
-
-#         # preserve the old password hash
-#         if row.get("password"):
-#             user.password = row["password"]
-#             user.save(update_fields=["password"])
-
-#         return user  
-  
-  
 class OrganizationImporter(BaseImporter):
     model = Organization
 
@@ -150,6 +125,7 @@ class OrganizationImporter(BaseImporter):
                 "modified": row["modified"],
             },
         )
+
 
 class EmployeeImporter(BaseImporter):
     model = Employee
@@ -214,7 +190,7 @@ class JobTypeImporter(BaseImporter):
         self.model.objects.update_or_create(
             source_id=row["id"],
             defaults={
-                "name":row["name"],
+                "name": row["name"],
                 "is_active": str_to_bool(row["is_active"]),
                 "created": row["created"],
                 "modified": row["modified"],
@@ -233,7 +209,7 @@ class OtsSoftwareImporter(BaseImporter):
                 "is_active": str_to_bool(row["is_active"]),
                 "created": row["created"],
                 "modified": row["modified"],
-                
+
             },
         )
 
@@ -266,17 +242,13 @@ class AcsAdeiaTypeImporter(BaseImporter):
                 "created": row["created"],
                 "modified": row["modified"],
             },
-            
+
         )
-
-
-
-
 
 
 class TaskImporter(BaseImporter):
     model = Task
-                # map old username -> new email
+    # map old username -> new email
     # USER_EMAIL_MAP = {
     #     "kostasvit": "kostasvit@acsservices.gr",
     #     "athanasia": "akarakousi@acsservices.gr",
@@ -395,12 +367,13 @@ class TaskImporter(BaseImporter):
                 "acs_employee": acs_employee,
                 "task_time": task_time,
                 "org_employee": org_employee,
-                "ticketid": row.get("ticketid",""),
+                "ticketid": row.get("ticketid", ""),
                 "created": row["created"],
                 "modified": row["modified"],
             },
         )
-        
+
+
 class AdeiaImporter(BaseImporter):
     model = Adeia
 
@@ -482,7 +455,8 @@ class AdeiaImporter(BaseImporter):
                 "enddate": parse_date(row.get("enddate")),
             },
         )
-        
+
+
 IMPORTERS = {
     "users": {
         "class": UserImporter,
@@ -512,11 +486,11 @@ IMPORTERS = {
         "class": AcsAdeiaTypeImporter,
         "label": "2-Είδος άδειας"
     },
-    "tasks":{
+    "tasks": {
         "class": TaskImporter,
         "label": "10-Εργασίες"
     },
-        "adeia":{
+    "adeia": {
         "class": AdeiaImporter,
         "label": "3-Άδειες εργαζομένων ACS"
     }
