@@ -1,3 +1,4 @@
+import uuid
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin
 from django.contrib.auth.base_user import BaseUserManager
 from django.db import models
@@ -37,6 +38,12 @@ class CustomUserManager(BaseUserManager):
 
 class CustomUser(AbstractBaseUser, PermissionsMixin, TimeStampedModel):
 
+    id = models.UUIDField(
+        primary_key=True,
+        default=uuid.uuid4,
+        editable=False,
+    )
+
     email = models.EmailField(unique=True)
 
     # Permissions/admin fields
@@ -65,6 +72,12 @@ class CustomUser(AbstractBaseUser, PermissionsMixin, TimeStampedModel):
 
 
 class Adeia(TimeStampedModel):
+
+    id = models.UUIDField(
+        primary_key=True,
+        default=uuid.uuid4,
+        editable=False,
+    )
     acs_employee = models.ForeignKey(settings.AUTH_USER_MODEL,verbose_name="Υπάλληλος", on_delete=models.CASCADE)
     acs_adeiatype = models.ForeignKey(
         "parameters.AcsAdeia",
@@ -117,13 +130,6 @@ class Adeia(TimeStampedModel):
             raise ValidationError(
                 "Υπάρχει ήδη άδεια για αυτό το διάστημα."
             )
-
-    # def clean(self):
-    #     if self.enddate < self.startdate:
-    #         raise ValidationError("End date cannot be before start date.")
-
-    #     if self.days < 0:
-    #         raise ValidationError("Days cannot be negative.")
 
     def get_absolute_url(self):
         return reverse("acs_adeia_update", args=[str(self.id)])  # type: ignore

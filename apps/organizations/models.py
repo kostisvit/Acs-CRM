@@ -1,3 +1,4 @@
+import uuid
 import re
 import datetime
 from django.conf import settings
@@ -9,6 +10,12 @@ from django.core.validators import MinValueValidator
 
 
 class Organization(TimeStampedModel):
+
+    id = models.UUIDField(
+        primary_key=True,
+        default=uuid.uuid4,
+        editable=False,
+    )
     org_name = models.CharField(max_length=255, verbose_name="Πελάτης", blank=False)
     org_address = models.CharField(
         max_length=255, verbose_name="Διεύθυνση", blank=True, default="-"
@@ -60,6 +67,12 @@ class Organization(TimeStampedModel):
 
 
 class Employee(TimeStampedModel):
+
+    id = models.UUIDField(
+        primary_key=True,
+        default=uuid.uuid4,
+        editable=False,
+    )
     organization = models.ForeignKey("Organization", on_delete=models.CASCADE, related_name="employees",verbose_name="Οργανισμός", null=True)
     firstname = models.CharField(max_length=150, verbose_name="Όνομα", blank=True)
     lastname = models.CharField(max_length=150, verbose_name="Επώνυμο", blank=True)
@@ -119,6 +132,12 @@ class Employee(TimeStampedModel):
 
 
 class Task(TimeStampedModel):
+
+    id = models.UUIDField(
+        primary_key=True,
+        default=uuid.uuid4,
+        editable=False,
+    )
     organization = models.ForeignKey("Organization", on_delete=models.PROTECT, verbose_name="Οργανισμός")
     importdate = models.DateField(default=datetime.date.today, verbose_name="Ημ. Κατ.", db_index=True)
     org_app = models.ForeignKey(

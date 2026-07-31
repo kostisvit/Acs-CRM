@@ -6,9 +6,9 @@ app_name = "organizations"
 
 urlpatterns = [
     path("list/", views.organization_list, name="organization_list"),
-    path("detail/<int:pk>/", OrganizationUpdateView.as_view(), name="organization_update"),
-    path("soft-delete/<int:pk>", views.soft_delete_organization, name="soft_delete_organization"),
-    path("restore/<int:pk>", views.restore_organization, name="restore_organization"),
+    path("detail/<uuid:pk>/", OrganizationUpdateView.as_view(), name="organization_update"),
+    path("soft-delete/<uuid:pk>", views.soft_delete_organization, name="soft_delete_organization"),
+    path("restore/<uuid:pk>", views.restore_organization, name="restore_organization"),
     path("employees/", views.employee_list, name="employee_list"),
     path("employee/soft-delete/<int:pk>", views.soft_delete_employee, name="soft_delete_employee"),
     path("employee/restore/<int:pk>", views.restore_employee, name="restore_employee"),

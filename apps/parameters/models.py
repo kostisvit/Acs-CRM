@@ -1,7 +1,14 @@
+import uuid
 from django.db import models
 from django_extensions.db.models import TimeStampedModel
 
 class JobType(TimeStampedModel):
+
+    id = models.UUIDField(
+        primary_key=True,
+        default=uuid.uuid4,
+        editable=False,
+    )
     name = models.CharField(
         max_length=100,
         unique=True,
@@ -19,6 +26,12 @@ class JobType(TimeStampedModel):
 
 
 class OtsSoftware(TimeStampedModel):
+
+    id = models.UUIDField(
+        primary_key=True,
+        default=uuid.uuid4,
+        editable=False,
+    )
     name = models.CharField(max_length=100, unique=True,
                             verbose_name="Όνομα Εφαρμογής")
     is_active = models.BooleanField(default=True, verbose_name="Ενεργή")
@@ -34,6 +47,12 @@ class OtsSoftware(TimeStampedModel):
 
 
 class OrgDepartment(TimeStampedModel):
+
+    id = models.UUIDField(
+        primary_key=True,
+        default=uuid.uuid4,
+        editable=False,
+    )
     name = models.CharField(
         max_length=100,
         unique=True,
@@ -51,6 +70,12 @@ class OrgDepartment(TimeStampedModel):
 
 
 class TrainingType(TimeStampedModel):
+
+    id = models.UUIDField(
+        primary_key=True,
+        default=uuid.uuid4,
+        editable=False,
+    )
     name = models.CharField(
         max_length=100,
         unique=True,
@@ -66,6 +91,12 @@ class TrainingType(TimeStampedModel):
 
 
 class TrainingPlace(TimeStampedModel):
+
+    id = models.UUIDField(
+        primary_key=True,
+        default=uuid.uuid4,
+        editable=False,
+    )    
     name = models.CharField(
         max_length=100,
         unique=True,
@@ -81,6 +112,13 @@ class TrainingPlace(TimeStampedModel):
 
 
 class AcsAdeia(TimeStampedModel):
+
+    id = models.UUIDField(
+        primary_key=True,
+        default=uuid.uuid4,
+        editable=False,
+    )
+    
     name = models.CharField(max_length=100, unique=True,
                             verbose_name="Τύπος Άδειας")
     adeianame_id = models.CharField(
@@ -100,6 +138,12 @@ class AcsAdeia(TimeStampedModel):
 
 
 class OfficialHoliday(TimeStampedModel):
+
+    id = models.UUIDField(
+        primary_key=True,
+        default=uuid.uuid4,
+        editable=False,
+    )
     date = models.DateField(unique=True)
     description = models.CharField(max_length=200)
 
