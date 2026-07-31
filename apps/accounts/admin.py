@@ -1,8 +1,10 @@
+from django import forms
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 from django.contrib.auth.forms import ReadOnlyPasswordHashField
-from .models import CustomUser, Adeia
-from django import forms
+
+from .models import Adeia, CustomUser
+
 
 class CustomUserChangeForm(forms.ModelForm):
     password = ReadOnlyPasswordHashField()

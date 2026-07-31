@@ -1,17 +1,16 @@
-from django.contrib.auth import authenticate, login
-from django.shortcuts import render, redirect
-from django.contrib.auth import logout
-from .forms import EmailLoginForm,CustomPasswordChangeForm,UserProfileForm
-from django.contrib.auth import get_user_model
-from .models import Adeia
-from django.contrib.auth.views import PasswordChangeView
-from django.urls import reverse_lazy
-from django.db.models import Sum
-from django.contrib.auth.mixins import LoginRequiredMixin
-from django.views.generic import ListView
-from datetime import date
-from django.contrib import messages
 import datetime
+from datetime import date
+
+from django.contrib import messages
+from django.contrib.auth import authenticate, get_user_model, login, logout
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.views import PasswordChangeView
+from django.shortcuts import redirect, render
+from django.urls import reverse_lazy
+from django.views.generic import ListView
+
+from .forms import CustomPasswordChangeForm, EmailLoginForm, UserProfileForm
+from .models import Adeia
 
 User = get_user_model()
 
@@ -68,7 +67,7 @@ class FirstPasswordChangeView(PasswordChangeView):
         return response
 
 
-from django.db.models import F, ExpressionWrapper, DurationField
+
 
 class MyLeaveListView(LoginRequiredMixin, ListView):
 

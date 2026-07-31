@@ -16,6 +16,6 @@ class ForcePasswordChangeMiddleware:
                 request.user.must_change_password
                 and request.path != change_password_url
             ):
-                return redirect("change_password")
+                return redirect("accounts:change_password")
 
         return self.get_response(request)

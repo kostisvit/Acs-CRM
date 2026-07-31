@@ -1,8 +1,8 @@
-from django import forms
-from django.contrib.auth.forms import PasswordChangeForm
-from django.contrib.auth import get_user_model
 from typing import Any, ClassVar
 
+from django import forms
+from django.contrib.auth import get_user_model
+from django.contrib.auth.forms import PasswordChangeForm
 
 User = get_user_model()
 

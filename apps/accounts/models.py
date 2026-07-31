@@ -1,13 +1,16 @@
-import uuid
-from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin
-from django.contrib.auth.base_user import BaseUserManager
-from django.db import models
-from django_extensions.db.models import TimeStampedModel
-from django.urls import reverse
-from django.conf import settings
 import datetime
+import uuid
+
+from django.conf import settings
+from django.contrib.auth.base_user import BaseUserManager
+from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin
 from django.core.exceptions import ValidationError
+from django.db import models
+from django.urls import reverse
+from django_extensions.db.models import TimeStampedModel
+
 from apps.parameters.models import OfficialHoliday
+
 
 class CustomUserManager(BaseUserManager):
     def create_user(self, email, password=None, **extra_fields):
