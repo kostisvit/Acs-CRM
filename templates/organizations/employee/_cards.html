@@ -62,6 +62,13 @@
       </div>
 
       <div class="flex justify-between">
+        <span>Κινητό</span>
+        <span class="font-medium text-gray-900">
+          {{ emp.mobile|default:"-" }}
+        </span>
+      </div>
+
+      <div class="flex justify-between">
         <span>Email</span>
         <span class="font-medium text-gray-900">
           {{ emp.email }}

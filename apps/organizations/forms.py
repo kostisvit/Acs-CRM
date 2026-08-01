@@ -65,7 +65,7 @@ class EmployeeForm(forms.ModelForm):
             "phone": forms.TextInput(
                 attrs={"class": INPUT_CLASS}
             ),
-            "cellphone": forms.TextInput(
+            "mobile": forms.TextInput(
                 attrs={"class": INPUT_CLASS}
             ),
             "email": forms.EmailInput(
