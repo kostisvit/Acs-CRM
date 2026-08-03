@@ -16,21 +16,25 @@ class Organization(TimeStampedModel):
         default=uuid.uuid4,
         editable=False,
     )
-    org_name = models.CharField(max_length=255, verbose_name="Πελάτης", blank=False)
+    org_name = models.CharField(
+        max_length=255, verbose_name="Πελάτης", blank=False)
     org_address = models.CharField(
         max_length=255, verbose_name="Διεύθυνση", blank=True, default="-"
     )
     org_city = models.CharField(
         max_length=255, verbose_name="Πόλη", blank=True, default="-"
     )
-    org_phone = models.CharField(max_length=100, verbose_name="Τηλέφωνο", blank=False)
-    org_remote = models.CharField(max_length=60, verbose_name="Remote", blank=True)
+    org_phone = models.CharField(
+        max_length=100, verbose_name="Τηλέφωνο", blank=False)
+    org_remote = models.CharField(
+        max_length=60, verbose_name="Remote", blank=True)
     org_email = models.EmailField(blank=True)
     org_site = models.URLField(max_length=250, blank=True, null=True)
-    org_info = models.TextField(max_length=1000, verbose_name="Πληροφορίες", blank=True)
+    org_info = models.TextField(
+        max_length=1000, verbose_name="Πληροφορίες", blank=True)
     is_active = models.BooleanField(default=True, verbose_name="Κατάσταση")
 
-    source_id = models.IntegerField(null=True, unique=True)
+    source_id = models.IntegerField(blank=True, null=True, unique=True)
 
     history = HistoricalRecords()
 
@@ -73,14 +77,20 @@ class Employee(TimeStampedModel):
         default=uuid.uuid4,
         editable=False,
     )
-    organization = models.ForeignKey("Organization", on_delete=models.CASCADE, related_name="employees",verbose_name="Οργανισμός", null=True)
-    firstname = models.CharField(max_length=150, verbose_name="Όνομα", blank=True)
-    lastname = models.CharField(max_length=150, verbose_name="Επώνυμο", blank=True)
-    phone = models.CharField(max_length=100, verbose_name="Τηλέφωνο", blank=False)
-    cellphone = models.CharField(max_length=30, verbose_name="Κινητό", blank=True)
-    email = models.EmailField(blank=True, null=True,db_index=True)
+    organization = models.ForeignKey("Organization", on_delete=models.CASCADE,
+                                     related_name="employees", verbose_name="Οργανισμός", null=True)
+    firstname = models.CharField(
+        max_length=150, verbose_name="Όνομα", blank=True)
+    lastname = models.CharField(
+        max_length=150, verbose_name="Επώνυμο", blank=True)
+    phone = models.CharField(
+        max_length=100, verbose_name="Τηλέφωνο", blank=False)
+    cellphone = models.CharField(
+        max_length=30, verbose_name="Κινητό", blank=True)
+    email = models.EmailField(blank=True, null=True, db_index=True)
     secondary_email = models.EmailField(blank=True, null=True)
-    info = models.TextField(max_length=1000, verbose_name="Πληροφορίες", blank=True)
+    info = models.TextField(
+        max_length=1000, verbose_name="Πληροφορίες", blank=True)
     is_active = models.BooleanField(default=True, verbose_name="Κατάσταση")
     org_department = models.ForeignKey(
         "parameters.OrgDepartment",
@@ -120,7 +130,6 @@ class Employee(TimeStampedModel):
 
         return (words[0][0] + words[-1][0]).upper()
 
-
     def soft_delete(self):
         self.is_active = False
         self.save()
@@ -130,7 +139,6 @@ class Employee(TimeStampedModel):
         self.save()
 
 
-
 class Task(TimeStampedModel):
 
     id = models.UUIDField(
@@ -138,8 +146,10 @@ class Task(TimeStampedModel):
         default=uuid.uuid4,
         editable=False,
     )
-    organization = models.ForeignKey("Organization", on_delete=models.PROTECT, verbose_name="Οργανισμός")
-    importdate = models.DateField(default=datetime.date.today, verbose_name="Ημ. Κατ.", db_index=True)
+    organization = models.ForeignKey(
+        "Organization", on_delete=models.PROTECT, verbose_name="Οργανισμός")
+    importdate = models.DateField(
+        default=datetime.date.today, verbose_name="Ημ. Κατ.", db_index=True)
     org_app = models.ForeignKey(
         "parameters.OtsSoftware",
         on_delete=models.SET_NULL,
@@ -154,14 +164,17 @@ class Task(TimeStampedModel):
         blank=True,
         verbose_name="Τύπος Εργασίας ACS",
     )
-    task_info = models.TextField(max_length=1000, verbose_name="Περιγραφή εργασίας")
-    task_note = models.TextField(max_length=1000, verbose_name="Σημειώσεις", blank=True)
+    task_info = models.TextField(
+        max_length=1000, verbose_name="Περιγραφή εργασίας")
+    task_note = models.TextField(
+        max_length=1000, verbose_name="Σημειώσεις", blank=True)
     acs_employee = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         verbose_name="Υπάλληλος",
         on_delete=models.PROTECT,
     )
-    task_time = models.DecimalField(verbose_name="Διάρκεια εργασίας", max_digits=5, decimal_places=2,validators=[MinValueValidator(0)],)
+    task_time = models.DecimalField(verbose_name="Διάρκεια εργασίας",
+                                    max_digits=5, decimal_places=2, validators=[MinValueValidator(0)],)
     org_employee = models.ForeignKey(
         "Employee",
         on_delete=models.PROTECT,
@@ -169,7 +182,8 @@ class Task(TimeStampedModel):
         null=True,
         blank=True,
     )
-    ticketid = models.CharField(max_length=50, verbose_name="Αίτημα OTS", null=True, blank=True)
+    ticketid = models.CharField(
+        max_length=50, verbose_name="Αίτημα OTS", null=True, blank=True)
 
     source_id = models.IntegerField(null=True, unique=True)
 

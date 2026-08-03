@@ -1,11 +1,13 @@
 from django.urls import path
 from . import views
-from .views import OrganizationUpdateView, EmployeeUpdateView
+from .views import OrganizationUpdateView, EmployeeUpdateView, OrganizationCreateView
 
 app_name = "organizations"
 
 urlpatterns = [
     path("list/", views.organization_list, name="organization_list"),
+    path("create/", OrganizationCreateView.as_view(),
+         name="organization_create"),
     path("detail/<uuid:pk>/", OrganizationUpdateView.as_view(),
          name="organization_update"),
     path("soft-delete/<uuid:pk>", views.soft_delete_organization,

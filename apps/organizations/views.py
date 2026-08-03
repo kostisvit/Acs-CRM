@@ -7,7 +7,7 @@ from django.core.paginator import Paginator
 from django.db.models import Q
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse_lazy
-from django.views.generic import UpdateView
+from django.views.generic import UpdateView, CreateView, ListView
 
 from apps.organizations.models import Employee, Organization, Task
 from apps.parameters.models import JobType, OtsSoftware
@@ -71,6 +71,19 @@ def organization_list(request):
         "organizations/list.html",
         context
     )
+
+
+class OrganizationCreateView(LoginRequiredMixin, SuccessMessageMixin, CreateView):
+    model = Organization
+    form_class = OrganizationForm
+    template_name = "organizations/create.html"
+    success_url = reverse_lazy("organizations:organization_list")
+    success_message = "Ο Οργανισμός δημιουργήθηκε με επιτυχία."
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["title"] = "Δημιουργία Πελάτη"
+        return context
 
 
 class OrganizationUpdateView(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
