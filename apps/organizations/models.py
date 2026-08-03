@@ -99,7 +99,7 @@ class Employee(TimeStampedModel):
         verbose_name="Τμήμα Οργανισμού",
     )
 
-    source_id = models.IntegerField(null=True, unique=True)
+    source_id = models.IntegerField(blank=True, null=True, unique=True)
     history = HistoricalRecords()
 
     class Meta:

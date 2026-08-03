@@ -85,6 +85,11 @@ class OrganizationCreateView(LoginRequiredMixin, SuccessMessageMixin, CreateView
         context["title"] = "Δημιουργία Πελάτη"
         return context
 
+    def form_valid(self, form):
+        response = super().form_valid(form)
+        # Additional logic after saving the form can be added here
+        return response
+
 
 class OrganizationUpdateView(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
     model = Organization
@@ -154,12 +159,30 @@ def employee_list(request):
     )
 
 
+class EmployeeCreateView(LoginRequiredMixin, SuccessMessageMixin, CreateView):
+    model = Employee
+    form_class = EmployeeForm
+    template_name = "organizations/employee/create.html"
+    success_url = reverse_lazy("organizations:employee_list")
+    success_message = "Η επαφή δημιουργήθηκε με επιτυχία."
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["title"] = "Δημιουργία Επαφής"
+        return context
+
+    def form_valid(self, form):
+        response = super().form_valid(form)
+        # Additional logic after saving the form can be added here
+        return response
+
+
 class EmployeeUpdateView(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
     model = Employee
     form_class = EmployeeForm
     template_name = "organizations/employee/detail.html"
     success_url = reverse_lazy("organizations:employee_list")
-    success_message = "Ο Οργανισμός ενημερώθηκε με επιτυχία."
+    success_message = "Η επαφή ενημερώθηκε με επιτυχία."
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)

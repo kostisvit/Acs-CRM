@@ -1,6 +1,6 @@
 from django.urls import path
 from . import views
-from .views import OrganizationUpdateView, EmployeeUpdateView, OrganizationCreateView
+from .views import OrganizationUpdateView, EmployeeUpdateView, OrganizationCreateView, EmployeeCreateView
 
 app_name = "organizations"
 
@@ -15,6 +15,8 @@ urlpatterns = [
     path("restore/<uuid:pk>", views.restore_organization,
          name="restore_organization"),
     path("employees/list", views.employee_list, name="employee_list"),
+    path("employee/create/", EmployeeCreateView.as_view(),
+         name="employee_create"),
     path("employee/detail/<uuid:pk>/",
          EmployeeUpdateView.as_view(), name="employee_update"),
     path("employee/soft-delete/<uuid:pk>",
