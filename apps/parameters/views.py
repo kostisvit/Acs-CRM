@@ -23,7 +23,7 @@ def parameters_view(request):
 
 @login_required
 def jobtype_view(request):
-    job_types =  JobType.objects.all()
+    job_types = JobType.objects.all()
     return render(
         request,
         "parameters/_job_type.html",
@@ -32,6 +32,7 @@ def jobtype_view(request):
         }
 
     )
+
 
 def add_job_type(request):
     data = json.loads(request.body)
@@ -61,6 +62,7 @@ def ots_software_view(request):
 
 # Organization department view
 
+
 @login_required
 def org_department_view(request):
     org_department = OrgDepartment.objects.all()
@@ -71,7 +73,6 @@ def org_department_view(request):
             "org_department": org_department
         }
     )
-
 
 
 # Acs adeia type
@@ -114,6 +115,7 @@ def export_errors_excel(errors):
     response["Content-Disposition"] = 'attachment; filename="import_errors.xlsx"'
 
     return response
+
 
 @login_required
 def import_csv(request):

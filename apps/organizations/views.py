@@ -38,9 +38,9 @@ def organization_list(request):
     # Search filter
     if search:
         organizations = organizations.filter(
-            Q(org_name__icontains=search) |
-            Q(org_city__icontains=search) |
-            Q(org_phone__icontains=search)
+            Q(org_name__icontains=search)
+            | Q(org_city__icontains=search)
+            | Q(org_phone__icontains=search)
         )
 
     # Organization filter
@@ -51,9 +51,7 @@ def organization_list(request):
 
     paginator = Paginator(organizations, 12)
 
-    page_obj = paginator.get_page(
-        request.GET.get("page", 1)
-    )
+    page_obj = paginator.get_page(request.GET.get("page", 1))
 
     context = {
         "organizations": page_obj,
@@ -64,17 +62,9 @@ def organization_list(request):
     }
 
     if request.headers.get("HX-Request"):
-        return render(
-            request,
-            "organizations/_cards.html",
-            context
-        )
+        return render(request, "organizations/_cards.html", context)
 
-    return render(
-        request,
-        "organizations/list.html",
-        context
-    )
+    return render(request, "organizations/list.html", context)
 
 
 class OrganizationCreateView(LoginRequiredMixin, SuccessMessageMixin, CreateView):
@@ -121,31 +111,21 @@ def employee_list(request):
 
     # Organization filter
     if organization_id:
-        employees = employees.filter(
-            organization_id=organization_id
-        )
+        employees = employees.filter(organization_id=organization_id)
 
     # Department filter
     if department_id:
-        employees = employees.filter(
-            org_department_id=department_id
-        )
+        employees = employees.filter(org_department_id=department_id)
 
     # Active filter
     if is_active == "true":
-        employees = employees.filter(
-            is_active=True
-        )
+        employees = employees.filter(is_active=True)
 
     elif is_active == "false":
-        employees = employees.filter(
-            is_active=False
-        )
+        employees = employees.filter(is_active=False)
 
     else:
-        employees = employees.filter(
-            is_active=True
-        )
+        employees = employees.filter(is_active=True)
 
     # Search filter
     if search:
@@ -157,45 +137,29 @@ def employee_list(request):
             | Q(email__icontains=search)
         )
 
-    employees = employees.order_by(
-        "lastname",
-        "firstname"
-    )
+    employees = employees.order_by("lastname", "firstname")
 
     paginator = Paginator(employees, 12)
 
-    page_obj = paginator.get_page(
-        request.GET.get("page", 1)
-    )
+    page_obj = paginator.get_page(request.GET.get("page", 1))
 
     context = {
         "employees": page_obj,
-
         # Current filters
         "search": search,
         "organization_id": organization_id,
         "department_id": department_id,
         "is_active": is_active,
-
         # Filter dropdowns
         "organizations": Organization.objects.all(),
         "departments": OrgDepartment.objects.all(),
-
         "is_htmx": request.headers.get("HX-Request"),
     }
 
     if request.headers.get("HX-Request"):
-        return render(
-            request,
-            "organizations/employee/_cards.html",
-            context
-        )
+        return render(request, "organizations/employee/_cards.html", context)
 
-    return render(
-        request,
-        "organizations/employee/list.html",
-        context
-    )
+    return render(request, "organizations/employee/list.html", context)
 
 
 class EmployeeCreateView(LoginRequiredMixin, SuccessMessageMixin, CreateView):
@@ -228,6 +192,7 @@ class EmployeeUpdateView(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
         context["title"] = "Επεξεργασία Επαφής"
         return context
 
+
 # Soft delete and restore for Organization & Employee
 
 
@@ -253,7 +218,9 @@ def soft_delete_employee(request, pk):
     obj.is_active = False
     obj.save(update_fields=["is_active"])
     messages.success(
-        request, f'Ο/H υπάλληλος "{obj.lastname} {obj.firstname}" του Οργανισμού "{obj.organization}" έχει απενεργοποιηθεί.')
+        request,
+        f'Ο/H υπάλληλος "{obj.lastname} {obj.firstname}" του Οργανισμού "{obj.organization}" έχει απενεργοποιηθεί.',
+    )
     return redirect("organizations:employee_list")
 
 
@@ -262,7 +229,9 @@ def restore_employee(request, pk):
     obj.is_active = True
     obj.save(update_fields=["is_active"])
     messages.success(
-        request, f'Ο/H υπάλληλος "{obj.lastname} {obj.firstname}" του Οργανισμού "{obj.organization}" έχει εργοποιηθεί.')
+        request,
+        f'Ο/H υπάλληλος "{obj.lastname} {obj.firstname}" του Οργανισμού "{obj.organization}" έχει εργοποιηθεί.',
+    )
     return redirect("organizations:employee_list")
 
 
@@ -319,9 +288,7 @@ def task_list(request):
 
     paginator = Paginator(tasks, 12)
 
-    page_obj = paginator.get_page(
-        request.GET.get("page", 1)
-    )
+    page_obj = paginator.get_page(request.GET.get("page", 1))
 
     context = {
         "tasks": page_obj,
@@ -334,25 +301,15 @@ def task_list(request):
         "org_employee_id": org_employee_id,
         "ticketid": ticketid,
         "importdate": importdate,
-
         "organizations": Organization.objects.all(),
         "org_apps": OtsSoftware.objects.all(),
         "job_types": JobType.objects.all(),
         "acs_employees": get_user_model().objects.filter(groups__name="employee"),
         "org_employees": Employee.objects.all(),
-
         "is_htmx": request.headers.get("HX-Request"),
     }
 
     if request.headers.get("HX-Request"):
-        return render(
-            request,
-            "organizations/task/_cards.html",
-            context
-        )
+        return render(request, "organizations/task/_cards.html", context)
 
-    return render(
-        request,
-        "organizations/task/list.html",
-        context
-    )
+    return render(request, "organizations/task/list.html", context)

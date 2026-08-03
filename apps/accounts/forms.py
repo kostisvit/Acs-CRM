@@ -6,16 +6,16 @@ from django.contrib.auth.forms import PasswordChangeForm
 
 User = get_user_model()
 
+
 class EmailLoginForm(forms.Form):
     email = forms.EmailField()
     password = forms.CharField(widget=forms.PasswordInput)
 
 
-
 class CustomPasswordChangeForm(PasswordChangeForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        
+
         # Change labels
         self.fields["old_password"].label = "Τρέχον Κωδικός"
         self.fields["new_password1"].label = "Νέος Κωδικός"
@@ -31,10 +31,6 @@ class CustomPasswordChangeForm(PasswordChangeForm):
             })
 
 
-
-
-
-
 class UserProfileForm(forms.ModelForm):
 
     class Meta:
@@ -46,7 +42,14 @@ class UserProfileForm(forms.ModelForm):
             "email",
             "allowed_leave_days",
         ]
-    
+
+        labels = {
+            "first_name": "Όνομα",
+            "last_name": "Επώνυμο",
+            "allowed_leave_days": "Επιτρεπόμενες Μέρες Αδείας συν υπόλοιπο",
+            "email": "Διεύθυνση Email",
+        }
+
         widgets: ClassVar[dict[str, Any]] = {
             "first_name": forms.TextInput(attrs={
                 "class": (
@@ -58,12 +61,12 @@ class UserProfileForm(forms.ModelForm):
 
             "last_name": forms.TextInput(attrs={
                 "class":                     "w-full px-4 py-3 border border-gray-300 "
-                    "rounded-lg focus:ring-2 focus:ring-teal-500 "
-                    "focus:border-teal-700 outline-none"
+                "rounded-lg focus:ring-2 focus:ring-teal-500 "
+                "focus:border-teal-700 outline-none"
             }),
-           "allowed_leave_days": forms.NumberInput(attrs={
+            "allowed_leave_days": forms.NumberInput(attrs={
                 "class":
-                    "w-full px-4 py-3 border border-gray-300 "
+                "w-full px-4 py-3 border border-gray-300 "
                     "rounded-lg focus:ring-2 focus:ring-teal-500 "
                     "focus:border-teal-700 outline-none",
                 "min": "0",
@@ -71,8 +74,8 @@ class UserProfileForm(forms.ModelForm):
 
             "email": forms.EmailInput(attrs={
                 "class":                     "w-full px-4 py-3 border border-gray-300 "
-                    "rounded-lg focus:ring-2 focus:ring-teal-500 "
-                    "focus:border-teal-700 outline-none",
-                
+                "rounded-lg focus:ring-2 focus:ring-teal-500 "
+                "focus:border-teal-700 outline-none",
+
             }),
         }
