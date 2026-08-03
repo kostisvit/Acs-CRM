@@ -14,7 +14,7 @@ urlpatterns = [
          name="soft_delete_organization"),
     path("restore/<uuid:pk>", views.restore_organization,
          name="restore_organization"),
-    path("employees/list", views.employee_list, name="employee_list"),
+    path("employee/list", views.employee_list, name="employee_list"),
     path("employee/create/", EmployeeCreateView.as_view(),
          name="employee_create"),
     path("employee/detail/<uuid:pk>/",

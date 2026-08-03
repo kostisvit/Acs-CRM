@@ -53,7 +53,7 @@
       </div>
       <div class="flex justify-between">
         <span>Email</span>
-        <span class="font-medium text-gray-900">{{ org.org_email }}</span>
+        <span class="font-medium text-gray-900">{{ org.org_email|default:"-"  }}</span>
       </div>
       <div class="flex justify-between">
         <span>Κατάσταση</span>
@@ -74,7 +74,7 @@
     <div class="mt-5 flex justify-end">
       {% if org.is_active  %}
       <a
-        href="{% url 'organizations:soft_delete_organization' org.pk %}"
+        href="{% url 'organizations:soft_delete_organization' org.pk %}" onclick="return confirmDelete();"
         class="rounded-lg bg-red-600 px-4 py-2 text-sm font-medium text-white hover:bg-red-700"
       >
         Διαγραφή
@@ -97,3 +97,9 @@
     {% include "organizations/_load_more.html" %}
 </div>
 {% endif %}
+
+<script>
+function confirmDelete() {
+  return confirm("Είστε σίγουροι ότι θέλετε να διαγράψετε αυτόν τον οργανισμό;");
+}
+</script>

@@ -47,7 +47,7 @@
   </div>
 
   <p class="text-sm text-gray-500">
-    {{ emp.org_department }}
+    {{ emp.org_department|default:"-"  }}
   </p>
 </div>
     </div>
@@ -71,7 +71,7 @@
       <div class="flex justify-between">
         <span>Email</span>
         <span class="font-medium text-gray-900">
-          {{ emp.email }}
+          {{ emp.email|default:"-"  }}
         </span>
       </div>
 
@@ -108,7 +108,7 @@
     <div class="mt-5 flex justify-end">
       {% if emp.is_active  %}
       <a
-        href="{% url 'organizations:soft_delete_employee' emp.pk %}"
+        href="{% url 'organizations:soft_delete_employee' emp.pk %}" onclick="return confirmDelete(event, this.href);"
         class="rounded-lg bg-red-600 px-4 py-2 text-sm font-medium text-white hover:bg-red-700"
       >
         Διαγραφή
@@ -136,3 +136,26 @@
     {% include "organizations/employee/_load_more.html" %}
 </div>
 {% endif %}
+
+<script>
+function confirmDelete(event, url) {
+  event.preventDefault();
+
+  Swal.fire({
+    title: "Απενεργοποίηση Εργαζόμενου;",
+    text: "Σίγουρα θέλετε να απενεργοποιήσετε αυτόν τον εργαζόμενο; Αυτή η ενέργεια μπορεί να αναιρεθεί.",
+    icon: "warning",
+    showCancelButton: true,
+    confirmButtonText: "Διαγραφή",
+    cancelButtonText: "Ακύρωση",
+    confirmButtonColor: "#d33", // red delete button
+    cancelButtonColor: "#3085d6" // blue cancel button
+  }).then((result) => {
+    if (result.isConfirmed) {
+      window.location.href = url;
+    }
+  });
+
+  return false;
+}
+</script>

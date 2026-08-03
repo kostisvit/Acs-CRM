@@ -15,9 +15,9 @@ from apps.parameters.models import JobType, OtsSoftware, OrgDepartment
 from .forms import EmployeeForm, OrganizationForm
 
 User = get_user_model()
+
+
 # Organization list view and update view
-
-
 @login_required
 def organization_list(request):
 
@@ -98,7 +98,7 @@ class OrganizationUpdateView(LoginRequiredMixin, SuccessMessageMixin, UpdateView
         return context
 
 
-# Employee list view and update view
+# Employee list view and update view & create view
 @login_required
 def employee_list(request):
 
