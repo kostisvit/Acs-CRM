@@ -6,13 +6,13 @@ from .models import Organization, Employee
 INPUT_CLASS = (
     "block w-full rounded-lg border border-gray-300 bg-white px-3 py-2 "
     "text-sm shadow-sm placeholder:text-gray-400 "
-    "focus:border-teal-300 focus:ring-2 focus:ring-teal-400"
+    "focus:border-teal-300 focus:ring-2 focus:ring-teal-400 focus:outline-none"
 )
 
 TEXTAREA_CLASS = (
     "block w-full rounded-lg border border-gray-300 bg-white px-3 py-2 "
     "text-sm shadow-sm placeholder:text-gray-400 "
-    "focus:border-teal-300 focus:ring-2 focus:ring-teal-400"
+    "focus:border-teal-300 focus:ring-2 focus:ring-teal-400 focus:outline-none"
 )
 
 
