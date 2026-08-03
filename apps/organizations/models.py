@@ -85,8 +85,7 @@ class Employee(TimeStampedModel):
         max_length=150, verbose_name="Επώνυμο", blank=True)
     phone = models.CharField(
         max_length=100, verbose_name="Τηλέφωνο", blank=False)
-    cellphone = models.CharField(
-        max_length=30, verbose_name="Κινητό", blank=True)
+    mobile = models.CharField(max_length=30, verbose_name="Κινητό", blank=True)
     email = models.EmailField(blank=True, null=True, db_index=True)
     secondary_email = models.EmailField(blank=True, null=True)
     info = models.TextField(
