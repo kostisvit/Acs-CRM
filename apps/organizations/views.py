@@ -10,7 +10,7 @@ from django.urls import reverse_lazy
 from django.views.generic import UpdateView, CreateView, ListView
 
 from apps.organizations.models import Employee, Organization, Task
-from apps.parameters.models import JobType, OtsSoftware
+from apps.parameters.models import JobType, OtsSoftware, OrgDepartment
 
 from .forms import EmployeeForm, OrganizationForm
 
@@ -22,11 +22,17 @@ User = get_user_model()
 def organization_list(request):
 
     search = request.GET.get("q", "")
+    organization_id = request.GET.get("organization", "")
     is_active = request.GET.get("is_active", "")
 
-    organizations = Organization.objects.all().order_by("?")
+    organizations = Organization.objects.all()
 
-    if is_active == "":
+    # Active filter
+    if is_active == "true":
+        organizations = organizations.filter(is_active=True)
+    elif is_active == "false":
+        organizations = organizations.filter(is_active=False)
+    else:
         organizations = organizations.filter(is_active=True)
 
     # Search filter
@@ -37,16 +43,11 @@ def organization_list(request):
             Q(org_phone__icontains=search)
         )
 
-    # Visibility filter
-    if is_active == "true":
-        organizations = organizations.filter(
-            is_active=True
-        )
+    # Organization filter
+    if organization_id:
+        organizations = organizations.filter(id=organization_id)
 
-    elif is_active == "false":
-        organizations = organizations.filter(
-            is_active=False
-        )
+    organizations = organizations.order_by("org_name")
 
     paginator = Paginator(organizations, 12)
 
@@ -58,14 +59,17 @@ def organization_list(request):
         "organizations": page_obj,
         "search": search,
         "is_active": is_active,
+        "organization_id": organization_id,
         "is_htmx": request.headers.get("HX-Request"),
     }
+
     if request.headers.get("HX-Request"):
         return render(
             request,
             "organizations/_cards.html",
             context
         )
+
     return render(
         request,
         "organizations/list.html",
@@ -109,21 +113,25 @@ class OrganizationUpdateView(LoginRequiredMixin, SuccessMessageMixin, UpdateView
 def employee_list(request):
 
     search = request.GET.get("q", "")
+    organization_id = request.GET.get("organization", "")
+    department_id = request.GET.get("org_department", "")
     is_active = request.GET.get("is_active", "")
 
-    employees = Employee.objects.all().order_by('?')
+    employees = Employee.objects.all()
 
-    if is_active == "":
-        employees = employees.filter(is_active=True)
-
-    # Search filter
-    if search:
+    # Organization filter
+    if organization_id:
         employees = employees.filter(
-            Q(lastname__icontains=search) |
-            Q(phone__icontains=search)
+            organization_id=organization_id
         )
 
-    # Visibility filter
+    # Department filter
+    if department_id:
+        employees = employees.filter(
+            org_department_id=department_id
+        )
+
+    # Active filter
     if is_active == "true":
         employees = employees.filter(
             is_active=True
@@ -134,6 +142,26 @@ def employee_list(request):
             is_active=False
         )
 
+    else:
+        employees = employees.filter(
+            is_active=True
+        )
+
+    # Search filter
+    if search:
+        employees = employees.filter(
+            Q(firstname__icontains=search)
+            | Q(lastname__icontains=search)
+            | Q(phone__icontains=search)
+            | Q(mobile__icontains=search)
+            | Q(email__icontains=search)
+        )
+
+    employees = employees.order_by(
+        "lastname",
+        "firstname"
+    )
+
     paginator = Paginator(employees, 12)
 
     page_obj = paginator.get_page(
@@ -142,16 +170,27 @@ def employee_list(request):
 
     context = {
         "employees": page_obj,
+
+        # Current filters
         "search": search,
-        # "employees": employees,
+        "organization_id": organization_id,
+        "department_id": department_id,
+        "is_active": is_active,
+
+        # Filter dropdowns
+        "organizations": Organization.objects.all(),
+        "departments": OrgDepartment.objects.all(),
+
         "is_htmx": request.headers.get("HX-Request"),
     }
+
     if request.headers.get("HX-Request"):
         return render(
             request,
             "organizations/employee/_cards.html",
             context
         )
+
     return render(
         request,
         "organizations/employee/list.html",

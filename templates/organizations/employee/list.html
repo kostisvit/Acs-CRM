@@ -74,7 +74,7 @@
 
         <div
             @click.outside="openFilter=false"
-            class="w-full max-w-md rounded-xl bg-white p-6 shadow-xl">
+            class="w-full max-w-4xl rounded-xl bg-white p-6 shadow-xl">
 
 
             <div class="mb-6 flex items-center justify-between">
@@ -104,7 +104,7 @@
           hx-target="#employee-list"
           hx-swap="innerHTML"
           hx-push-url="true"
-          class="space-y-5">
+          class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
 
           <input
               type="text"
@@ -112,7 +112,42 @@
               value="{{ search }}"
               placeholder="Αναζήτηση επαφής..."
               class="w-full rounded-lg border px-4 py-3 focus:outline-none focus:border-teal-400 focus:ring-2 focus:ring-teal-300">
+            
+              <select name="organization"
+                    class="rounded-lg border px-4 py-3">
 
+                <option value="">Όλοι οι οργανισμοί</option>
+
+                {% for org in organizations %}
+                    <option value="{{ org.pk }}"
+                        {% if organization_id == org.pk|stringformat:"s" %}
+                            selected
+                        {% endif %}>
+                        {{ org }}
+                    </option>
+                {% endfor %}
+
+            </select>
+            
+            <select name="org_department"
+                    hx-get="{% url 'organizations:employee_list' %}"
+                    hx-trigger="change"
+                    hx-target="#employee-list"
+                    hx-include="this"
+                    class="rounded-lg border px-4 py-3">
+
+                <option value="">Όλα τα τμήματα</option>
+
+                {% for dept in departments %}
+                    <option value="{{ dept.pk }}"
+                        {% if department_id == dept.pk|stringformat:"s" %}
+                            selected
+                        {% endif %}>
+                        {{ dept }}
+                    </option>
+                {% endfor %}
+
+            </select>
 
           <select name="is_active"
               class="w-full rounded-lg border px-4 py-3">

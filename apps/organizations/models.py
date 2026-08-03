@@ -7,6 +7,7 @@ from django.db.models import Sum
 from django_extensions.db.models import TimeStampedModel
 from simple_history.models import HistoricalRecords
 from django.core.validators import MinValueValidator
+from django.utils.translation import gettext_lazy as _
 
 
 class Organization(TimeStampedModel):
