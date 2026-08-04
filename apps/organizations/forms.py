@@ -1,7 +1,11 @@
 # forms.py
 from django import forms
+from django.contrib.auth import get_user_model
 
 from .models import Organization, Employee, Task
+
+
+User = get_user_model()
 
 INPUT_CLASS = (
     "block w-full rounded-lg border border-gray-300 bg-white px-3 py-2 "
@@ -135,13 +139,11 @@ class TaskForm(forms.ModelForm):
             ),
         }
 
-    # def __init__(self, *args, **kwargs):
-    #     super().__init__(*args, **kwargs)
-    #     self.fields["importdate"].initial = None
-
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields["importdate"].initial = None
+        self.fields["acs_employee"].queryset = User.objects.filter(
+            is_active=True, groups__name="employee")
         self.fields["org_employee"].queryset = Employee.objects.none()
 
         if self.data.get("organization"):
