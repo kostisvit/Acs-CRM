@@ -26,5 +26,11 @@ urlpatterns = [
     path("task/list", views.task_list, name="task_list"),
     path("task/create/", views.TaskCreateView.as_view(), name="task_create"),
 
+    path(
+        "load-employees/",
+        views.load_employees,
+        name="load_employees"
+    ),
+
 
 ]

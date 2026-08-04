@@ -185,7 +185,7 @@ class Task(TimeStampedModel):
     ticketid = models.CharField(
         max_length=50, verbose_name="Αίτημα OTS", null=True, blank=True)
 
-    source_id = models.IntegerField(null=True, unique=True)
+    source_id = models.IntegerField(blank=True, null=True, unique=True)
 
     history = HistoricalRecords()
 

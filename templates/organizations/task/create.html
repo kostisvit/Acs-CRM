@@ -135,10 +135,35 @@
 <script>
 document.addEventListener("DOMContentLoaded", function () {
     flatpickr(".flatpickr", {
-        dateFormat: "d/m/Y",
-        allowInput: true,
-        defaultDate: null
+        altInput: true,
+        altFormat: "d/m/Y",
+        dateFormat: "Y-m-d",
+        allowInput: true
     });
 });
 </script>
+
+<script>
+document.getElementById("id_organization").addEventListener("change", function () {
+    const organizationId = this.value;
+
+fetch("{% url 'organizations:load_employees' %}?organization_id=" + organizationId)
+    .then(response => response.json())
+    .then(data => {
+        const employeeSelect = document.getElementById("id_org_employee");
+
+        employeeSelect.innerHTML = '<option value="">---------</option>';
+
+        data.forEach(employee => {
+            const option = document.createElement("option");
+
+            option.value = employee.id;
+            option.textContent = employee.lastname + " " + employee.firstname;
+
+            employeeSelect.appendChild(option);
+        });
+    });
+});
+</script>
+
 {% endblock %}

@@ -98,7 +98,9 @@ class TaskForm(forms.ModelForm):
 
         widgets = {
             "organization": forms.Select(
-                attrs={"class": INPUT_CLASS}
+                attrs={"class": INPUT_CLASS,
+                       "id": "id_organization", },
+
             ),
             "importdate": forms.DateInput(
                 attrs={
@@ -119,7 +121,8 @@ class TaskForm(forms.ModelForm):
                 attrs={"class": INPUT_CLASS}
             ),
             "org_employee": forms.Select(
-                attrs={"class": INPUT_CLASS}
+                attrs={"class": INPUT_CLASS,
+                       "id": "id_org_employee", }
             ),
             "task_time": forms.TextInput(
                 attrs={"class": INPUT_CLASS}
@@ -132,6 +135,24 @@ class TaskForm(forms.ModelForm):
             ),
         }
 
+    # def __init__(self, *args, **kwargs):
+    #     super().__init__(*args, **kwargs)
+    #     self.fields["importdate"].initial = None
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields["importdate"].initial = None
+        self.fields["org_employee"].queryset = Employee.objects.none()
+
+        if self.data.get("organization"):
+            self.fields["org_employee"].queryset = Employee.objects.filter(
+                organization_id=self.data.get("organization")
+            )
+
+        elif self.instance.pk:
+            try:
+                self.fields["org_employee"].queryset = Employee.objects.filter(
+                    organization=self.instance.organization
+                )
+            except Task.organization.RelatedObjectDoesNotExist:
+                pass

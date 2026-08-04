@@ -1,3 +1,4 @@
+from django.http import JsonResponse
 from django.contrib import messages
 from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
@@ -331,3 +332,13 @@ class TaskCreateView(LoginRequiredMixin, SuccessMessageMixin, CreateView):
         response = super().form_valid(form)
         # Additional logic after saving the form can be added here
         return response
+
+
+def load_employees(request):
+    organization_id = request.GET.get("organization_id")
+
+    employees = Employee.objects.filter(
+        organization_id=organization_id
+    ).values("id", "lastname", "firstname").order_by("lastname", "firstname")
+
+    return JsonResponse(list(employees), safe=False)
