@@ -12,7 +12,7 @@ from django.views.generic import UpdateView, CreateView, ListView
 from apps.organizations.models import Employee, Organization, Task
 from apps.parameters.models import JobType, OtsSoftware, OrgDepartment
 
-from .forms import EmployeeForm, OrganizationForm
+from .forms import EmployeeForm, OrganizationForm, TaskForm
 
 User = get_user_model()
 
@@ -305,7 +305,7 @@ def task_list(request):
         "org_apps": OtsSoftware.objects.all(),
         "job_types": JobType.objects.all(),
         "acs_employees": get_user_model().objects.filter(groups__name="employee"),
-        "org_employees": Employee.objects.all(),
+        "org_employees": Employee.objects.filter(is_active=True),
         "is_htmx": request.headers.get("HX-Request"),
     }
 
@@ -313,3 +313,21 @@ def task_list(request):
         return render(request, "organizations/task/_cards.html", context)
 
     return render(request, "organizations/task/list.html", context)
+
+
+class TaskCreateView(LoginRequiredMixin, SuccessMessageMixin, CreateView):
+    model = Task
+    form_class = TaskForm
+    template_name = "organizations/task/create.html"
+    success_url = reverse_lazy("organizations:task_list")
+    success_message = "Η εργασία δημιουργήθηκε με επιτυχία."
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["title"] = "Δημιουργία Εργασίας"
+        return context
+
+    def form_valid(self, form):
+        response = super().form_valid(form)
+        # Additional logic after saving the form can be added here
+        return response

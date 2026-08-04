@@ -24,6 +24,7 @@ urlpatterns = [
     path("employee/restore/<uuid:pk>",
          views.restore_employee, name="restore_employee"),
     path("task/list", views.task_list, name="task_list"),
+    path("task/create/", views.TaskCreateView.as_view(), name="task_create"),
 
 
 ]

@@ -1,7 +1,7 @@
 # forms.py
 from django import forms
 
-from .models import Organization, Employee
+from .models import Organization, Employee, Task
 
 INPUT_CLASS = (
     "block w-full rounded-lg border border-gray-300 bg-white px-3 py-2 "
@@ -89,3 +89,49 @@ class EmployeeForm(forms.ModelForm):
                 }
             ),
         }
+
+
+class TaskForm(forms.ModelForm):
+    class Meta:
+        model = Task
+        fields = "__all__"
+
+        widgets = {
+            "organization": forms.Select(
+                attrs={"class": INPUT_CLASS}
+            ),
+            "importdate": forms.DateInput(
+                attrs={
+                    "class": INPUT_CLASS + " flatpickr",
+                    "autocomplete": "off",
+                },
+            ),
+            "org_app": forms.Select(
+                attrs={"class": INPUT_CLASS}
+            ),
+            "job_type_acs": forms.Select(
+                attrs={"class": INPUT_CLASS}
+            ),
+            "task_note": forms.Textarea(
+                attrs={"class": TEXTAREA_CLASS, "rows": 5}
+            ),
+            "acs_employee": forms.Select(
+                attrs={"class": INPUT_CLASS}
+            ),
+            "org_employee": forms.Select(
+                attrs={"class": INPUT_CLASS}
+            ),
+            "task_time": forms.TextInput(
+                attrs={"class": INPUT_CLASS}
+            ),
+            "task_info": forms.Textarea(
+                attrs={
+                    "class": TEXTAREA_CLASS,
+                    "rows": 5,
+                }
+            ),
+        }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields["importdate"].initial = None

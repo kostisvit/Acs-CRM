@@ -1,0 +1,144 @@
+{% extends '_base.html' %}
+
+{% block title %}{{ employee }}{% endblock %}
+
+
+{% block content %}
+
+<div class="max-w-6xl mx-auto px-6 py-8">
+
+    <!-- Header -->
+    <div class="flex items-center justify-between mb-8">
+        <div>
+            <h1 class="flex flex-wrap items-center gap-3 text-3xl font-bold text-gray-900">
+                Δημιουργία Εργασίας
+                {% comment %} <span class="max-w-full truncate rounded-full bg-blue-100 px-3 py-1 text-base font-medium text-blue-700">
+                    {{ employee }}
+                </span> {% endcomment %}
+            </h1>
+            <p class="mt-1 text-sm text-gray-500">
+                Ενημερώστε τα στοιχεία της εργασίας.
+            </p>
+        </div>
+
+        <a href="{% url 'organizations:task_list' %}"
+           class="rounded-lg border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50">
+            ← Επιστροφή
+        </a>
+    </div>
+    {% if form.errors %}
+    <div class="rounded bg-red-100 p-4 mb-4">
+        {{ form.errors }}
+    </div>
+    {% endif %}
+    <form method="post">
+        {% csrf_token %}
+
+        <div class="overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm">
+
+            <!-- Company Information -->
+            <div class="border-b border-gray-200 px-8 py-6">
+                <h2 class="text-lg font-semibold text-gray-900">
+                    Στοιχεία Εργασίας
+                </h2>
+            </div>
+
+            <div class="grid gap-6 p-8 md:grid-cols-2">
+
+                <div>
+                    <label class="mb-2 block text-sm font-medium text-gray-700">
+                        Οργανισμός
+                    </label>
+                    {{ form.organization }}
+                </div>
+                <div>
+                    <label class="mb-2 block text-sm font-medium text-gray-700">
+                        Επαφή Οργανισμού
+                    </label>
+                    {{ form.org_employee }}
+                </div>
+                <div>
+                    <label class="mb-2 block text-sm font-medium text-gray-700">
+                        Ημερομηνία Εργασίας
+                    </label>
+                    {{ form.importdate }}
+                </div>
+                <div>
+                    <label class="mb-2 block text-sm font-medium text-gray-700">
+                        Εφαρμογή OTS
+                    </label>
+                    {{ form.org_app }}
+                </div>
+                <div>
+                    <label class="mb-2 block text-sm font-medium text-gray-700">
+                        Τύπος Εργασίας
+                    </label>
+                    {{ form.job_type_acs }}
+                </div>
+                <div>
+                    <label class="mb-2 block text-sm font-medium text-gray-700">
+                        Για την ACS
+                    </label>
+                    {{ form.acs_employee }}
+                </div>
+                <div>
+                    <label class="mb-2 block text-sm font-medium text-gray-700">
+                        Χρόνος Εργασίας
+                    </label>
+                    {{ form.task_time }}
+                </div>
+              </div>
+
+            <!-- Notes -->
+            <div class="border-t border-gray-200 px-8 py-6">
+
+                <label class="mb-2 block text-sm font-medium text-gray-700">
+                    Εργασία
+                </label>
+
+                {{ form.task_info }}
+
+            </div>
+
+            <!-- Footer -->
+            <div class="flex justify-between border-t border-gray-200 bg-gray-50 px-8 py-5">
+
+                <button
+                    type="button"
+                    onclick="history.back()"
+                    class="rounded-lg border border-gray-300 bg-white px-5 py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-100">
+                    Ακύρωση
+                </button>
+
+                <button
+                    type="submit"
+                    class="rounded-lg bg-teal-600 px-6 py-2.5 text-sm font-semibold text-white shadow hover:bg-teal-700">
+                    Αποθήκευση
+                </button>
+
+            </div>
+
+        </div>
+
+    </form>
+
+</div>
+<script>
+    const checkbox = document.querySelector('#id_is_active');
+    const label = document.querySelector('#status-label');
+
+    checkbox.addEventListener('change', function () {
+        label.textContent = this.checked ? 'Ενεργός' : 'Μη ενεργός';
+    });
+</script>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    flatpickr(".flatpickr", {
+        dateFormat: "d/m/Y",
+        allowInput: true,
+        defaultDate: null
+    });
+});
+</script>
+{% endblock %}
