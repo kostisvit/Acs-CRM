@@ -22,6 +22,7 @@ INSTALLED_APPS = [
     "simple_history",
     "tailwind",
     "theme",
+    "xlwt",
 ]
 
 TAILWIND_APP_NAME = "theme"
@@ -35,7 +36,7 @@ MIDDLEWARE = [
     "apps.accounts.middleware.ForcePasswordChangeMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
-    
+
 ]
 
 TEMPLATES = [
