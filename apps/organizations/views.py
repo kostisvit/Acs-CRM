@@ -334,6 +334,19 @@ class TaskCreateView(LoginRequiredMixin, SuccessMessageMixin, CreateView):
         return response
 
 
+class TaskListUpdateView(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
+    model = Task
+    form_class = TaskForm
+    template_name = "organizations/task/detail.html"
+    success_url = reverse_lazy("organizations:task_list")
+    success_message = "Η εργασία ενημερώθηκε με επιτυχία."
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["title"] = "Επεξεργασία Εργασίας"
+        return context
+
+
 def load_employees(request):
     organization_id = request.GET.get("organization_id")
 
