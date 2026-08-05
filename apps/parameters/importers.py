@@ -248,20 +248,6 @@ class AcsAdeiaTypeImporter(BaseImporter):
 
 class TaskImporter(BaseImporter):
     model = Task
-    # map old username -> new email
-    # USER_EMAIL_MAP = {
-    #     "kostasvit": "kostasvit@acsservices.gr",
-    #     "athanasia": "akarakousi@acsservices.gr",
-    #     "geo": "gmav@acsservices.gr",
-    #     "kostas": "kvitiniotis@acsservices.gr",
-    #     "amaz": "amaz@acsservices.gr",
-    #     "stauros": "stauros@acsservices.gr",
-    #     "eirini": "etourgeli@acsservices.gr",
-    #     "gmpek": "gmpekiaris@acsservices.gr",
-    #     "panagiotis": "ptsellos@acsservices.gr",
-    #     "vmazioti": "vmazioti@acsservices.gr",
-    #     "alexis": "amav@acsservices.gr",
-    #         }
 
     def import_row(self, row):
 

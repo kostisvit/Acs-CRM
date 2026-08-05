@@ -9,6 +9,8 @@ from .models import JobType, OtsSoftware, OrgDepartment, AcsAdeia, TrainingType
 import json
 from django.http import JsonResponse
 
+from collections import OrderedDict
+
 
 @login_required
 def parameters_view(request):
@@ -178,6 +180,11 @@ def import_csv(request):
         request,
         "data/import.html",
         {
-            "importers": IMPORTERS
+            "importers": dict(
+                sorted(
+                    IMPORTERS.items(),
+                    key=lambda item: item[1]["label"] if "label" in item[1] else item[0]
+                )
+            )
         }
     )
