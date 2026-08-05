@@ -5,7 +5,7 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from openpyxl import Workbook
 from .importers import IMPORTERS
-from .models import JobType, OtsSoftware, OrgDepartment, AcsAdeia
+from .models import JobType, OtsSoftware, OrgDepartment, AcsAdeia, TrainingType
 import json
 from django.http import JsonResponse
 
@@ -85,6 +85,20 @@ def acs_adeia_type_view(request):
         {
             "acs_adeia_type": acs_adeia_type
         }
+    )
+
+
+# Training type view
+@login_required
+def training_type_view(request):
+    training_types = TrainingType.objects.all()
+    return render(
+        request,
+        "parameters/_training_type.html",
+        {
+            "training_types": training_types
+        }
+
     )
 
 
