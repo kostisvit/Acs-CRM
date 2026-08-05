@@ -1,17 +1,19 @@
 from django.contrib import admin
-from .models import Organization, Employee, Task
+from .models import Organization, Employee, Task, Training
 
 
 @admin.register(Organization)
 class OrganizationAdmin(admin.ModelAdmin):
-    list_display = ["org_name", "org_address", "org_city", "org_phone","source_id"]
+    list_display = ["org_name", "org_address",
+                    "org_city", "org_phone", "source_id"]
     search_fields = ["org_name", "org_address", "org_city"]
 
 
 @admin.register(Employee)
 class EmployeeAdmin(admin.ModelAdmin):
-    list_display = ["organization", "firstname", "lastname","phone","mobile","email","secondary_email","is_active","org_department","source_id"]
-    search_fields = ["organization","lastname"]
+    list_display = ["organization", "firstname", "lastname", "phone", "mobile",
+                    "email", "secondary_email", "is_active", "org_department", "source_id"]
+    search_fields = ["organization", "lastname"]
     list_filter = ["is_active", "org_department", "organization"]
 
     def delete_queryset(self, request, queryset):
@@ -20,6 +22,15 @@ class EmployeeAdmin(admin.ModelAdmin):
 
 @admin.register(Task)
 class TaskAdmin(admin.ModelAdmin):
-    list_display = ['organization','importdate','org_app','job_type_acs','acs_employee','task_time','org_employee','created','modified']
-    search_fields = ["organization","task_info"]
+    list_display = ['organization', 'importdate', 'org_app', 'job_type_acs',
+                    'acs_employee', 'task_time', 'org_employee', 'created', 'modified']
+    search_fields = ["organization", "task_info"]
+    list_filter = ["organization", "acs_employee"]
+
+
+@admin.register(Training)
+class TrainingAdmin(admin.ModelAdmin):
+    list_display = ['organization', 'training_date', 'training_type', 'org_app',
+                    'acs_employee', 'training_info', 'training_note', 'created', 'modified']
+    search_fields = ["organization", "training_info"]
     list_filter = ["organization", "acs_employee"]

@@ -209,3 +209,40 @@ class Task(TimeStampedModel):
             .aggregate(task_time_sum=Sum("task_time"))
             .get("task_time_sum")
         )
+
+
+class Training(TimeStampedModel):
+    organization = models.ForeignKey(
+        "Organization", on_delete=models.CASCADE, verbose_name="Οργανισμός", null=True, blank=True)
+    training_date = models.DateField(
+        default=datetime.date.today, verbose_name="Ημερομηνία Εκπαίδευσης")
+    org_app = models.ForeignKey(
+        "parameters.OtsSoftware",
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        verbose_name="Εφαρμογή OTS",
+    )
+    training_type = models.ForeignKey(
+        "parameters.TrainingType",
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        verbose_name="Τύπος Εκπαίδευσης",
+    )
+    training_time = models.DecimalField(verbose_name="Διάρκεια εργασίας",
+                                        max_digits=5, decimal_places=2, validators=[MinValueValidator(0)],)
+    acs_employee = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        verbose_name="Υπάλληλος",
+        on_delete=models.PROTECT,
+    )
+    training_info = models.TextField(
+        max_length=500, verbose_name="Περιγραφή", null=True, blank=True)
+    training_note = models.TextField(
+        max_length=500, verbose_name="Σημειώσεις", null=True, blank=True)
+
+    class Meta:
+        indexes = [models.Index(fields=["training_date", "acs_employee"])]
+        verbose_name = "ACS Εκπαιδεύσεις"
+        verbose_name_plural = "ACS Εκπαιδεύσεις"

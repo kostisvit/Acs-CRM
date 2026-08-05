@@ -33,7 +33,7 @@ def login_view(request):
 
                 return redirect("home")
 
-            form.add_error(None, "Invalid email or password")
+            form.add_error(None, "Λάθος email ή κωδικός πρόσβασης.")
 
     else:
         form = EmailLoginForm()
@@ -52,7 +52,6 @@ def users_view(request):
     return render(request, "accounts/users.html", {"users": users})
 
 
-
 class FirstPasswordChangeView(PasswordChangeView):
     template_name = "registration/change_password.html"
     form_class = CustomPasswordChangeForm
@@ -67,8 +66,6 @@ class FirstPasswordChangeView(PasswordChangeView):
         return response
 
 
-
-
 class MyLeaveListView(LoginRequiredMixin, ListView):
 
     model = Adeia
@@ -76,14 +73,13 @@ class MyLeaveListView(LoginRequiredMixin, ListView):
     context_object_name = "adeia_list"
     paginate_by = 10
 
-
     def get_queryset(self):
         today = datetime.date.today()
         return (
             Adeia.objects
-            
+
             .filter(
-                acs_employee=self.request.user,startdate__year=today.year
+                acs_employee=self.request.user, startdate__year=today.year
             )
             .select_related(
                 "acs_adeiatype"
@@ -91,12 +87,10 @@ class MyLeaveListView(LoginRequiredMixin, ListView):
             .order_by("-startdate")
         )
 
-
     def get_year_leave_total(self, employee, year=None):
 
         if year is None:
             year = date.today().year
-
 
         leaves = (
             Adeia.objects
@@ -109,18 +103,15 @@ class MyLeaveListView(LoginRequiredMixin, ListView):
             )
         )
 
-
         return sum(
             leave.working_days()
             for leave in leaves
         )
 
-
     def get_leave_total(self, employee, leave_type, year=None):
 
         if year is None:
             year = date.today().year
-
 
         leaves = (
             Adeia.objects
@@ -131,21 +122,16 @@ class MyLeaveListView(LoginRequiredMixin, ListView):
             )
         )
 
-
         return sum(
             leave.working_days()
             for leave in leaves
         )
 
-
-
     def get_context_data(self, **kwargs):
 
         context = super().get_context_data(**kwargs)
 
-
         employee = self.request.user
-
 
         # Leave types summary
 
@@ -154,66 +140,54 @@ class MyLeaveListView(LoginRequiredMixin, ListView):
             "Κανονική"
         )
 
-
         context["adeia_anarotiki_total"] = self.get_leave_total(
             employee,
             "Αναρρωτική"
         )
-
 
         context["adeia_eortastiki_total"] = self.get_leave_total(
             employee,
             "Εορταστική"
         )
 
-
         context["adeia_kioforias_total"] = self.get_leave_total(
             employee,
             "Κυοφορίας"
         )
-
 
         context["adeia_mitrothtas_total"] = self.get_leave_total(
             employee,
             "Μητρότητας"
         )
 
-
         context["adeia_patrothtas_total"] = self.get_leave_total(
             employee,
             "Πατρότητας"
         )
-
 
         context["adeia_gamou_total"] = self.get_leave_total(
             employee,
             "Γάμου"
         )
 
-
         context["adeia_goniki_total"] = self.get_leave_total(
             employee,
             "Γονική"
         )
-
 
         context["adeia_anef_apodoxon_total"] = self.get_leave_total(
             employee,
             "Άνευ Αποδοχών"
         )
 
-
-
         # Annual leave balance
 
         allowed_days = employee.allowed_leave_days
-
 
         used_days = self.get_leave_total(
             employee,
             "Κανονική"
         )
-
 
         context["days_sum"] = allowed_days
 
@@ -223,7 +197,6 @@ class MyLeaveListView(LoginRequiredMixin, ListView):
             allowed_days - used_days,
             0
         )
-
 
         # percentage for progress bar
 
@@ -236,10 +209,7 @@ class MyLeaveListView(LoginRequiredMixin, ListView):
             else 0
         )
 
-
         return context
-
-
 
 
 def profile(request):

@@ -2,6 +2,7 @@ import uuid
 from django.db import models
 from django_extensions.db.models import TimeStampedModel
 
+
 class JobType(TimeStampedModel):
 
     id = models.UUIDField(
@@ -37,7 +38,7 @@ class OtsSoftware(TimeStampedModel):
     is_active = models.BooleanField(default=True, verbose_name="Ενεργή")
 
     source_id = models.IntegerField(null=True, unique=True)
-    
+
     class Meta:
         verbose_name = "Λογισμικό Οργανισμού"
         verbose_name_plural = "Λογισμικό Οργανισμού"
@@ -83,8 +84,8 @@ class TrainingType(TimeStampedModel):
     is_active = models.BooleanField(default=True)
 
     class Meta:
-        verbose_name = "Εκπαίδευση"
-        verbose_name_plural = "Εκπαίδευση"
+        verbose_name = "Τύπος Εκπαίδευσης"
+        verbose_name_plural = "Τύποι Εκπαίδευσης"
 
     def __str__(self):
         return self.name
@@ -96,7 +97,7 @@ class TrainingPlace(TimeStampedModel):
         primary_key=True,
         default=uuid.uuid4,
         editable=False,
-    )    
+    )
     name = models.CharField(
         max_length=100,
         unique=True,
@@ -118,7 +119,7 @@ class AcsAdeia(TimeStampedModel):
         default=uuid.uuid4,
         editable=False,
     )
-    
+
     name = models.CharField(max_length=100, unique=True,
                             verbose_name="Τύπος Άδειας")
     adeianame_id = models.CharField(
@@ -127,14 +128,13 @@ class AcsAdeia(TimeStampedModel):
     is_active = models.BooleanField(default=True, verbose_name="Ενεργή")
 
     source_id = models.IntegerField(null=True, unique=True)
-    
+
     class Meta:
         verbose_name = "ACS Τύπος Άδειας"
         verbose_name_plural = "ACS Τύποι Άδειας"
 
     def __str__(self):
         return self.name
-
 
 
 class OfficialHoliday(TimeStampedModel):
