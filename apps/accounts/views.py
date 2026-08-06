@@ -12,6 +12,8 @@ from django.views.generic import ListView
 from .forms import CustomPasswordChangeForm, EmailLoginForm, UserProfileForm
 from .models import Adeia
 
+from .export import export_adeia
+
 User = get_user_model()
 
 
