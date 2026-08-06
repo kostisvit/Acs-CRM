@@ -394,25 +394,21 @@ border-r border-gray-200
             transition">
                 Παραμετρικά
             </a>
-
+            <a href="{% url 'accounts:users' %}"
+            class="
+            block
+            py-2 px-3
+            rounded-lg
+            text-gray-600
+            hover:bg-teal-300
+            hover:text-black
+            transition">
+                Χρήστες
+            </a>
 
 
         </div>
 
-    </li>
-    
-    
-    <!-- Users -->
-    <li class="border-b border-gray-200">
-        <a href="{% url 'accounts:users' %}"
-        class="
-        flex items-center gap-3
-        px-4 py-4
-        hover:bg-teal-300
-        transition">
-            <span class="text-gray-500">♟</span>
-            <span class="font-medium">Users</span>
-        </a>
     </li>
 
     <!-- Reports -->

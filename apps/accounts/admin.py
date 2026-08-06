@@ -20,11 +20,11 @@ class CustomUserAdmin(UserAdmin):
 
     fieldsets = (
         (None, {
-            "fields": ("email", 
-                        "password",
-                        "first_name",
-                        "last_name",
-                        "allowed_leave_days",)
+            "fields": ("email",
+                       "password",
+                       "first_name",
+                       "last_name",
+                       "allowed_leave_days",)
         }),
         ("Permissions", {
             "fields": (
@@ -59,6 +59,8 @@ class CustomUserAdmin(UserAdmin):
     )
 
     list_display = (
+        "first_name",
+        "last_name",
         "email",
         "is_staff",
         "is_active",
@@ -70,6 +72,7 @@ class CustomUserAdmin(UserAdmin):
     @admin.register(Adeia)
     class AdeiaAdmin(admin.ModelAdmin):
         model = Adeia
-        list_display = ["acs_employee","acs_adeiatype", "startdate","enddate","source_id"]
+        list_display = ["acs_employee", "acs_adeiatype",
+                        "startdate", "enddate", "source_id"]
         search_fields = ["acs_employee"]
         list_filter = ["acs_employee", "created"]

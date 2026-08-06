@@ -23,7 +23,7 @@
         <p class="mt-2 text-3xl font-bold">{{ total_organization }}</p>
       </div>
 
-      <div class="rounded-xl bg-green-600 p-6 shadow transition hover:shadow-lg">
+      <div class="rounded-xl bg-teal-600 p-6 shadow transition hover:shadow-lg">
         <h3 class="text-lg font-semibold">Επαφές</h3>
         <p class="mt-2 text-3xl font-bold">{{ total_employees }}</p>
       </div>
@@ -33,12 +33,12 @@
         <h2 class="text-xl font-semibold mb-6">Η Δραστηριότητά μου</h2>
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
 
-          <div class="rounded-xl bg-pink-500 p-6 shadow transition hover:shadow-lg">
+          <div class="rounded-xl border-2 border-teal-300 p-6 shadow transition hover:shadow-lg">
             <h3 class="text-lg font-semibold">Εργασίες {% now "Y" %}</h3>
             <p class="mt-2 text-3xl font-bold">{{ user_work_count }}</p>
           </div>
 
-          <div class="rounded-xl bg-orange-600 p-6 shadow transition hover:shadow-lg">
+          <div class="rounded-xl border-2 border-teal-600 p-6 shadow transition hover:shadow-lg">
             <h3 class="text-lg font-semibold">Ώρες Εργασιών</h3>
             <p class="mt-2 text-3xl font-bold">{{ user_work_time|floatformat:2 }}</p>
           </div>
