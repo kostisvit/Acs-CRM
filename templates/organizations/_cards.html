@@ -74,7 +74,7 @@
     <div class="mt-5 flex justify-end">
       {% if org.is_active  %}
       <a
-        href="{% url 'organizations:soft_delete_organization' org.pk %}" onclick="return confirmDelete();"
+        href="{% url 'organizations:soft_delete_organization' org.pk %}"  onclick="return confirmDelete(event, this.href);"
         class="rounded-lg bg-red-600 px-4 py-2 text-sm font-medium text-white hover:bg-red-700"
       >
         Διαγραφή
@@ -99,7 +99,24 @@
 {% endif %}
 
 <script>
-function confirmDelete() {
-  return confirm("Είστε σίγουροι ότι θέλετε να διαγράψετε αυτόν τον οργανισμό;");
+function confirmDelete(event, url) {
+  event.preventDefault();
+
+  Swal.fire({
+    title: "Απενεργοποίηση Οργανισμού;",
+    text: "Επιβεβαιώστε ότι θέλετε να απενεργοποιήσετε τον οργανισμό. Η ενέργεια αυτή μπορεί να αναιρεθεί οποιαδήποτε στιγμή.",
+    icon: "warning",
+    showCancelButton: true,
+    confirmButtonText: "Διαγραφή",
+    cancelButtonText: "Ακύρωση",
+    confirmButtonColor: "#d33", // red delete button
+    cancelButtonColor: "#3085d6" // blue cancel button
+  }).then((result) => {
+    if (result.isConfirmed) {
+      window.location.href = url;
+    }
+  });
+
+  return false;
 }
 </script>

@@ -13,7 +13,7 @@ def export_ergasies(request):
     # ErgasiaFilter(request.GET, queryset=ergasies_queryset).qs
 
     response = HttpResponse(content_type="application/ms-excel")
-    response["Content-Disposition"] = "attachment; filename=ergasies_{}.xls".format(
+    response["Content-Disposition"] = "attachment; filename=Εργασίες_Οργανισμού_{}.xls".format(
         datetime.date.today()
     )
 
@@ -28,14 +28,15 @@ def export_ergasies(request):
     ws.merge(0, 0, 0, 7)
 
     columns = [
-        "Φορέας",
-        "Ημ.Καταχ.",
+        "Οργανισμός",
+        "Καταχώρηση",
         "Εφαρμογή",
-        "Τύπος",
-        "Υπαλ.Επικοιν.",
+        "Τύπος Εργασίας",
+        "Υπαλ.Οργανισμού",
         "Εργασία",
-        "Υπάλληλος ACS",
-        "Χρόνος",
+        "ACS",
+        "Διάρκεια",
+        "Ημ.Δημιουργίας",
     ]
 
     header_style = xlwt.XFStyle()
@@ -69,6 +70,8 @@ def export_ergasies(request):
                 if task.acs_employee else ""
             ),
             task.task_time or "",
+            task.created.strftime(
+                "%d/%m/%Y %H:%M:%S") if task.created else "",
         ]
 
         for col, value in enumerate(row):

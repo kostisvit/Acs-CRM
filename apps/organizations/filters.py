@@ -7,6 +7,7 @@ from django.contrib.auth import get_user_model
 User = get_user_model()
 
 
+# Χρησιμοποιείται κατά την εξαγωγή των εργασιών σε Excel, για να φιλτράρει τα αποτελέσματα
 class ErgasiaFilter(django_filters.FilterSet):
     organization = django_filters.ModelChoiceFilter(
         queryset=Organization.objects.filter(is_active=True), empty_label="Επιλέξτε Οργανισμό"
