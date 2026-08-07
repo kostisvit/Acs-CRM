@@ -3,6 +3,8 @@ from django.db.models import Sum
 from apps.organizations.models import Organization, Employee, Task
 
 # Custom context processor for organization, contacts, tasks and day off count
+
+
 def organization_count(request):
     if request.user.is_authenticated:
         return {"total_organization": Organization.objects.filter(is_active=True).count()}
@@ -13,6 +15,14 @@ def organization_count(request):
 def org_employees_count(request):
     if request.user.is_authenticated:
         return {'total_employees': Employee.objects.filter(is_active=True).count()}
+    else:
+        return {}
+
+
+def org_tasks_count(request):
+    today = datetime.date.today()
+    if request.user.is_authenticated:
+        return {'total_tasks': Task.objects.filter(importdate__year=today.year).count()}
     else:
         return {}
 

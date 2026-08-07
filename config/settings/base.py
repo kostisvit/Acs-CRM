@@ -53,6 +53,7 @@ TEMPLATES = [
                 "apps.organizations.context_processor.organization_count",
                 "apps.organizations.context_processor.org_employees_count",
                 "apps.organizations.context_processor.user_work_time",
+                "apps.organizations.context_processor.org_tasks_count",
             ],
         },
     },
