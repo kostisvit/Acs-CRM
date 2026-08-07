@@ -42,7 +42,7 @@ class Organization(TimeStampedModel):
     class Meta:
         verbose_name = "Οργανισμός"
         verbose_name_plural = "Οργανισμός"
-        ordering = ["org_name"]
+        ordering = ("org_name",)
 
     def __str__(self):
         return self.org_name
@@ -106,7 +106,7 @@ class Employee(TimeStampedModel):
     class Meta:
         verbose_name = "Υπάλληλοι Οργανισμού"
         verbose_name_plural = "Υπάλληλοι Οργανισμού"
-        ordering = ["lastname", "firstname"]
+        ordering = ("lastname", "firstname")
 
     def __str__(self):
         return (self.lastname or "") + " " + (self.firstname or "")
@@ -149,7 +149,7 @@ class Task(TimeStampedModel):
     organization = models.ForeignKey(
         "Organization", on_delete=models.PROTECT, verbose_name="Οργανισμός")
     importdate = models.DateField(
-        default=datetime.date.today, verbose_name="Ημ. Κατ.", db_index=True)
+        default=datetime.datetime.now(tz=datetime.UTC).date, verbose_name="Ημ. Κατ.", db_index=True)
     org_app = models.ForeignKey(
         "parameters.OtsSoftware",
         on_delete=models.SET_NULL,
@@ -190,19 +190,17 @@ class Task(TimeStampedModel):
     history = HistoricalRecords()
 
     class Meta:
-        indexes = [
-            models.Index(fields=["organization", "importdate"]),
-            models.Index(fields=["acs_employee", "importdate"]),
-        ]
+        indexes = (models.Index(
+            fields=["organization", "importdate", "acs_employee"]),)
         verbose_name = "Εργασίες Οργανισμού"
         verbose_name_plural = "Εργασίες Οργανισμού"
-        ordering = ["-importdate"]
+        ordering = ("-importdate",)
 
     def __str__(self):
         return str(self.organization)
 
     def task_time_count(self):  # Ώρες εργασίας ανα χρήστη
-        today = datetime.date.today()
+        today = datetime.datetime.now(tz=datetime.UTC).date()
         return (
             Task.objects.all()
             .filter(importdate__year=today.year, acs_employee=self.acs_employee)
@@ -215,7 +213,7 @@ class Training(TimeStampedModel):
     organization = models.ForeignKey(
         "Organization", on_delete=models.CASCADE, verbose_name="Οργανισμός", null=True, blank=True)
     training_date = models.DateField(
-        default=datetime.date.today, verbose_name="Ημερομηνία Εκπαίδευσης")
+        default=datetime.datetime.now(tz=datetime.UTC).date, verbose_name="Ημερομηνία Εκπαίδευσης")
     org_app = models.ForeignKey(
         "parameters.OtsSoftware",
         on_delete=models.SET_NULL,
@@ -243,6 +241,6 @@ class Training(TimeStampedModel):
         max_length=500, verbose_name="Σημειώσεις", null=True, blank=True)
 
     class Meta:
-        indexes = [models.Index(fields=["training_date", "acs_employee"])]
+        indexes = (models.Index(fields=["training_date", "acs_employee"]),)
         verbose_name = "ACS Εκπαιδεύσεις"
         verbose_name_plural = "ACS Εκπαιδεύσεις"

@@ -20,7 +20,7 @@ def org_employees_count(request):
 
 
 def org_tasks_count(request):
-    today = datetime.date.today()
+    today = datetime.datetime.now(tz=datetime.UTC).date()
     if request.user.is_authenticated:
         return {'total_tasks': Task.objects.filter(importdate__year=today.year).count()}
     else:
@@ -31,7 +31,7 @@ def user_work_time(request):
     if not request.user.is_authenticated:
         return {}
 
-    today = datetime.date.today()
+    today = datetime.datetime.now(tz=datetime.UTC).date()
 
     user_work_time = 0
     user_work_count = 0
