@@ -7,12 +7,14 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.views import PasswordChangeView
 from django.shortcuts import redirect, render
 from django.urls import reverse_lazy
-from django.views.generic import ListView
+from django.views.generic import CreateView, ListView
 
-from .forms import CustomPasswordChangeForm, EmailLoginForm, UserProfileForm
+from .forms import AdeiaForm, CustomPasswordChangeForm, EmailLoginForm, UserProfileForm
 from .models import Adeia
 
 from .export import export_adeia
+
+from django.contrib.auth.decorators import login_required
 
 User = get_user_model()
 
@@ -76,7 +78,7 @@ class MyLeaveListView(LoginRequiredMixin, ListView):
     paginate_by = 10
 
     def get_queryset(self):
-        today = datetime.date.today()
+        today = datetime.datetime.now(tz=datetime.UTC).date()
         return (
             Adeia.objects
 
@@ -92,7 +94,7 @@ class MyLeaveListView(LoginRequiredMixin, ListView):
     def get_year_leave_total(self, employee, year=None):
 
         if year is None:
-            year = date.today().year
+            year = datetime.datetime.now(tz=datetime.UTC).date().year
 
         leaves = (
             Adeia.objects
@@ -113,7 +115,7 @@ class MyLeaveListView(LoginRequiredMixin, ListView):
     def get_leave_total(self, employee, leave_type, year=None):
 
         if year is None:
-            year = date.today().year
+            year = datetime.datetime.now(tz=datetime.UTC).date().year
 
         leaves = (
             Adeia.objects
@@ -214,6 +216,35 @@ class MyLeaveListView(LoginRequiredMixin, ListView):
         return context
 
 
+@login_required
+def adeia_create(request):
+    if request.method == "POST":
+        form = AdeiaForm(request.POST)
+
+        if form.is_valid():
+            adeia = form.save()
+
+            messages.success(
+                request,
+                "Η άδεια καταχωρήθηκε επιτυχώς."
+            )
+
+            return redirect('accounts:my_leave_dashboard')
+
+    else:
+        form = AdeiaForm()
+
+    return render(
+        request,
+        "accounts/adeia_create.html",
+        {
+            "form": form,
+            "title": "Νέα Άδεια",
+        },
+    )
+
+
+@login_required
 def profile(request):
     user = request.user
 

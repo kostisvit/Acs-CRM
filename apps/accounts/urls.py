@@ -1,9 +1,10 @@
+from django import views
 from django.contrib.auth import views as auth_views
 from django.urls import path, reverse_lazy
 
 from apps.accounts.export import export_adeia
 
-from .views import FirstPasswordChangeView, MyLeaveListView, login_view, logout_view, profile, users_view
+from .views import FirstPasswordChangeView, MyLeaveListView, login_view, logout_view, profile, users_view, adeia_create
 
 app_name = "accounts"
 
@@ -16,6 +17,7 @@ urlpatterns = [
         MyLeaveListView.as_view(),
         name="my_leave_dashboard"
     ),
+    path("my-leaves/create", adeia_create, name="adeia_create"),
     path("profile/", profile, name="profile"),
     path(
         "export-my-leaves/",

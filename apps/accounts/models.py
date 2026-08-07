@@ -6,7 +6,6 @@ from django.contrib.auth.base_user import BaseUserManager
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin
 from django.core.exceptions import ValidationError
 from django.db import models
-from django.urls import reverse
 from django_extensions.db.models import TimeStampedModel
 
 from apps.parameters.models import OfficialHoliday
@@ -58,11 +57,11 @@ class CustomUser(AbstractBaseUser, PermissionsMixin, TimeStampedModel):
     last_name = models.CharField(max_length=150, blank=True)
 
     allowed_leave_days = models.PositiveIntegerField(default=25)
-    
+
     must_change_password = models.BooleanField(default=False)
 
     source_id = models.IntegerField(null=True, unique=True)
-    
+
     USERNAME_FIELD = "email"
     REQUIRED_FIELDS = []
 
@@ -72,8 +71,6 @@ class CustomUser(AbstractBaseUser, PermissionsMixin, TimeStampedModel):
         return f"{self.first_name} {self.last_name}".strip() or self.email
 
 
-
-
 class Adeia(TimeStampedModel):
 
     id = models.UUIDField(
@@ -81,7 +78,8 @@ class Adeia(TimeStampedModel):
         default=uuid.uuid4,
         editable=False,
     )
-    acs_employee = models.ForeignKey(settings.AUTH_USER_MODEL,verbose_name="Υπάλληλος", on_delete=models.CASCADE)
+    acs_employee = models.ForeignKey(
+        settings.AUTH_USER_MODEL, verbose_name="Υπάλληλος", on_delete=models.CASCADE)
     acs_adeiatype = models.ForeignKey(
         "parameters.AcsAdeia",
         on_delete=models.SET_NULL,
@@ -89,13 +87,14 @@ class Adeia(TimeStampedModel):
         blank=True,
         verbose_name="Τύπος Άδειας",
     )
-    startdate = models.DateField(default=datetime.date.today, verbose_name="Από")
+    startdate = models.DateField(
+        default=datetime.date.today, verbose_name="Από")
     enddate = models.DateField(default=datetime.date.today, verbose_name="Έως")
 
     source_id = models.IntegerField(null=True, blank=True, unique=True)
 
     class Meta:
-        indexes = [models.Index(fields=["acs_employee","startdate"])]
+        indexes = (models.Index(fields=["acs_employee", "startdate"]),)
         verbose_name = "ACS Άδειες"
         verbose_name_plural = "ACS Άδειες"
 
@@ -133,9 +132,3 @@ class Adeia(TimeStampedModel):
             raise ValidationError(
                 "Υπάρχει ήδη άδεια για αυτό το διάστημα."
             )
-
-    def get_absolute_url(self):
-        return reverse("acs_adeia_update", args=[str(self.id)])  # type: ignore
-
-    def get_absolute_url_delete(self):
-        return reverse("acs_adeia_delete", args=[str(self.id)])  # type: ignore

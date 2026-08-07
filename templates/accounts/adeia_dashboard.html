@@ -22,10 +22,18 @@
     <div class="flex items-center gap-3">
         <a href="{% url 'accounts:export_my_leaves' %}" class="rounded-lg border border-teal-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-teal-50">Export</a>
 
-        <a href="#" class="rounded-lg bg-teal-300 px-5 py-2 text-sm font-semibold text-gray-900 hover:bg-teal-400">+ Νέα εγγραφή</a>
+        <a href="{% url 'accounts:adeia_create' %}" class="rounded-lg bg-teal-300 px-5 py-2 text-sm font-semibold text-gray-900 hover:bg-teal-400">+ Νέα εγγραφή</a>
     </div>
 </div>
-
+    {% if messages %}
+        <div id="messages" class="max-w-5xl mx-auto mt-6">
+            {% for message in messages %}
+                <div class="mb-4 rounded-lg border border-green-300 bg-green-100 px-4 py-3 text-green-800">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
 
     <!-- Leave Balance Cards -->
     <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
@@ -360,5 +368,18 @@
 
 </div>
 
+<script>
+    setTimeout(() => {
+        const messages = document.getElementById("messages");
 
+        if (messages) {
+            messages.style.transition = "opacity 0.5s ease";
+            messages.style.opacity = "0";
+
+            setTimeout(() => {
+                messages.remove();
+            }, 500);
+        }
+    }, 3000);
+</script>
 {% endblock %}
