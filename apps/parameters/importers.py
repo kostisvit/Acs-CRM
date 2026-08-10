@@ -17,7 +17,6 @@ def str_to_bool(value):
 
 
 class BaseImporter(ABC):
-
     model = None
 
     @abstractmethod
@@ -46,11 +45,13 @@ class BaseImporter(ABC):
                 imported += 1
 
             except Exception as e:
-                errors.append({
-                    "row": row_number,
-                    "error": str(e),
-                    "data": row,
-                })
+                errors.append(
+                    {
+                        "row": row_number,
+                        "error": str(e),
+                        "data": row,
+                    }
+                )
 
         return {
             "imported": imported,
@@ -74,7 +75,6 @@ class UserImporter(BaseImporter):
         "panagiotis": "ptsellos@acsservices.gr",
         "vmazioti": "vmazioti@acsservices.gr",
         "alexis": "amav@acsservices.gr",
-
     }
 
     def import_row(self, row):
@@ -139,21 +139,15 @@ class EmployeeImporter(BaseImporter):
             ).first()
 
             if not department:
-                raise ValueError(
-                    f"Department not found: {row['org_department']}"
-                )
+                raise ValueError(f"Department not found: {row['org_department']}")
 
         organization = None
 
         if row.get("dhmos"):
-            organization = Organization.objects.filter(
-                source_id=row["dhmos"].strip()
-            ).first()
+            organization = Organization.objects.filter(source_id=row["dhmos"].strip()).first()
 
             if not organization:
-                raise ValueError(
-                    f"Missing organization source id: {row['dhmos']}"
-                )
+                raise ValueError(f"Missing organization source id: {row['dhmos']}")
 
         source_id = row.get("id", "").strip()
 
@@ -163,21 +157,21 @@ class EmployeeImporter(BaseImporter):
             email = f"employee-{source_id}@invalid.local"
 
         self.model.objects.update_or_create(
-            source_id=source_id,   # lookup field
+            source_id=source_id,  # lookup field
             defaults={
                 "email": email,
                 "organization": organization,
                 "firstname": row.get("firstname", ""),
                 "lastname": row.get("lastname", ""),
                 "phone": row.get("phone", ""),
-                "cellphone": row.get("cellphone", ""),
+                "mobile": row.get("cellphone", ""),
                 "secondary_email": row.get("secondary_email", ""),
                 "info": row.get("info", ""),
                 "is_active": str_to_bool(row.get("is_visible", "")),
                 "org_department": department,
                 "created": row["created"],
                 "modified": row["modified"],
-            }
+            },
         )
 
         return True
@@ -209,7 +203,6 @@ class OtsSoftwareImporter(BaseImporter):
                 "is_active": str_to_bool(row["is_active"]),
                 "created": row["created"],
                 "modified": row["modified"],
-
             },
         )
 
@@ -242,7 +235,6 @@ class AcsAdeiaTypeImporter(BaseImporter):
                 "created": row["created"],
                 "modified": row["modified"],
             },
-
         )
 
 
@@ -252,14 +244,10 @@ class TaskImporter(BaseImporter):
     def import_row(self, row):
 
         # Organization (your model has org_name)
-        organization = Organization.objects.filter(
-            org_name=row["dhmos"].strip()
-        ).first()
+        organization = Organization.objects.filter(org_name=row["dhmos"].strip()).first()
 
         if organization is None:
-            raise ValueError(
-                f"Missing organization: {row['dhmos']}"
-            )
+            raise ValueError(f"Missing organization: {row['dhmos']}")
 
         job_type_acs = None
 
@@ -269,33 +257,24 @@ class TaskImporter(BaseImporter):
             ).first()
 
             if not job_type_acs:
-                raise ValueError(
-                    f"Job type not found: {row['job_type_acs']}"
-                )
+                raise ValueError(f"Job type not found: {row['job_type_acs']}")
 
         # OtsSoftware does NOT have source_id, use id
         org_app = None
         if row.get("org_app") and row["org_app"].strip():
-            org_app = OtsSoftware.objects.filter(
-                source_id=int(row["org_app"])
-            ).first()
+            org_app = OtsSoftware.objects.filter(source_id=int(row["org_app"])).first()
 
         # Employee does NOT have source_id, use id
         org_employee = None
         if row.get("org_employee") and row["org_employee"].strip():
-            org_employee = Employee.objects.filter(
-                source_id=int(row["org_employee"])
-            ).first()
+            org_employee = Employee.objects.filter(source_id=int(row["org_employee"])).first()
 
         # Employee does NOT have source_id, use id
         org_employee = None
         if row.get("org_employee") and row["org_employee"].strip():
-            org_employee = Employee.objects.filter(
-                source_id=int(row["org_employee"])
-            ).first()
+            org_employee = Employee.objects.filter(source_id=int(row["org_employee"])).first()
 
-
-# ACS User uses email, not username
+        # ACS User uses email, not username
         employee_code = row.get("employee", "").strip()
 
         if not employee_code:
@@ -318,28 +297,18 @@ class TaskImporter(BaseImporter):
         email = USER_EMAIL_MAP.get(employee_code)
 
         if not email:
-            raise ValueError(
-                f"No email mapping found for employee: {employee_code}"
-            )
+            raise ValueError(f"No email mapping found for employee: {employee_code}")
 
-        acs_employee = CustomUser.objects.filter(
-            email=email
-        ).first()
+        acs_employee = CustomUser.objects.filter(email=email).first()
 
         if not acs_employee:
-            raise ValueError(
-                f"User does not exist: {email}"
-            )
+            raise ValueError(f"User does not exist: {email}")
 
         # Convert time safely
         try:
-            task_time = Decimal(
-                row["time"].replace(",", ".")
-            )
-        except (InvalidOperation, AttributeError):
-            raise ValueError(
-                f"Invalid task time: {row.get('time')}"
-            )
+            task_time = Decimal(row["time"].replace(",", "."))
+        except InvalidOperation, AttributeError:
+            raise ValueError(f"Invalid task time: {row.get('time')}")
 
         self.model.objects.update_or_create(
             source_id=row["id"],
@@ -367,14 +336,10 @@ class AdeiaImporter(BaseImporter):
         employee_code = str(row.get("employee", "")).strip()
 
         if not employee_code:
-            raise ValueError(
-                f"Missing employee code for Adeia row {row['id']}"
-            )
+            raise ValueError(f"Missing employee code for Adeia row {row['id']}")
 
         try:
-            acs_employee = CustomUser.objects.get(
-                source_id=int(employee_code)
-            )
+            acs_employee = CustomUser.objects.get(source_id=int(employee_code))
 
         except CustomUser.DoesNotExist:
             username = str(row.get("username", "")).strip().lower()
@@ -411,9 +376,7 @@ class AdeiaImporter(BaseImporter):
         acsadeiatype = None
 
         if row.get("acsadeiatype") and row["acsadeiatype"].strip():
-            acsadeiatype = AcsAdeia.objects.filter(
-                source_id=int(row["acsadeiatype"])
-            ).first()
+            acsadeiatype = AcsAdeia.objects.filter(source_id=int(row["acsadeiatype"])).first()
 
         def parse_date(value):
             if not value:
@@ -468,16 +431,7 @@ IMPORTERS = {
         "class": OrgDepartmentImporter,
         "label": "6-Διευθύνσεις - Τμήματα Οργανισμού",
     },
-    "acsadeiatype": {
-        "class": AcsAdeiaTypeImporter,
-        "label": "2-Τύπος αδειών ACS"
-    },
-    "tasks": {
-        "class": TaskImporter,
-        "label": "9-Εργασίες Οργανισμών"
-    },
-    "adeia": {
-        "class": AdeiaImporter,
-        "label": "3-Άδειες εργαζομένων ACS"
-    }
+    "acsadeiatype": {"class": AcsAdeiaTypeImporter, "label": "2-Τύπος αδειών ACS"},
+    "tasks": {"class": TaskImporter, "label": "9-Εργασίες Οργανισμών"},
+    "adeia": {"class": AdeiaImporter, "label": "3-Άδειες εργαζομένων ACS"},
 }
