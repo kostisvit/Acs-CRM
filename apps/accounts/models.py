@@ -39,7 +39,6 @@ class CustomUserManager(BaseUserManager):
 
 
 class CustomUser(AbstractBaseUser, PermissionsMixin, TimeStampedModel):
-
     id = models.UUIDField(
         primary_key=True,
         default=uuid.uuid4,
@@ -72,14 +71,14 @@ class CustomUser(AbstractBaseUser, PermissionsMixin, TimeStampedModel):
 
 
 class Adeia(TimeStampedModel):
-
     id = models.UUIDField(
         primary_key=True,
         default=uuid.uuid4,
         editable=False,
     )
     acs_employee = models.ForeignKey(
-        settings.AUTH_USER_MODEL, verbose_name="Υπάλληλος", on_delete=models.CASCADE)
+        settings.AUTH_USER_MODEL, verbose_name="Υπάλληλος", on_delete=models.CASCADE
+    )
     acs_adeiatype = models.ForeignKey(
         "parameters.AcsAdeia",
         on_delete=models.SET_NULL,
@@ -87,8 +86,7 @@ class Adeia(TimeStampedModel):
         blank=True,
         verbose_name="Τύπος Άδειας",
     )
-    startdate = models.DateField(
-        default=datetime.date.today, verbose_name="Από")
+    startdate = models.DateField(default=datetime.date.today, verbose_name="Από")
     enddate = models.DateField(default=datetime.date.today, verbose_name="Έως")
 
     source_id = models.IntegerField(null=True, blank=True, unique=True)
@@ -109,10 +107,7 @@ class Adeia(TimeStampedModel):
         holidays = set(holidays)
 
         while current <= self.enddate:
-            if (
-                current.weekday() < 5
-                and current not in holidays
-            ):
+            if current.weekday() < 5 and current not in holidays:
                 days += 1
 
             current += datetime.timedelta(days=1)
@@ -129,6 +124,4 @@ class Adeia(TimeStampedModel):
         ).exclude(pk=self.pk)
 
         if overlap.exists():
-            raise ValidationError(
-                "Υπάρχει ήδη άδεια για αυτό το διάστημα."
-            )
+            raise ValidationError("Υπάρχει ήδη άδεια σε αυτό το διάστημα.")

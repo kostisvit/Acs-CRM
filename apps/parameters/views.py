@@ -1,15 +1,13 @@
+import json
 from io import BytesIO
-from django.http import HttpResponse
-from django.shortcuts import redirect, render
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
+from django.http import HttpResponse, JsonResponse
+from django.shortcuts import redirect, render
 from openpyxl import Workbook
 from .importers import IMPORTERS
 from .models import JobType, OtsSoftware, OrgDepartment, AcsAdeia, TrainingType
-import json
-from django.http import JsonResponse
 
-from collections import OrderedDict
 
 
 @login_required
@@ -17,50 +15,32 @@ def parameters_view(request):
     return render(
         request,
         "parameters/parameters.html",
-
     )
 
 
 # Job type view and create job type view
 
+
 @login_required
 def jobtype_view(request):
     job_types = JobType.objects.all()
-    return render(
-        request,
-        "parameters/_job_type.html",
-        {
-            "job_types": job_types
-        }
-
-    )
+    return render(request, "parameters/_job_type.html", {"job_types": job_types})
 
 
 def add_job_type(request):
     data = json.loads(request.body)
-    job_type = JobType.objects.create(
-        name=data["name"],
-        is_active=data.get("is_active", True)
-    )
-    return JsonResponse({
-        "name": job_type.name,
-        "is_active": job_type.is_active
-    })
+    job_type = JobType.objects.create(name=data["name"], is_active=data.get("is_active", True))
+    return JsonResponse({"name": job_type.name, "is_active": job_type.is_active})
 
 
 # Ots software view
 
+
 @login_required
 def ots_software_view(request):
     ots_software = OtsSoftware.objects.all()
-    return render(
-        request,
-        "parameters/_ots_software.html",
-        {
-            "ots_software": ots_software
-        }
+    return render(request, "parameters/_ots_software.html", {"ots_software": ots_software})
 
-    )
 
 # Organization department view
 
@@ -68,43 +48,25 @@ def ots_software_view(request):
 @login_required
 def org_department_view(request):
     org_department = OrgDepartment.objects.all()
-    return render(
-        request,
-        "parameters/_org_department.html",
-        {
-            "org_department": org_department
-        }
-    )
+    return render(request, "parameters/_org_department.html", {"org_department": org_department})
 
 
 # Acs adeia type
 @login_required
 def acs_adeia_type_view(request):
     acs_adeia_type = AcsAdeia.objects.all()
-    return render(
-        request,
-        "parameters/_acs_adeia_type.html",
-        {
-            "acs_adeia_type": acs_adeia_type
-        }
-    )
+    return render(request, "parameters/_acs_adeia_type.html", {"acs_adeia_type": acs_adeia_type})
 
 
 # Training type view
 @login_required
 def training_type_view(request):
     training_types = TrainingType.objects.all()
-    return render(
-        request,
-        "parameters/_training_type.html",
-        {
-            "training_types": training_types
-        }
-
-    )
+    return render(request, "parameters/_training_type.html", {"training_types": training_types})
 
 
 # Import csv view
+
 
 def export_errors_excel(errors):
     wb = Workbook()
@@ -163,16 +125,13 @@ def import_csv(request):
             messages.warning(
                 request,
                 f"Imported {imported}/{csv_records} records. "
-                f"{csv_records - imported} records failed."
+                f"{csv_records - imported} records failed.",
             )
 
             # Export failed rows
             return export_errors_excel(errors)
 
-        messages.success(
-            request,
-            f"Successfully imported all {imported} records"
-        )
+        messages.success(request, f"Successfully imported all {imported} records")
 
         return redirect("parameters:import")
 
@@ -183,8 +142,8 @@ def import_csv(request):
             "importers": dict(
                 sorted(
                     IMPORTERS.items(),
-                    key=lambda item: item[1]["label"] if "label" in item[1] else item[0]
+                    key=lambda item: item[1]["label"] if "label" in item[1] else item[0],
                 )
             )
-        }
+        },
     )

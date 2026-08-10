@@ -1,20 +1,16 @@
 import datetime
-from datetime import date
 
 from django.contrib import messages
 from django.contrib.auth import authenticate, get_user_model, login, logout
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.views import PasswordChangeView
 from django.shortcuts import redirect, render
 from django.urls import reverse_lazy
-from django.views.generic import CreateView, ListView
+from django.views.generic import ListView
 
 from .forms import AdeiaForm, CustomPasswordChangeForm, EmailLoginForm, UserProfileForm
 from .models import Adeia
-
-from .export import export_adeia
-
-from django.contrib.auth.decorators import login_required
 
 User = get_user_model()
 
@@ -71,7 +67,6 @@ class FirstPasswordChangeView(PasswordChangeView):
 
 
 class MyLeaveListView(LoginRequiredMixin, ListView):
-
     model = Adeia
     template_name = "accounts/adeia_dashboard.html"
     context_object_name = "adeia_list"
@@ -80,14 +75,8 @@ class MyLeaveListView(LoginRequiredMixin, ListView):
     def get_queryset(self):
         today = datetime.datetime.now(tz=datetime.UTC).date()
         return (
-            Adeia.objects
-
-            .filter(
-                acs_employee=self.request.user, startdate__year=today.year
-            )
-            .select_related(
-                "acs_adeiatype"
-            )
+            Adeia.objects.filter(acs_employee=self.request.user, startdate__year=today.year)
+            .select_related("acs_adeiatype")
             .order_by("-startdate")
         )
 
@@ -96,40 +85,22 @@ class MyLeaveListView(LoginRequiredMixin, ListView):
         if year is None:
             year = datetime.datetime.now(tz=datetime.UTC).date().year
 
-        leaves = (
-            Adeia.objects
-            .filter(
-                acs_employee=employee,
-                startdate__year=year
-            )
-            .select_related(
-                "acs_adeiatype"
-            )
+        leaves = Adeia.objects.filter(acs_employee=employee, startdate__year=year).select_related(
+            "acs_adeiatype"
         )
 
-        return sum(
-            leave.working_days()
-            for leave in leaves
-        )
+        return sum(leave.working_days() for leave in leaves)
 
     def get_leave_total(self, employee, leave_type, year=None):
 
         if year is None:
             year = datetime.datetime.now(tz=datetime.UTC).date().year
 
-        leaves = (
-            Adeia.objects
-            .filter(
-                acs_employee=employee,
-                startdate__year=year,
-                acs_adeiatype__name=leave_type
-            )
+        leaves = Adeia.objects.filter(
+            acs_employee=employee, startdate__year=year, acs_adeiatype__name=leave_type
         )
 
-        return sum(
-            leave.working_days()
-            for leave in leaves
-        )
+        return sum(leave.working_days() for leave in leaves)
 
     def get_context_data(self, **kwargs):
 
@@ -139,78 +110,40 @@ class MyLeaveListView(LoginRequiredMixin, ListView):
 
         # Leave types summary
 
-        context["adeia_total"] = self.get_leave_total(
-            employee,
-            "Κανονική"
-        )
+        context["adeia_total"] = self.get_leave_total(employee, "Κανονική")
 
-        context["adeia_anarotiki_total"] = self.get_leave_total(
-            employee,
-            "Αναρρωτική"
-        )
+        context["adeia_anarotiki_total"] = self.get_leave_total(employee, "Αναρρωτική")
 
-        context["adeia_eortastiki_total"] = self.get_leave_total(
-            employee,
-            "Εορταστική"
-        )
+        context["adeia_eortastiki_total"] = self.get_leave_total(employee, "Εορταστική")
 
-        context["adeia_kioforias_total"] = self.get_leave_total(
-            employee,
-            "Κυοφορίας"
-        )
+        context["adeia_kioforias_total"] = self.get_leave_total(employee, "Κυοφορίας")
 
-        context["adeia_mitrothtas_total"] = self.get_leave_total(
-            employee,
-            "Μητρότητας"
-        )
+        context["adeia_mitrothtas_total"] = self.get_leave_total(employee, "Μητρότητας")
 
-        context["adeia_patrothtas_total"] = self.get_leave_total(
-            employee,
-            "Πατρότητας"
-        )
+        context["adeia_patrothtas_total"] = self.get_leave_total(employee, "Πατρότητας")
 
-        context["adeia_gamou_total"] = self.get_leave_total(
-            employee,
-            "Γάμου"
-        )
+        context["adeia_gamou_total"] = self.get_leave_total(employee, "Γάμου")
 
-        context["adeia_goniki_total"] = self.get_leave_total(
-            employee,
-            "Γονική"
-        )
+        context["adeia_goniki_total"] = self.get_leave_total(employee, "Γονική")
 
-        context["adeia_anef_apodoxon_total"] = self.get_leave_total(
-            employee,
-            "Άνευ Αποδοχών"
-        )
+        context["adeia_anef_apodoxon_total"] = self.get_leave_total(employee, "Άνευ Αποδοχών")
 
         # Annual leave balance
 
         allowed_days = employee.allowed_leave_days
 
-        used_days = self.get_leave_total(
-            employee,
-            "Κανονική"
-        )
+        used_days = self.get_leave_total(employee, "Κανονική")
 
         context["days_sum"] = allowed_days
 
         context["days_used"] = used_days
 
-        context["days_left"] = max(
-            allowed_days - used_days,
-            0
-        )
+        context["days_left"] = max(allowed_days - used_days, 0)
 
         # percentage for progress bar
 
         context["leave_percentage"] = (
-            round(
-                (used_days / allowed_days) * 100,
-                2
-            )
-            if allowed_days
-            else 0
+            round((used_days / allowed_days) * 100, 2) if allowed_days else 0
         )
 
         return context
@@ -224,12 +157,9 @@ def adeia_create(request):
         if form.is_valid():
             adeia = form.save()
 
-            messages.success(
-                request,
-                "Η άδεια καταχωρήθηκε επιτυχώς."
-            )
+            messages.success(request, "Η άδεια καταχωρήθηκε επιτυχώς.")
 
-            return redirect('accounts:my_leave_dashboard')
+            return redirect("accounts:my_leave_dashboard")
 
     else:
         form = AdeiaForm()
@@ -259,6 +189,4 @@ def profile(request):
     else:
         form = UserProfileForm(instance=user)
 
-    return render(request, "accounts/profile.html", {
-        "form": form
-    })
+    return render(request, "accounts/profile.html", {"form": form})
