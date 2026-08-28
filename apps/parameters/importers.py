@@ -1,13 +1,13 @@
 import csv
 import datetime
-from apps.organizations.models import Organization, Employee, Task
-from apps.parameters.models import JobType, OtsSoftware, OrgDepartment, AcsAdeia
 from abc import ABC, abstractmethod
-from decimal import Decimal
+from decimal import Decimal, InvalidOperation
+
 from django.contrib.auth import get_user_model
-from decimal import InvalidOperation
+
 from apps.accounts.models import Adeia
-from django.db.models import Q
+from apps.organizations.models import Employee, Organization, Task
+from apps.parameters.models import AcsAdeia, JobType, OrgDepartment, OtsSoftware
 
 CustomUser = get_user_model()
 
@@ -25,7 +25,6 @@ class BaseImporter(ABC):
         Import a single CSV row.
         Must be implemented by subclasses.
         """
-        pass
 
     def import_file(self, csv_file):
         imported = 0
@@ -259,18 +258,15 @@ class TaskImporter(BaseImporter):
             if not job_type_acs:
                 raise ValueError(f"Job type not found: {row['job_type_acs']}")
 
-        # OtsSoftware does NOT have source_id, use id
+        # OtsSoftware uses source_id
         org_app = None
+
         if row.get("org_app") and row["org_app"].strip():
             org_app = OtsSoftware.objects.filter(source_id=int(row["org_app"])).first()
 
-        # Employee does NOT have source_id, use id
+        # Employee uses source_id
         org_employee = None
-        if row.get("org_employee") and row["org_employee"].strip():
-            org_employee = Employee.objects.filter(source_id=int(row["org_employee"])).first()
 
-        # Employee does NOT have source_id, use id
-        org_employee = None
         if row.get("org_employee") and row["org_employee"].strip():
             org_employee = Employee.objects.filter(source_id=int(row["org_employee"])).first()
 
@@ -307,7 +303,7 @@ class TaskImporter(BaseImporter):
         # Convert time safely
         try:
             task_time = Decimal(row["time"].replace(",", "."))
-        except InvalidOperation, AttributeError:
+        except (InvalidOperation, AttributeError):
             raise ValueError(f"Invalid task time: {row.get('time')}")
 
         self.model.objects.update_or_create(

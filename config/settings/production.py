@@ -5,8 +5,7 @@ from .base import *
 DEBUG = False
 
 ALLOWED_HOSTS = [
-    "example.com",
-    "www.example.com",
+'*'
 ]
 
 DATABASES = {
@@ -20,6 +19,6 @@ DATABASES = {
     }
 }
 
-SECURE_SSL_REDIRECT = True
-SESSION_COOKIE_SECURE = True
+SECURE_SSL_REDIRECT = False
+SESSION_COOKIE_SECURE = False
 CSRF_COOKIE_SECURE = True
