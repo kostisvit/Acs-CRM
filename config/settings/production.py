@@ -1,8 +1,12 @@
 import os
 
+import environ
+
 from .base import *
 
 DEBUG = False
+
+environ.Env.read_env(BASE_DIR / ".env")
 
 ALLOWED_HOSTS = [
 '*'
