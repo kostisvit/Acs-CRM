@@ -1,0 +1,161 @@
+{% for emp in employees %}
+  <div class="rounded-xl border border-gray-200 bg-white p-5 shadow-sm transition hover:shadow-md">
+    <div class="flex items-center gap-4">
+      <div class="flex h-12 w-12 items-center justify-center rounded-full font-semibold text-gray-800
+          {% cycle 
+              'bg-blue-300'
+              'bg-green-300'
+              'bg-purple-300'
+              'bg-pink-300'
+              'bg-yellow-300'
+              'bg-indigo-300'
+              'bg-red-300'
+          %}">
+    
+        <div class="flex h-12 w-12 items-center justify-center rounded-full font-semibold text-gray-800
+        {% cycle 'bg-blue-300' 'bg-green-300' 'bg-purple-300' 'bg-pink-300' 'bg-yellow-300' 'bg-indigo-300' 'bg-red-300' %}">
+        
+        {{ emp.initials }}
+
+        </div>
+
+      </div>
+
+<div>
+  <div class="flex items-center gap-2">
+    <h3 class="font-semibold text-gray-900">
+      {{ emp.firstname }} {{ emp.lastname }}
+    </h3>
+
+    <a
+      href="{% url 'organizations:employee_update' emp.pk %}"
+      class="rounded-md p-2 text-slate-400 hover:bg-indigo-100 hover:text-teal-600 transition"
+      title="Επεξεργασία"
+    >
+      <!-- Heroicons Pencil -->
+            <svg xmlns="http://www.w3.org/2000/svg"
+                 fill="none"
+                 viewBox="0 0 24 24"
+                 stroke-width="1.8"
+                 stroke="currentColor"
+                 class="h-5 w-5">
+                <path stroke-linecap="round"
+                      stroke-linejoin="round"
+                      d="M16.862 4.487a2.25 2.25 0 0 1 3.182 3.182L7.5 20.213 3 21l.787-4.5 13.075-12.013Z"/>
+            </svg>
+    </a>
+  </div>
+
+  <p class="text-sm text-gray-500">
+    {{ emp.org_department|default:"-"  }}
+  </p>
+</div>
+    </div>
+
+    <div class="mt-5 space-y-2 text-sm text-gray-600">
+
+      <div class="flex justify-between">
+        <span>Τηλέφωνο</span>
+        <span class="font-medium text-gray-900">
+          {{ emp.phone|default:"-" }}
+        </span>
+      </div>
+
+      <div class="flex justify-between">
+        <span>Κινητό</span>
+        <span class="font-medium text-gray-900">
+          {{ emp.mobile|default:"-" }}
+        </span>
+      </div>
+
+      <div class="flex justify-between">
+        <span>Email</span>
+        <span class="font-medium text-gray-900">
+          {{ emp.email|default:"-"  }}
+        </span>
+      </div>
+
+      <div class="flex justify-between">
+        <span>Οργανισμός</span>
+        <span class="font-medium text-gray-900">
+          {{ emp.organization }}
+        </span>
+      </div>
+
+      <div class="flex justify-between items-center">
+        <span>Κατάσταση</span>
+
+        {% if emp.is_active %}
+          <span class="rounded-full bg-green-100 px-3 py-1 text-xs text-green-700">
+            Ενεργός
+          </span>
+        {% else %}
+          <span class="rounded-full bg-red-100 px-3 py-1 text-xs text-red-700">
+            Μη ενεργός
+          </span>
+        {% endif %}
+      </div>
+
+      <div class="flex justify-between">
+        <span>Δημιουργήθηκε</span>
+        <span>
+          {{ emp.created|date:'d/m/Y' }}
+        </span>
+      </div>
+
+    </div>
+
+    <div class="mt-5 flex justify-end">
+      {% if emp.is_active  %}
+      <a
+        href="{% url 'organizations:soft_delete_employee' emp.pk %}" onclick="return confirmDelete(event, this.href);"
+        class="rounded-lg bg-red-600 px-4 py-2 text-sm font-medium text-white hover:bg-red-700"
+      >
+        Διαγραφή
+      </a>
+      {% else%}
+      <a
+        href="{% url 'organizations:restore_employee' emp.pk %}"
+        class="rounded-lg bg-red-600 px-4 py-2 text-sm font-medium text-white hover:bg-red-700"
+      >
+        Ενεργοποίηση
+      </a>
+      {%endif %}
+    </div>
+  </div>
+
+{% empty %}
+  <div class="col-span-full rounded-xl bg-white p-8 text-center text-gray-500">
+    Δεν υπάρχουν εργαζόμενοι
+  </div>
+{% endfor %}
+
+
+{% if is_htmx %}
+<div id="load-more-container" hx-swap-oob="true">
+    {% include "organizations/employee/_load_more.html" %}
+</div>
+{% endif %}
+
+<script>
+function confirmDelete(event, url) {
+  event.preventDefault();
+
+  Swal.fire({
+    title: "Απενεργοποίηση Εργαζόμενου;",
+    text: "Επιβεβαιώστε ότι θέλετε να απενεργοποιήσετε τον εργαζόμενο. Η ενέργεια αυτή μπορεί να αναιρεθεί οποιαδήποτε στιγμή.",
+    icon: "warning",
+    showCancelButton: true,
+    confirmButtonText: "Διαγραφή",
+    cancelButtonText: "Ακύρωση",
+    confirmButtonColor: "#d33", // red delete button
+    cancelButtonColor: "#3085d6" // blue cancel button
+  }).then((result) => {
+    if (result.isConfirmed) {
+      window.location.href = url;
+    }
+  });
+
+  return false;
+}
+</script>

@@ -1,0 +1,124 @@
+{% extends "_base.html" %}
+
+{% block content %} 
+<div class="w-full rounded-2xl border border-gray-200 bg-white shadow-sm">
+  <div class="flex items-center justify-between px-6 py-5">
+    <div>
+      <h2 class="text-lg font-semibold text-gray-900">
+        Χρήστες
+      </h2>
+      <p class="text-sm text-gray-500">
+        Διαχείριση μελών ομάδας
+      </p>
+    </div>
+
+    {% comment %} <button
+      class="rounded-lg bg-teal-600 px-4 py-2 text-sm font-medium text-white hover:bg-teal-700"
+    >
+      Νέος χρήστης
+    </button> {% endcomment %}
+  </div>
+
+  <div class="overflow-x-auto">
+    <table class="min-w-full divide-y divide-gray-200">
+      <thead class="bg-gray-50">
+        <tr>
+          <th class="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wide text-gray-500">
+            User
+          </th>
+
+          {% comment %} <th class="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wide text-gray-500">
+            Role
+          </th> {% endcomment %}
+
+          <th class="hidden px-6 py-3 text-left text-xs font-semibold uppercase tracking-wide text-gray-500 md:table-cell">
+            Status
+          </th>
+
+          <th class="hidden px-6 py-3 text-left text-xs font-semibold uppercase tracking-wide text-gray-500 md:table-cell">
+            Groups
+          </th>
+          <th class="px-6 py-3 text-right text-xs font-semibold uppercase tracking-wide text-gray-500">
+            Action
+          </th>
+          
+          <th class="px-6 py-3 text-right text-xs font-semibold uppercase tracking-wide text-gray-500">
+            Created
+          </th>
+        </tr>
+      </thead>
+
+      <tbody class="divide-y divide-gray-100 bg-white">
+      {% for user in users %}
+        <tr class="transition hover:bg-gray-50">
+          <td class="px-6 py-4">
+            <div class="flex items-center gap-3">
+              <div class="flex h-10 w-10 items-center justify-center rounded-full bg-teal-300 font-medium">
+                {{ user.first_name|slice:":1"|upper }}{{ user.last_name|slice:":1"|upper }}
+              </div>
+
+              <div>
+                <p class="font-medium text-gray-900">
+                  {{ user.first_name }} {{ user.last_name }}
+                </p>
+                <p class="text-sm text-gray-500">
+                  {{ user.email }}
+                </p>
+              </div>
+            </div>
+          </td>
+
+          <td class="hidden px-6 py-4 md:table-cell">
+            {% if user.is_active %}
+              <span class="rounded-full bg-green-100 px-3 py-1 text-xs font-medium text-green-700">
+                Active
+              </span>
+            {% else %}
+              <span class="rounded-full bg-red-100 px-3 py-1 text-xs font-medium text-red-700">
+                Inactive
+              </span>
+            {% endif %}
+          </td>
+          <td class="hidden px-6 py-4 md:table-cell">
+            {% for group in user.groups.all %}
+              <span class="rounded-full bg-green-100 px-3 py-1 text-xs font-medium text-green-700">
+                  {{ group.name }}{% if not forloop.last %}, {% endif %}
+              {% empty %}
+              <span class="rounded-full bg-red-100 px-3 py-1 text-xs font-medium text-red-700">
+                  No groups
+              {% endfor %}
+            </span>
+          </td>
+          <td class="px-6 py-4 text-right">
+            <button class="text-sm font-medium text-blue-600 hover:text-blue-800">
+              Edit
+            </button>
+          </td>
+        
+          <td class="px-6 py-4 text-right text-sm text-gray-500">
+            {{ user.created|date:"d/m/Y H:i" }}
+          </td>
+        </tr>
+{% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  <div class="flex items-center justify-between border-t px-6 py-4">
+    <span class="text-sm text-gray-500">
+      Showing 1-10 of 100
+    </span>
+
+    <div class="flex gap-2">
+      <button class="rounded-lg border px-3 py-1 text-sm hover:bg-gray-50">
+        Previous
+      </button>
+
+      <button class="rounded-lg border px-3 py-1 text-sm hover:bg-gray-50">
+        Next
+      </button>
+    </div>
+  </div>
+</div>
+
+{% endblock %}

@@ -1,0 +1,151 @@
+{% extends '_base.html' %}
+
+{% block title %}Νέος Οργανισμός{% endblock %}
+
+{% block content %}
+
+<div class="max-w-6xl mx-auto px-6 py-8">
+
+    <!-- Header -->
+    <div class="flex items-center justify-between mb-8">
+        <div>
+            <h1 class="text-3xl font-bold text-gray-900">
+                Δημιουργία Οργανισμού
+            </h1>
+            <p class="mt-1 text-sm text-gray-500">
+                Συμπληρώστε τα στοιχεία του νέου οργανισμού.
+            </p>
+        </div>
+
+        <a href="{% url 'organizations:organization_list' %}"
+           class="rounded-lg border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50">
+            ← Επιστροφή
+        </a>
+    </div>
+    {% if form.errors %}
+    <div class="rounded bg-red-100 p-4 mb-4">
+        {{ form.errors }}
+    </div>
+    {% endif %}
+    <form method="post">
+        {% csrf_token %}
+
+        <div class="overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm">
+
+            <!-- Company Information -->
+            <div class="border-b border-gray-200 px-8 py-6">
+                <h2 class="text-lg font-semibold text-gray-900">
+                    Στοιχεία Οργανισμού
+                </h2>
+            </div>
+
+            <div class="grid gap-6 p-8 md:grid-cols-2">
+
+                <div>
+                    <label for="{{ form.org_name.id_for_label }}" class="mb-2 block text-sm font-medium text-gray-700">
+                        Πελάτης
+                    </label>
+                    {{ form.org_name }}
+                </div>
+
+                <div>
+                    <label for="{{ form.org_phone.id_for_label }}" class="mb-2 block text-sm font-medium text-gray-700">
+                        Τηλέφωνο
+                    </label>
+                    {{ form.org_phone }}
+                </div>
+
+                <div>
+                    <label for="{{ form.org_address.id_for_label }}" class="mb-2 block text-sm font-medium text-gray-700">
+                        Διεύθυνση
+                    </label>
+                    {{ form.org_address }}
+                </div>
+
+                <div>
+                    <label for="{{ form.org_city.id_for_label }}" class="mb-2 block text-sm font-medium text-gray-700">
+                        Πόλη
+                    </label>
+                    {{ form.org_city }}
+                </div>
+
+                <div>
+                    <label for="{{ form.org_email.id_for_label }}" class="mb-2 block text-sm font-medium text-gray-700">
+                        Email
+                    </label>
+                    {{ form.org_email }}
+                </div>
+
+                <div>
+                    <label for="{{ form.org_site.id_for_label }}" class="mb-2 block text-sm font-medium text-gray-700">
+                        Website
+                    </label>
+                    {{ form.org_site }}
+                </div>
+
+                <div>
+                    <label for="{{ form.org_remote.id_for_label }}" class="mb-2 block text-sm font-medium text-gray-700">
+                        Remote Access
+                    </label>
+                    {{ form.org_remote }}
+                </div>
+
+                <div class="flex items-center gap-3 pt-8">
+                    {{ form.is_active }}
+                    <label id="status-label" for="{{ form.is_active.id_for_label }}" class="text-sm font-medium text-gray-700">
+                        {% if form.is_active.value %}
+                            Ενεργός
+                        {% else %}
+                            Μη ενεργός
+                        {% endif %}
+                    </label>
+                </div>
+
+            </div>
+
+            <!-- Notes -->
+            <div class="border-t border-gray-200 px-8 py-6">
+                <label for="{{ form.org_info.id_for_label }}" class="mb-2 block text-sm font-medium text-gray-700">
+                    Σημειώσεις
+                </label>
+                {{ form.org_info }}
+            </div>
+
+            <!-- Footer -->
+            <div class="flex justify-between border-t border-gray-200 bg-gray-50 px-8 py-5">
+
+                <a href="{% url 'organizations:organization_list' %}"
+                   class="rounded-lg border border-gray-300 bg-white px-5 py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-100">
+                    Ακύρωση
+                </a>
+
+                <button
+                    type="submit"
+                    class="rounded-lg bg-teal-600 px-6 py-2.5 text-sm font-semibold text-white shadow hover:bg-teal-700">
+                    Δημιουργία
+                </button>
+
+            </div>
+
+        </div>
+
+    </form>
+
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const checkbox = document.getElementById('id_is_active');
+    const label = document.getElementById('status-label');
+
+    if (checkbox && label) {
+        label.textContent = checkbox.checked ? 'Ενεργός' : 'Μη ενεργός';
+
+        checkbox.addEventListener('change', function () {
+            label.textContent = this.checked ? 'Ενεργός' : 'Μη ενεργός';
+        });
+    }
+});
+</script>
+
+{% endblock %}

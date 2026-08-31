@@ -1,0 +1,27 @@
+<div class="mt-8 flex justify-center">
+
+    {% if tasks.has_next %}
+
+        <button
+            hx-get="?page={{ tasks.next_page_number }}&{{ query_string }}"
+            hx-target="#task-list"
+            hx-swap="beforeend"
+            class="rounded-xl bg-teal-600 px-6 py-3 text-white text-sm font-semibold hover:bg-teal-700">
+
+            Περισσότερα
+
+        </button>
+
+    {% else %}
+
+        <button
+            disabled
+            class="cursor-not-allowed rounded-xl bg-gray-300 px-6 py-3 text-gray-500 text-sm font-semibold">
+
+            Τέλος αποτελεσμάτων
+
+        </button>
+
+    {% endif %}
+
+</div>

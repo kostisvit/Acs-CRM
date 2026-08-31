@@ -1,3 +1,84 @@
+from django import forms
 from django.contrib import admin
+from django.contrib.auth.admin import UserAdmin
+from django.contrib.auth.forms import ReadOnlyPasswordHashField
 
-# Register your models here.
+from .models import Adeia, CustomUser
+
+
+class CustomUserChangeForm(forms.ModelForm):
+    password = ReadOnlyPasswordHashField()
+
+    class Meta:
+        model = CustomUser
+        fields = "__all__"
+
+
+@admin.register(CustomUser)
+class CustomUserAdmin(UserAdmin):
+    model = CustomUser
+
+    fieldsets = (
+        (
+            None,
+            {
+                "fields": (
+                    "email",
+                    "password",
+                    "first_name",
+                    "last_name",
+                    "allowed_leave_days",
+                )
+            },
+        ),
+        (
+            "Permissions",
+            {
+                "fields": (
+                    "is_active",
+                    "is_staff",
+                    "is_superuser",
+                    "must_change_password",
+                    "groups",
+                    "user_permissions",
+                )
+            },
+        ),
+        ("Important dates", {"fields": ("last_login",)}),
+    )
+
+    add_fieldsets = (
+        (
+            None,
+            {
+                "classes": ("wide",),
+                "fields": (
+                    "email",
+                    "password1",
+                    "password2",
+                    "is_active",
+                    "is_staff",
+                    "allowed_leave_days",
+                    "must_change_password",
+                ),
+            },
+        ),
+    )
+
+    list_display = (
+        "first_name",
+        "last_name",
+        "email",
+        "is_staff",
+        "is_active",
+        "source_id",
+    )
+
+    ordering = ("email",)
+
+    @admin.register(Adeia)
+    class AdeiaAdmin(admin.ModelAdmin):
+        model = Adeia
+        list_display = ["acs_employee", "acs_adeiatype", "startdate", "enddate", "source_id"]
+        search_fields = ["acs_employee"]
+        list_filter = ["acs_employee", "created"]
