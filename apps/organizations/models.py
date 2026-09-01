@@ -1,13 +1,14 @@
-import uuid
-import re
 import datetime
+import re
+import uuid
+
 from django.conf import settings
+from django.core.validators import MinValueValidator
 from django.db import models
 from django.db.models import Sum
+from django.utils import timezone
 from django_extensions.db.models import TimeStampedModel
 from simple_history.models import HistoricalRecords
-from django.core.validators import MinValueValidator
-from django.utils.translation import gettext_lazy as _
 
 
 class Organization(TimeStampedModel):
@@ -149,7 +150,7 @@ class Task(TimeStampedModel):
     organization = models.ForeignKey(
         "Organization", on_delete=models.PROTECT, verbose_name="Οργανισμός")
     importdate = models.DateField(
-        default=datetime.datetime.now(tz=datetime.UTC).date, verbose_name="Ημ. Κατ.", db_index=True)
+        default=timezone.localdate, verbose_name="Ημ. Κατ.", db_index=True)
     org_app = models.ForeignKey(
         "parameters.OtsSoftware",
         on_delete=models.SET_NULL,
@@ -213,7 +214,7 @@ class Training(TimeStampedModel):
     organization = models.ForeignKey(
         "Organization", on_delete=models.CASCADE, verbose_name="Οργανισμός", null=True, blank=True)
     training_date = models.DateField(
-        default=datetime.datetime.now(tz=datetime.UTC).date, verbose_name="Ημερομηνία Εκπαίδευσης")
+        default=timezone.localdate, verbose_name="Ημερομηνία Εκπαίδευσης")
     org_app = models.ForeignKey(
         "parameters.OtsSoftware",
         on_delete=models.SET_NULL,

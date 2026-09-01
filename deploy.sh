@@ -31,6 +31,10 @@ echo "Running Django migrations..."
 uv run --env-file=.env python manage.py migrate \
     --settings=config.settings.production
 
+uv run python manage.py tailwind build
+
+uv run python manage.py collectstatic --noinput
+
 # Start Django server
 echo "Starting Django server..."
 uv run --env-file=.env python manage.py runserver \

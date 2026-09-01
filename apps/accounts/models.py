@@ -6,6 +6,7 @@ from django.contrib.auth.base_user import BaseUserManager
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin
 from django.core.exceptions import ValidationError
 from django.db import models
+from django.utils import timezone
 from django_extensions.db.models import TimeStampedModel
 
 from apps.parameters.models import OfficialHoliday
@@ -86,8 +87,8 @@ class Adeia(TimeStampedModel):
         blank=True,
         verbose_name="Τύπος Άδειας",
     )
-    startdate = models.DateField(default=datetime.date.today, verbose_name="Από")
-    enddate = models.DateField(default=datetime.date.today, verbose_name="Έως")
+    startdate = models.DateField(default=timezone.localdate, verbose_name="Από")
+    enddate = models.DateField(default=timezone.localdate, verbose_name="Έως")
 
     source_id = models.IntegerField(null=True, blank=True, unique=True)
 
