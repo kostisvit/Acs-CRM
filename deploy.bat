@@ -59,6 +59,8 @@ echo ================================
 echo  Starting Django server
 echo ================================
 
+uv run --env-file=.env python manage.py migrate --settings=config.settings.production
+
 uv run --env-file=.env python manage.py runserver --settings=config.settings.production
 
 endlocal
