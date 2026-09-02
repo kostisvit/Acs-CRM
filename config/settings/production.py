@@ -4,7 +4,7 @@ import environ
 
 from .base import *
 
-DEBUG = False
+DEBUG = True
 
 environ.Env.read_env(BASE_DIR / ".env")
 
