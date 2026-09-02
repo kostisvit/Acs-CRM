@@ -61,7 +61,7 @@ echo ================================
 
 uv run --env-file=.env python manage.py migrate --settings=config.settings.production
 
-uv run --env-file=.env python manage.py runserver --settings=config.settings.production
+uv run --env-file=.env python manage.py runserver 0.0.0.0:8000 --settings=config.settings.production
 
 endlocal
 
