@@ -12,8 +12,8 @@ for /f "usebackq tokens=1,2 delims==" %%a in ("%ENV_FILE%") do (
     set "key=%%a"
     set "value=%%b"
     if "!key!"=="DATABASE_CONTAINER" set CONTAINER=!value!
-    if "!key!"=="DATABASE_USER" set DB_USER=!value!
-    if "!key!"=="DATABASE_NAME" set DB_NAME=!value!
+    if "!key!"=="DB_USER" set DB_USER=!value!
+    if "!key!"=="DB_NAME" set DB_NAME=!value!
     if "!key!"=="BACKUP_DIR" set BACKUP_DIR=!value!
 )
 
@@ -26,6 +26,12 @@ set TIMESTAMP=%ldt:~0,8%_%ldt:~8,4%
 
 REM === Backup file path ===
 set BACKUP_FILE=%BACKUP_DIR%\%DB_NAME%_%TIMESTAMP%.sql
+
+
+echo CONTAINER=[%CONTAINER%]
+echo DB_USER=[%DB_USER%]
+echo DB_NAME=[%DB_NAME%]
+echo BACKUP_DIR=[%BACKUP_DIR%]
 
 echo Creating database backup: %BACKUP_FILE%
 docker exec -t %CONTAINER% pg_dump -c -U %DB_USER% %DB_NAME% > "%BACKUP_FILE%"
