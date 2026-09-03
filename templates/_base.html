@@ -21,7 +21,7 @@
 </head>
 
 
-<body 
+<body
     x-data="{ open:false, organizations:false, acs:false, config:false }"
     class="bg-[#F8F8FF] text-gray-800">
 
@@ -35,7 +35,7 @@
 
 
     <!-- Mobile button -->
-    <button 
+    <button
         @click="open=!open"
         class="md:hidden text-[#0B1F3A] text-2xl">
         ☰
@@ -254,7 +254,7 @@ border-r border-gray-200
                 <span class="ml-2 inline-flex items-center justify-center px-2 py-1 text-xs font-bold leading-none text-red-700 bg-red-100 rounded-full">
                     {{ total_tasks }}</span>
             </a>
-            
+
             <a href="#"
             class="
             block
@@ -265,6 +265,18 @@ border-r border-gray-200
             hover:text-black
             transition">
                 Εκπαιδεύσεις
+            </a>
+
+            <a href="#"
+            class="
+            block
+            py-2 px-3
+            rounded-lg
+            text-gray-600
+            hover:bg-teal-300
+            hover:text-black
+            transition">
+                Ταμειακές
             </a>
 
         </div>
@@ -340,7 +352,7 @@ border-r border-gray-200
         </div>
 
     </li>
-    
+
     <!-- Ρυθμίσεις-->
     <li class="border-b border-gray-200">
 

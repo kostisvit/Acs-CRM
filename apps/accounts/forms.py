@@ -1,9 +1,10 @@
-from .models import Adeia
 from typing import Any, ClassVar
 
 from django import forms
 from django.contrib.auth import get_user_model
 from django.contrib.auth.forms import PasswordChangeForm
+
+from .models import Adeia
 
 User = get_user_model()
 
@@ -56,7 +57,7 @@ class UserProfileForm(forms.ModelForm):
         labels = {
             "first_name": "Όνομα",
             "last_name": "Επώνυμο",
-            "allowed_leave_days": "Επιτρεπόμενες Μέρες Αδείας συν υπόλοιπο",
+            "allowed_leave_days": "Επιτρεπόμενες Μέρες Άδειας συν υπόλοιπο",
             "email": "Διεύθυνση Email",
         }
 
