@@ -2,7 +2,7 @@
 setlocal enabledelayedexpansion
 
 REM === Load .env file ===
-set ENV_FILE=C:\Users\KostasVit\Desktop\Projects\AcsServices-CRM\.env
+set ENV_FILE=C:\Users\KostasVit\Desktop\Projects\Acs-CRM\.env
 if not exist "%ENV_FILE%" (
     echo ❌ .env file not found: %ENV_FILE%
     exit /b 1
