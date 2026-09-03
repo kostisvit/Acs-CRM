@@ -42,7 +42,7 @@ services:
       - "8000"
 
     env_file:
-      - .env.production
+      - .env
 
     depends_on:
       postgres:
@@ -75,7 +75,7 @@ services:
       PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD}
 
     ports:
-      - "5050:80"
+      - "5051:80"
 
     depends_on:
       postgres:
