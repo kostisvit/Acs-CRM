@@ -4,7 +4,7 @@ import environ
 
 from .base import *
 
-DEBUG = True
+DEBUG = False
 
 environ.Env.read_env(BASE_DIR / ".env")
 
@@ -26,3 +26,6 @@ DATABASES = {
 SECURE_SSL_REDIRECT = False
 SESSION_COOKIE_SECURE = False
 CSRF_COOKIE_SECURE = True
+
+
+CSRF_TRUSTED_ORIGINS=os.environ.get("CSRF_TRUSTED_ORIGINS", "").split(",")
