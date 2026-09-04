@@ -3,7 +3,7 @@
     {% if employees.has_next %}
 
         <button
-            hx-get="?page={{ employees.next_page_number }}&q={{ search }}&is_visible={{ is_visible }}"
+            hx-get="?page={{ employees.next_page_number }}&q={{ search|urlencode }}&organization={{ organization_id|urlencode }}&org_department={{ department_id|urlencode }}&is_active={{ is_active|urlencode }}"
             hx-target="#employee-list"
             hx-swap="beforeend"
             class="rounded-xl bg-teal-600 px-6 py-3 text-white text-sm font-semibold hover:bg-teal-700">

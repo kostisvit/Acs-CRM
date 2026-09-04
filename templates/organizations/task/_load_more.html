@@ -3,7 +3,7 @@
     {% if tasks.has_next %}
 
         <button
-            hx-get="?page={{ tasks.next_page_number }}&{{ query_string }}"
+            hx-get="?page={{ tasks.next_page_number }}&q={{ search|urlencode }}&organization={{ organization_id|urlencode }}&org_app={{ org_app_id|urlencode }}&job_type_acs={{ job_type_id|urlencode }}&acs_employee={{ acs_employee_id|urlencode }}&org_employee={{ org_employee_id|urlencode }}&ticketid={{ ticket_id|urlencode }}&importdate={{ importdate|urlencode }}"
             hx-target="#task-list"
             hx-swap="beforeend"
             class="rounded-xl bg-teal-600 px-6 py-3 text-white text-sm font-semibold hover:bg-teal-700">
