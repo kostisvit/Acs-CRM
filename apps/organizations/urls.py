@@ -1,6 +1,13 @@
 from django.urls import path
+
 from . import views
-from .views import OrganizationUpdateView, EmployeeUpdateView, OrganizationCreateView, EmployeeCreateView
+from .export import export_ergasies
+from .views import (
+    EmployeeCreateView,
+    EmployeeUpdateView,
+    OrganizationCreateView,
+    OrganizationUpdateView,
+)
 
 app_name = "organizations"
 
@@ -36,7 +43,7 @@ urlpatterns = [
     path("load-employees/",
          views.load_employees, name="load_employees"),
 
-    path("export-ergasies/", views.export_ergasies, name="export_ergasies"),
+    path("export-ergasies/", export_ergasies, name="export_ergasies"),
 
 
 ]

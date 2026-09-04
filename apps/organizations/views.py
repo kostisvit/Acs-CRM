@@ -1,4 +1,3 @@
-from django.http import JsonResponse
 from django.contrib import messages
 from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
@@ -6,16 +5,15 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.messages.views import SuccessMessageMixin
 from django.core.paginator import Paginator
 from django.db.models import Q
+from django.http import JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse_lazy
-from django.views.generic import UpdateView, CreateView, ListView
+from django.views.generic import CreateView, UpdateView
 
 from apps.organizations.models import Employee, Organization, Task
-from apps.parameters.models import JobType, OtsSoftware, OrgDepartment
+from apps.parameters.models import JobType, OrgDepartment, OtsSoftware
 
 from .forms import EmployeeForm, OrganizationForm, TaskForm
-
-from .export import export_ergasies
 
 User = get_user_model()
 
