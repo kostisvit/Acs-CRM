@@ -18,6 +18,7 @@ INSTALLED_APPS = [
     "organizations",
     "pages",
     "parameters",
+    "tameiakes",
     "django_extensions",
     "simple_history",
     "tailwind",
