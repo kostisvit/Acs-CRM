@@ -1,5 +1,7 @@
 from django.contrib import admin
-from .models import Organization, Employee, Task, Training
+from import_export.admin import ImportExportModelAdmin
+
+from .models import Employee, Organization, Task, Training
 
 
 @admin.register(Organization)
@@ -20,8 +22,9 @@ class EmployeeAdmin(admin.ModelAdmin):
         queryset.update(is_active=False)
 
 
-@admin.register(Task)
-class TaskAdmin(admin.ModelAdmin):
+
+class TaskAdmin(ImportExportModelAdmin):
+    date_hierarchy = "importdate"
     list_display = ['organization', 'importdate', 'org_app', 'job_type_acs',
                     'acs_employee', 'task_time', 'org_employee', 'created', 'modified']
     search_fields = ["organization", "task_info"]
@@ -34,3 +37,7 @@ class TrainingAdmin(admin.ModelAdmin):
                     'acs_employee', 'training_info', 'training_note', 'created', 'modified']
     search_fields = ["organization", "training_info"]
     list_filter = ["organization", "acs_employee"]
+
+
+
+admin.site.register(Task, TaskAdmin)

@@ -23,6 +23,7 @@ INSTALLED_APPS = [
     "tailwind",
     "theme",
     "xlwt",
+    "import_export",
 ]
 
 TAILWIND_APP_NAME = "theme"

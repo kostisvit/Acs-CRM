@@ -10,6 +10,7 @@ dependencies = [
     "django-environ>=0.14.0",
     "django-extensions>=4.1",
     "django-filter>=26.1",
+    "django-import-export>=4.4.1",
     "django-simple-history>=3.12.0",
     "django-tailwind>=4.5.0",
     "gunicorn>=26.2.0",
