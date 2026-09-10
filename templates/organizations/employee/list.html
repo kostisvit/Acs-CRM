@@ -27,11 +27,11 @@
                 placeholder="Αναζήτηση..."
                 class="w-64 rounded-lg border border-gray-300 px-4 py-2 focus:outline-none focus:border-teal-400 focus:ring-2 focus:ring-teal-300"
             />
+            <!-- Export -->
+
+            <a href="#" class="rounded-lg border border-teal-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-teal-50">Export</a>
 
         </form>
-
-        <!-- Export -->
-        <button class="rounded-lg border border-teal-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-teal-50">Export</button>
 
         <!-- New -->
         <a href="{% url 'organizations:employee_create' %}" class="rounded-lg bg-teal-300 px-5 py-2 text-sm font-semibold text-gray-900 hover:bg-teal-400">+ Νέα εγγραφή</a>
@@ -41,7 +41,7 @@
 
   <!-- Space between toolbar and table -->
   <div class="mt-6"></div>
-    <div 
+    <div
       x-data="{ openFilter:false }"
       @htmx:after-request.window="openFilter = false">
 
@@ -112,7 +112,7 @@
               value="{{ search }}"
               placeholder="Αναζήτηση επαφής..."
               class="w-full rounded-lg border px-4 py-3 focus:outline-none focus:border-teal-400 focus:ring-2 focus:ring-teal-300">
-            
+
               <select name="organization"
                     class="rounded-lg border px-4 py-3">
 
@@ -128,7 +128,7 @@
                 {% endfor %}
 
             </select>
-            
+
             <select name="org_department"
                     hx-get="{% url 'organizations:employee_list' %}"
                     hx-trigger="change"
@@ -191,7 +191,7 @@
         {% endfor %}
     </div>
   {% endif %}
-  
+
   <div id="employee-list" class="grid grid-cols-1 gap-5 md:grid-cols-3">
     {% include 'organizations/employee/_cards.html' %}
   </div>
