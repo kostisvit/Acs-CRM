@@ -293,6 +293,7 @@ def task_list(request):
 
     context = {
         "tasks": page_obj,
+        'page_obj': page_obj,
         "search": search,
         "query_string": request.GET.urlencode(),
         "organization_id": organization_id,

@@ -148,15 +148,15 @@
         <thead class="border-b bg-slate-50">
 
             <tr>
-                <th class="px-4 py-3 text-left">Organization</th>
-                <th class="px-4 py-3 text-left">Date</th>
+                <th class="px-4 py-3 text-left">Οργανισμός</th>
+                <th class="px-4 py-3 text-left">Ημερομηνία</th>
                 <th class="px-4 py-3 text-left">Ticket</th>
-                <th class="px-4 py-3 text-left">Application</th>
-                <th class="px-4 py-3 text-left">Type</th>
-                <th class="px-4 py-3 text-left">Hours</th>
-                <th class="px-4 py-3 text-left">ACS Employee</th>
-                <th class="px-4 py-3 text-left">Description</th>
-                <th class="px-4 py-3 text-left">Actions</th>
+                <th class="px-4 py-3 text-left">Εφαρμογή</th>
+                <th class="px-4 py-3 text-left">Εργασία</th>
+                <th class="px-4 py-3 text-left">Διάρκεια</th>
+                <th class="px-4 py-3 text-left">ACS</th>
+                <th class="px-4 py-3 text-left">Περιγραφή</th>
+                <th class="px-4 py-3 text-left">Ενέργειες</th>
             </tr>
 
         </thead>
@@ -214,7 +214,7 @@
 
                 <td class="px-4 py-3">
 
-                    <a href="#"
+                    <a href="{% url 'organizations:task_update' task.pk %}"
                        class="text-slate-400 hover:text-teal-600"
                        title="Edit task">
 
@@ -244,5 +244,58 @@
     </table>
 
 </div>
+<!-- Pagination -->
+{% if page_obj.has_other_pages %}
 
+<div class="mt-5 flex items-center justify-between">
+
+    <!-- Previous -->
+    <div>
+        {% if page_obj.has_previous %}
+            <a href="?page={{ page_obj.previous_page_number }}"
+               class="rounded-md border border-slate-200 bg-white px-3 py-2 text-sm font-medium text-slate-600 hover:bg-slate-50">
+                ← Προηγούμενη
+            </a>
+        {% endif %}
+    </div>
+
+
+    <!-- Page numbers -->
+    <div class="flex items-center gap-1">
+
+        {% for num in page_obj.paginator.page_range %}
+
+            {% if page_obj.number == num %}
+
+                <span class="rounded-md bg-teal-600 px-3 py-2 text-sm font-semibold text-white">
+                    {{ num }}
+                </span>
+
+            {% elif num > page_obj.number|add:'-2' and num < page_obj.number|add:'2' %}
+
+                <a href="?page={{ num }}"
+                   class="rounded-md border border-slate-200 bg-white px-3 py-2 text-sm text-slate-600 hover:bg-slate-50">
+                    {{ num }}
+                </a>
+
+            {% endif %}
+
+        {% endfor %}
+
+    </div>
+
+
+    <!-- Next -->
+    <div>
+        {% if page_obj.has_next %}
+            <a href="?page={{ page_obj.next_page_number }}"
+               class="rounded-md border border-slate-200 bg-white px-3 py-2 text-sm font-medium text-slate-600 hover:bg-slate-50">
+                Επόμενη →
+            </a>
+        {% endif %}
+    </div>
+
+</div>
+
+{% endif %}
 {% endif %}
