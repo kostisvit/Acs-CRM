@@ -88,3 +88,6 @@ STATIC_ROOT = BASE_DIR / "staticfiles"
 
 MEDIA_URL = "/media/"
 MEDIA_ROOT = BASE_DIR / "media"
+
+
+FIELD_ENCRYPTION_KEY=os.environ.get("FIELD_ENCRYPTION_KEY")
