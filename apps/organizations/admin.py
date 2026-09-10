@@ -1,4 +1,5 @@
 from django.contrib import admin
+from import_export import fields, resources
 from import_export.admin import ImportExportModelAdmin
 
 from .models import Employee, Organization, Task, Training
@@ -22,8 +23,51 @@ class EmployeeAdmin(admin.ModelAdmin):
         queryset.update(is_active=False)
 
 
+class TaskResource(resources.ModelResource):
+    organization = fields.Field(
+        column_name="organization",
+        attribute="organization__org_name",
+    )
+    org_app = fields.Field(
+        column_name="org_app",
+        attribute="org_app__name"
+    )
+    job_type_acs = fields.Field(
+        column_name="job_type_acs",
+        attribute="job_type_acs__name"
+    )
+    org_employee = fields.Field(
+        column_name="org_employee",
+    )
+
+    def dehydrate_acs_employee(self, task):
+        if task.acs_employee:
+            return f"{task.acs_employee.last_name or ''} {task.acs_employee.first_name or ''}".strip()
+        return ""
+
+
+    def dehydrate_org_employee(self, task):
+        if task.org_employee:
+            return f"{task.org_employee.lastname or ''} {task.org_employee.firstname or ''}".strip()
+        return ""
+
+    class Meta:
+        model = Task
+        fields = (
+            "organization",
+            "importdate",
+            "org_app",
+            "job_type_acs",
+            "acs_employee",
+            "task_time",
+            "org_employee",
+            "created",
+            "modified",
+        )
+
 
 class TaskAdmin(ImportExportModelAdmin):
+    resource_class = TaskResource
     date_hierarchy = "importdate"
     list_display = ['organization', 'importdate', 'org_app', 'job_type_acs',
                     'acs_employee', 'task_time', 'org_employee', 'created', 'modified']
