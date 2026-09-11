@@ -1,3 +1,5 @@
+import os
+
 from django.contrib import messages
 from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
@@ -5,7 +7,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.messages.views import SuccessMessageMixin
 from django.core.paginator import Paginator
 from django.db.models import Q
-from django.http import JsonResponse
+from django.http import FileResponse, JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse_lazy
 from django.views.generic import CreateView, UpdateView
@@ -356,3 +358,11 @@ def load_employees(request):
     ).values("id", "lastname", "firstname").order_by("lastname", "firstname")
 
     return JsonResponse(list(employees), safe=False)
+
+
+def download_skipped_rows(request):
+    file_path = request.session.get("skipped_file_path")
+    if file_path and os.path.exists(file_path):
+        return FileResponse(open(file_path, "rb"), as_attachment=True, filename="skipped_rows.xlsx")
+    messages.error(request, "No skipped rows file available.")
+    return redirect("import_task")

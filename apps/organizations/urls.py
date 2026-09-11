@@ -44,6 +44,7 @@ urlpatterns = [
     path("load-employees/",
          views.load_employees, name="load_employees"),
     path("import/tasks", task_excel_import, name="task_excel_import"),
+    path("download_skipped_rows/", views.download_skipped_rows, name="download_skipped_rows",),
     path("export/tasks", export_ergasies, name="export_ergasies"),
 
 
