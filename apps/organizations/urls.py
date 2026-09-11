@@ -2,6 +2,7 @@ from django.urls import path
 
 from . import views
 from .export import export_ergasies
+from .task_import import task_excel_import
 from .views import (
     EmployeeCreateView,
     EmployeeUpdateView,
@@ -42,8 +43,8 @@ urlpatterns = [
          views.TaskListUpdateView.as_view(), name="task_update"),
     path("load-employees/",
          views.load_employees, name="load_employees"),
-
-    path("export-ergasies/", export_ergasies, name="export_ergasies"),
+    path("import/tasks", task_excel_import, name="task_excel_import"),
+    path("export/tasks", export_ergasies, name="export_ergasies"),
 
 
 ]

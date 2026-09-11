@@ -25,13 +25,14 @@
               name="q"
               value="{{ search }}"
               placeholder="Αναζήτηση..."
-              class="w-64 rounded-lg border border-gray-300 px-4 py-2 focus:outline-none focus:border-teal-400 focus:ring-2 focus:ring-teal-300"
+              class="w-64 rounded-lg border border-gray-300 px-4 py-2 focus:outline-none focus:border-teal-400 focus:ring-2 focus:ring-teal-300 mr-3"
           />
             <!-- Export -->
 
-            <a href="{% url 'organizations:export_ergasies' %}?{{ request.GET.urlencode }}" class="rounded-lg border border-teal-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-teal-50">Export</a>
+            <a href="{% url 'organizations:export_ergasies' %}?{{ request.GET.urlencode }}" class="inline-flex items-center justify-center rounded-lg border border-teal-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-teal-50">Export</a>
 
       </form>
+            <a href="{% url 'organizations:task_excel_import' %}" class="inline-flex items-center justify-center rounded-lg border border-teal-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-teal-50">Import</a>
 
             <a href="{% url 'organizations:task_create' %}" class="rounded-lg bg-teal-300 px-5 py-2 text-sm font-semibold text-gray-900 hover:bg-teal-400">+ Νέα εγγραφή</a>
       </div>
