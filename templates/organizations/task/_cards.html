@@ -246,23 +246,20 @@
 </div>
 <!-- Pagination -->
 {% if page_obj.has_other_pages %}
-
 <div class="mt-5 flex items-center justify-between">
 
-    <!-- Previous -->
     <div>
         {% if page_obj.has_previous %}
-            <a href="?page={{ page_obj.previous_page_number }}"
-               class="rounded-md border border-slate-200 bg-white px-3 py-2 text-sm font-medium text-slate-600 hover:bg-slate-50">
+            <a
+                href="?{{ query_string }}&page={{ page_obj.previous_page_number }}"
+                class="rounded-md border border-slate-200 bg-white px-3 py-2 text-sm font-medium text-slate-600 hover:bg-slate-50"
+            >
                 ← Προηγούμενη
             </a>
         {% endif %}
     </div>
 
-
-    <!-- Page numbers -->
     <div class="flex items-center gap-1">
-
         {% for num in page_obj.paginator.page_range %}
 
             {% if page_obj.number == num %}
@@ -273,29 +270,29 @@
 
             {% elif num > page_obj.number|add:'-2' and num < page_obj.number|add:'2' %}
 
-                <a href="?page={{ num }}"
-                   class="rounded-md border border-slate-200 bg-white px-3 py-2 text-sm text-slate-600 hover:bg-slate-50">
+                <a
+                    href="?{{ query_string }}&page={{ num }}"
+                    class="rounded-md border border-slate-200 bg-white px-3 py-2 text-sm text-slate-600 hover:bg-slate-50"
+                >
                     {{ num }}
                 </a>
 
             {% endif %}
 
         {% endfor %}
-
     </div>
 
-
-    <!-- Next -->
     <div>
         {% if page_obj.has_next %}
-            <a href="?page={{ page_obj.next_page_number }}"
-               class="rounded-md border border-slate-200 bg-white px-3 py-2 text-sm font-medium text-slate-600 hover:bg-slate-50">
+            <a
+                href="?{{ query_string }}&page={{ page_obj.next_page_number }}"
+                class="rounded-md border border-slate-200 bg-white px-3 py-2 text-sm font-medium text-slate-600 hover:bg-slate-50"
+            >
                 Επόμενη →
             </a>
         {% endif %}
     </div>
 
 </div>
-
 {% endif %}
 {% endif %}

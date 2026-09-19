@@ -253,7 +253,7 @@ def task_list(request):
     job_type_id = request.GET.get("job_type_acs", "")
     acs_employee_id = request.GET.get("acs_employee", "")
     org_employee_id = request.GET.get("org_employee", "")
-    ticketid = request.GET.get("ticketid", "")
+    ticket_id = request.GET.get("ticket_id", "")
     importdate = request.GET.get("importdate", "")
     year = request.GET.get("year", "")
 
@@ -274,8 +274,8 @@ def task_list(request):
     if org_employee_id:
         tasks = tasks.filter(org_employee_id=org_employee_id)
 
-    if ticketid:
-        tasks = tasks.filter(ticketid__icontains=ticketid)
+    if ticket_id:
+        tasks = tasks.filter(ticket_id__icontains=ticket_id)
 
     if importdate:
         tasks = tasks.filter(importdate=importdate)
@@ -297,17 +297,20 @@ def task_list(request):
 
     page_obj = paginator.get_page(request.GET.get("page", 1))
 
+    query_params = request.GET.copy()
+    query_params.pop("page", None)
+
     context = {
         "tasks": page_obj,
         'page_obj': page_obj,
         "search": search,
-        "query_string": request.GET.urlencode(),
+        "query_string": query_params.urlencode(),
         "organization_id": organization_id,
         "org_app_id": org_app_id,
         "job_type_id": job_type_id,
         "acs_employee_id": acs_employee_id,
         "org_employee_id": org_employee_id,
-        "ticketid": ticketid,
+        "ticket_id": ticket_id,
         "importdate": importdate,
         "year": year,
         "organizations": Organization.objects.all(),

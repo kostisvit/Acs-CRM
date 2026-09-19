@@ -216,8 +216,8 @@
             placeholder="Αίτημα OTS"
             class="rounded-lg border px-4 py-3"
         >
-<!-- Date From -->
-    <input type="date"
+        <!-- Date From -->
+        <input type="date"
             name="importdate_after"
             value="{{ importdate_after }}"
             class="rounded-lg border px-4 py-3" >
@@ -265,24 +265,26 @@
     </div>
   <!-- Table Card -->
 <div id="task-wrapper">
-  {% if messages %}
-    <div id="messages" class="max-w-5xl mx-auto mt-6">
-        {% for message in messages %}
-            <div class="mb-4 rounded-lg border border-green-300 bg-green-100 px-4 py-3 text-green-800">
-                {{ message }}
-            </div>
-        {% endfor %}
+    {% if messages %}
+        <div id="messages" class="max-w-5xl mx-auto mt-6">
+            {% for message in messages %}
+                <div class="mb-4 rounded-lg border border-green-300 bg-green-100 px-4 py-3 text-green-800">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+
+    <div id="task-list">
+        {% include 'organizations/task/_cards.html' %}
     </div>
-  {% endif %}
 
-  <div id="task-list" >
-    {% include 'organizations/task/_cards.html' %}
-  </div>
+    <div id="load-more-container">
+        {% include 'organizations/task/_load_more.html' %}
+    </div>
 
-  <div id="load-more-container">
-    {% include 'organizations/task/_load_more.html' %}
-  </div>
 </div>
+
 
 <script>
     setTimeout(() => {
