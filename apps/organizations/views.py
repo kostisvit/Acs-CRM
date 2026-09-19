@@ -255,6 +255,7 @@ def task_list(request):
     org_employee_id = request.GET.get("org_employee", "")
     ticketid = request.GET.get("ticketid", "")
     importdate = request.GET.get("importdate", "")
+    year = request.GET.get("year", "")
 
     tasks = Task.objects.all()
 
@@ -278,6 +279,9 @@ def task_list(request):
 
     if importdate:
         tasks = tasks.filter(importdate=importdate)
+
+    if year:
+        tasks = tasks.filter(importdate__year=year)
 
     # Search all text fields
     if search:
@@ -305,6 +309,7 @@ def task_list(request):
         "org_employee_id": org_employee_id,
         "ticketid": ticketid,
         "importdate": importdate,
+        "year": year,
         "organizations": Organization.objects.all(),
         "org_apps": OtsSoftware.objects.all(),
         "job_types": JobType.objects.all(),
