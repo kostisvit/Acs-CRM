@@ -83,10 +83,10 @@ class OrganizationCreateView(LoginRequiredMixin, SuccessMessageMixin, CreateView
         context["title"] = "Δημιουργία Πελάτη"
         return context
 
-    def form_valid(self, form):
-        response = super().form_valid(form)
-        # Additional logic after saving the form can be added here
-        return response
+    # def form_valid(self, form):
+    #     response = super().form_valid(form)
+    #     # Additional logic after saving the form can be added here
+    #     return response
 
 
 class OrganizationUpdateView(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
@@ -178,10 +178,9 @@ class EmployeeCreateView(LoginRequiredMixin, SuccessMessageMixin, CreateView):
         context["title"] = "Δημιουργία Επαφής"
         return context
 
-    def form_valid(self, form):
-        response = super().form_valid(form)
-        # Additional logic after saving the form can be added here
-        return response
+    # def form_valid(self, form):
+    #     response = super().form_valid(form)
+    #     return response
 
 
 class EmployeeUpdateView(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
@@ -291,10 +290,9 @@ class TaskCreateView(LoginRequiredMixin, SuccessMessageMixin, CreateView):
         context["title"] = "Δημιουργία Εργασίας"
         return context
 
-    def form_valid(self, form):
-        response = super().form_valid(form)
-        # Additional logic after saving the form can be added here
-        return response
+    # def form_valid(self, form):
+    #     response = super().form_valid(form)
+    #     return response
 
 
 class TaskListUpdateView(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
