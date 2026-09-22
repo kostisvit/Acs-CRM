@@ -2,26 +2,35 @@
 
 <div class="mt-8 flex justify-center">
 
-    {% if tasks.has_next %}
+    {% if page_obj.has_next %}
 
         <button
-            hx-get="?{{ query_string }}&page={{ tasks.next_page_number }}"
-            hx-target="#task-list"
+            type="button"
+
+            hx-get="{% url 'organizations:task_list' %}?{{ query_string }}{% if query_string %}&{% endif %}page={{ page_obj.next_page_number }}"
+
+            hx-target="#task-items"
+
             hx-swap="beforeend"
-            class="rounded-xl bg-teal-600 px-6 py-3 text-white text-sm font-semibold hover:bg-teal-700">
 
+            class="rounded-xl bg-teal-600 px-6 py-3
+                   text-sm font-semibold text-white
+                   hover:bg-teal-700"
+        >
             Περισσότερα
-
         </button>
 
     {% else %}
 
         <button
+            type="button"
             disabled
-            class="cursor-not-allowed rounded-xl bg-gray-300 px-6 py-3 text-gray-500 text-sm font-semibold">
 
+            class="cursor-not-allowed rounded-xl
+                   bg-gray-300 px-6 py-3
+                   text-sm font-semibold text-gray-500"
+        >
             Τέλος αποτελεσμάτων
-
         </button>
 
     {% endif %}

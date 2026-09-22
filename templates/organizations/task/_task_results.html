@@ -1,0 +1,31 @@
+{% if request.session.task_view != 'table' %}
+
+    <div
+        id="task-items"
+        class="grid w-full grid-cols-1 gap-5 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4"
+    >
+
+        {% include "organizations/task/_task_items.html" %}
+
+    </div>
+
+{% else %}
+
+    <div id="task-table">
+
+        {% include "organizations/task/_task_table.html" %}
+
+    </div>
+
+{% endif %}
+
+
+{% if request.session.task_view != 'table' %}
+
+    <div id="load-more-container">
+
+        {% include "organizations/task/_load_more.html" %}
+
+    </div>
+
+{% endif %}

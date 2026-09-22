@@ -1,0 +1,152 @@
+<div class="overflow-x-auto rounded-lg border bg-white shadow-sm">
+
+    <table class="min-w-full text-sm">
+
+        <thead class="border-b bg-slate-50">
+
+            <tr>
+
+                <th class="px-4 py-3 text-left">
+                    Οργανισμός
+                </th>
+
+                <th class="px-4 py-3 text-left">
+                    Ημερομηνία
+                </th>
+
+                <th class="px-4 py-3 text-left">
+                    Ticket
+                </th>
+
+                <th class="px-4 py-3 text-left">
+                    Εφαρμογή
+                </th>
+
+                <th class="px-4 py-3 text-left">
+                    Εργασία
+                </th>
+
+                <th class="px-4 py-3 text-left">
+                    Διάρκεια
+                </th>
+
+                <th class="px-4 py-3 text-left">
+                    ACS
+                </th>
+
+                <th class="px-4 py-3 text-left">
+                    Περιγραφή
+                </th>
+
+                <th class="px-4 py-3 text-left">
+                    Ενέργειες
+                </th>
+
+            </tr>
+
+        </thead>
+
+
+        <tbody class="divide-y">
+
+            {% for task in tasks %}
+
+                <tr class="hover:bg-slate-50">
+
+                    <td class="px-4 py-3 font-medium">
+                        {{ task.organization }}
+                    </td>
+
+
+                    <td class="px-4 py-3">
+                        {{ task.importdate|date:"d/m/Y" }}
+                    </td>
+
+
+                    <td class="px-4 py-3 text-indigo-600">
+
+                        {% if task.ticketid %}
+                            #{{ task.ticketid }}
+                        {% else %}
+                            -
+                        {% endif %}
+
+                    </td>
+
+
+                    <td class="px-4 py-3">
+                        {{ task.org_app|default:"-" }}
+                    </td>
+
+
+                    <td class="px-4 py-3">
+                        {{ task.job_type_acs|default:"-" }}
+                    </td>
+
+
+                    <td class="px-4 py-3 font-bold text-indigo-600">
+                        {{ task.task_time }}
+                    </td>
+
+
+                    <td class="px-4 py-3">
+                        {{ task.acs_employee }}
+                    </td>
+
+
+                    <td class="max-w-xs truncate px-4 py-3">
+                        {{ task.task_info }}
+                    </td>
+
+
+                    <td class="px-4 py-3">
+
+                        <a
+                            href="{% url 'organizations:task_update' task.pk %}"
+                            class="text-slate-400 hover:text-teal-600"
+                            title="Edit task"
+                        >
+
+                            <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                fill="none"
+                                viewBox="0 0 24 24"
+                                stroke-width="1.8"
+                                stroke="currentColor"
+                                class="h-5 w-5"
+                            >
+
+                                <path
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                    d="M16.862 4.487a2.25 2.25 0 0 1 3.182 3.182L7.5 20.213 3 21l.787-4.5 13.075-12.013Z"
+                                />
+
+                            </svg>
+
+                        </a>
+
+                    </td>
+
+                </tr>
+
+            {% empty %}
+
+                <tr>
+
+                    <td
+                        colspan="9"
+                        class="px-4 py-10 text-center text-slate-500"
+                    >
+                        Δεν βρέθηκαν εργασίες με τα συγκεκριμένα φίλτρα.
+                    </td>
+
+                </tr>
+
+            {% endfor %}
+
+        </tbody>
+
+    </table>
+
+</div>

@@ -12,8 +12,9 @@ from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse_lazy
 from django.views.generic import CreateView, UpdateView
 
+from apps.organizations.filters import ErgasiaFilter
 from apps.organizations.models import Employee, Organization, Task
-from apps.parameters.models import JobType, OrgDepartment, OtsSoftware
+from apps.parameters.models import OrgDepartment
 
 from .forms import EmployeeForm, OrganizationForm, TaskForm
 
@@ -239,6 +240,7 @@ def restore_employee(request, pk):
 
 
 # Task List
+@login_required
 def task_list(request):
     if request.method == "POST":
         mode = request.POST.get("view_mode")
@@ -246,85 +248,35 @@ def task_list(request):
         if mode in ["cards", "table"]:
             request.session["task_view"] = mode
 
-    # Filters
-    search = request.GET.get("q", "")
-    organization_id = request.GET.get("organization", "")
-    org_app_id = request.GET.get("org_app", "")
-    job_type_id = request.GET.get("job_type_acs", "")
-    acs_employee_id = request.GET.get("acs_employee", "")
-    org_employee_id = request.GET.get("org_employee", "")
-    ticket_id = request.GET.get("ticket_id", "")
-    importdate = request.GET.get("importdate", "")
-    year = request.GET.get("year", "")
+    queryset = (
+        Task.objects .select_related( "organization", "org_app", "job_type_acs", "acs_employee", "org_employee",
+                                     )
+                                     .order_by("-importdate", "-pk") )
 
-    tasks = Task.objects.all()
-
-    if organization_id:
-        tasks = tasks.filter(organization_id=organization_id)
-
-    if org_app_id:
-        tasks = tasks.filter(org_app_id=org_app_id)
-
-    if job_type_id:
-        tasks = tasks.filter(job_type_acs_id=job_type_id)
-
-    if acs_employee_id:
-        tasks = tasks.filter(acs_employee_id=acs_employee_id)
-
-    if org_employee_id:
-        tasks = tasks.filter(org_employee_id=org_employee_id)
-
-    if ticket_id:
-        tasks = tasks.filter(ticket_id__icontains=ticket_id)
-
-    if importdate:
-        tasks = tasks.filter(importdate=importdate)
-
-    if year:
-        tasks = tasks.filter(importdate__year=year)
-
-    # Search all text fields
-    if search:
-        tasks = tasks.filter(
-            Q(task_info__icontains=search)
-            | Q(task_note__icontains=search)
-            | Q(ticketid__icontains=search)
+    task_filter = ErgasiaFilter(
+        request.GET, queryset=queryset,
         )
-
-    tasks = tasks.order_by("-importdate")
+    tasks = task_filter.qs
 
     paginator = Paginator(tasks, 12)
-
-    page_obj = paginator.get_page(request.GET.get("page", 1))
-
+    page_number = request.GET.get("page", 1)
+    page_obj = paginator.get_page(page_number)
     query_params = request.GET.copy()
     query_params.pop("page", None)
+    query_string = query_params.urlencode()
 
-    context = {
-        "tasks": page_obj,
-        'page_obj': page_obj,
-        "search": search,
-        "query_string": query_params.urlencode(),
-        "organization_id": organization_id,
-        "org_app_id": org_app_id,
-        "job_type_id": job_type_id,
-        "acs_employee_id": acs_employee_id,
-        "org_employee_id": org_employee_id,
-        "ticket_id": ticket_id,
-        "importdate": importdate,
-        "year": year,
-        "organizations": Organization.objects.all(),
-        "org_apps": OtsSoftware.objects.all(),
-        "job_types": JobType.objects.all(),
-        "acs_employees": get_user_model().objects.filter(groups__name="employee"),
-        "org_employees": Employee.objects.filter(is_active=True),
-        "is_htmx": request.headers.get("HX-Request"),
-    }
-
+    context = { "filter": task_filter,
+               "tasks": page_obj,
+               "page_obj": page_obj,
+               "query_string": query_string,
+               "is_htmx": request.headers.get("HX-Request"),
+               }
     if request.headers.get("HX-Request"):
-        return render(request, "organizations/task/_cards.html", context)
+        if request.GET.get("page"):
+            return render( request, "organizations/task/_task_items.html", context, )
 
-    return render(request, "organizations/task/list.html", context)
+        return render( request, "organizations/task/_task_results.html", context, )
+    return render( request, "organizations/task/list.html", context, )
 
 
 class TaskCreateView(LoginRequiredMixin, SuccessMessageMixin, CreateView):

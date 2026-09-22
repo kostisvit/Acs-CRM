@@ -8,19 +8,32 @@ from .models import Task
 
 
 def export_ergasies(request):
-    ergasies_queryset = Task.objects.all()
+    queryset = (
+        Task.objects
+        .select_related(
+            "organization",
+            "org_app",
+            "job_type_acs",
+            "acs_employee",
+            "org_employee",
+        )
+        .order_by("-importdate", "-pk")
+    )
 
-    # Apply filters from GET
-    filter_obj = ErgasiaFilter(
+    task_filter = ErgasiaFilter(
         request.GET,
-        queryset=ergasies_queryset
-    ).qs
+        queryset=queryset,
+    )
+
+    tasks = task_filter.qs
 
     response = HttpResponse(
         content_type="application/vnd.ms-excel"
     )
 
-    filename = f"ergasies_organismou_{datetime.date.today()}.xls"
+    filename = (
+        f"ergasies_organismou_{datetime.date.today()}.xls"
+    )
 
     response["Content-Disposition"] = (
         f'attachment; filename="{filename}"'
@@ -59,29 +72,49 @@ def export_ergasies(request):
 
     row_num = 1
 
-    for task in filter_obj:
+    for task in tasks:
         row_num += 1
 
         row = [
-            task.organization.org_name if task.organization else "",
-            task.importdate.strftime("%d/%m/%Y")
-                if task.importdate else "",
-            task.org_app.name if task.org_app else "",
-            task.job_type_acs.name if task.job_type_acs else "",
             (
-                task.org_employee.lastname + " "
-                + task.org_employee.firstname
-                if task.org_employee else ""
+                task.organization.org_name
+                if task.organization
+                else ""
+            ),
+            (
+                task.importdate.strftime("%d/%m/%Y")
+                if task.importdate
+                else ""
+            ),
+            (
+                task.org_app.name
+                if task.org_app
+                else ""
+            ),
+            (
+                task.job_type_acs.name
+                if task.job_type_acs
+                else ""
+            ),
+            (
+                f"{task.org_employee.lastname} "
+                f"{task.org_employee.firstname}"
+                if task.org_employee
+                else ""
             ),
             task.task_info or "",
             (
-                task.acs_employee.last_name + " "
-                + task.acs_employee.first_name
-                if task.acs_employee else ""
+                f"{task.acs_employee.last_name} "
+                f"{task.acs_employee.first_name}"
+                if task.acs_employee
+                else ""
             ),
             task.task_time or "",
-            task.created.strftime("%d/%m/%Y %H:%M:%S")
-                if task.created else "",
+            (
+                task.created.strftime("%d/%m/%Y %H:%M:%S")
+                if task.created
+                else ""
+            ),
         ]
 
         for col, value in enumerate(row):
@@ -90,3 +123,4 @@ def export_ergasies(request):
     wb.save(response)
 
     return response
+
