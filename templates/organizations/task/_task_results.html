@@ -22,7 +22,7 @@
 
 {% if request.session.task_view != 'table' %}
 
-    <div id="load-more-container">
+    <div id="load-more-container" hx-swap-oob="outerHTML">
 
         {% include "organizations/task/_load_more.html" %}
 

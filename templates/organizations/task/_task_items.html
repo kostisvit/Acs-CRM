@@ -160,9 +160,9 @@
 <!-- IMPORTANT:
      This replaces the old Load More button after every HTMX request.
 -->
-<div
+{% comment %} <div
     id="load-more-container"
     hx-swap-oob="outerHTML"
 >
     {% include "organizations/task/_load_more.html" %}
-</div>
+</div> {% endcomment %}
