@@ -42,12 +42,53 @@ def export_ergasies(request):
     wb = xlwt.Workbook(encoding="utf-8")
     ws = wb.add_sheet("Ergasies")
 
+    # -----------------------------
+    # Styles
+    # -----------------------------
+
+    # Title
     title_style = xlwt.easyxf(
-        "font: bold on, height 240; "
+        "font: bold on, color white, height 240; "
+        "pattern: pattern solid, fore_colour dark_blue; "
         "align: horiz center, vert center"
     )
 
-    ws.write(0, 0, "Πελάτης", title_style)
+    # Header
+    header_style = xlwt.easyxf(
+        "font: bold on, color white; "
+        "pattern: pattern solid, fore_colour blue; "
+        "align: horiz center, vert center; "
+        "borders: "
+        "left thin, right thin, top thin, bottom thin"
+    )
+
+    # Normal cells
+    cell_style = xlwt.easyxf(
+        "align: vert center; "
+        "borders: "
+        "left thin, right thin, top thin, bottom thin"
+    )
+
+    # Alternate row
+    alternate_style = xlwt.easyxf(
+        "pattern: pattern solid, fore_colour ice_blue; "
+        "align: vert center; "
+        "borders: "
+        "left thin, right thin, top thin, bottom thin"
+    )
+
+    organization_name = ""
+
+    first_task = tasks.first()
+    if first_task and first_task.organization:
+        organization_name = first_task.organization.org_name
+
+    ws.write(
+        0,
+        0,
+        f"Οργανισμός: {organization_name}",
+        title_style
+    )
     ws.merge(0, 0, 0, 8)
 
     columns = [
@@ -67,8 +108,6 @@ def export_ergasies(request):
 
     for col, name in enumerate(columns):
         ws.write(1, col, name, header_style)
-
-    row_style = xlwt.XFStyle()
 
     row_num = 1
 
@@ -116,9 +155,14 @@ def export_ergasies(request):
                 else ""
             ),
         ]
-
+    # Alternate row colors
+        current_style = (
+            alternate_style
+            if row_num % 2 == 0
+            else cell_style
+        )
         for col, value in enumerate(row):
-            ws.write(row_num, col, value, row_style)
+            ws.write(row_num, col, value, current_style)
 
     wb.save(response)
 

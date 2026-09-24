@@ -102,51 +102,57 @@ class MyLeaveListView(LoginRequiredMixin, ListView):
 
         return sum(leave.working_days() for leave in leaves)
 
-    def get_context_data(self, **kwargs):
 
+    def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
 
         employee = self.request.user
 
         # Leave types summary
-
         context["adeia_total"] = self.get_leave_total(employee, "Κανονική")
-
         context["adeia_anarotiki_total"] = self.get_leave_total(employee, "Αναρρωτική")
-
         context["adeia_eortastiki_total"] = self.get_leave_total(employee, "Εορταστική")
-
         context["adeia_kioforias_total"] = self.get_leave_total(employee, "Κυοφορίας")
-
         context["adeia_mitrothtas_total"] = self.get_leave_total(employee, "Μητρότητας")
-
         context["adeia_patrothtas_total"] = self.get_leave_total(employee, "Πατρότητας")
-
         context["adeia_gamou_total"] = self.get_leave_total(employee, "Γάμου")
-
         context["adeia_goniki_total"] = self.get_leave_total(employee, "Γονική")
-
-        context["adeia_anef_apodoxon_total"] = self.get_leave_total(employee, "Άνευ Αποδοχών")
-
-        # Annual leave balance
-
-        allowed_days = employee.allowed_leave_days
-
-        used_days = self.get_leave_total(employee, "Κανονική")
-
-        context["days_sum"] = allowed_days
-
-        context["days_used"] = used_days
-
-        context["days_left"] = max(allowed_days - used_days, 0)
-
-        # percentage for progress bar
-
-        context["leave_percentage"] = (
-            round((used_days / allowed_days) * 100, 2) if allowed_days else 0
+        context["adeia_anef_apodoxon_total"] = self.get_leave_total(
+            employee, "Άνευ Αποδοχών"
         )
 
+        # Annual leave balance
+        allowed_days = employee.allowed_leave_days or 0
+        used_days = self.get_leave_total(employee, "Κανονική") or 0
+
+        context["days_sum"] = allowed_days
+        context["days_used"] = used_days
+
+        # Remaining days
+        context["days_left"] = max(allowed_days - used_days, 0)
+
+        # Check if annual leave limit is exceeded
+        context["leave_exceeded"] = used_days > allowed_days
+
+        # Number of exceeded days
+        context["leave_exceeded_days"] = max(
+            used_days - allowed_days,
+            0
+        )
+
+        # Progress bar percentage
+        if allowed_days > 0:
+            context["leave_percentage"] = round(
+                (used_days / allowed_days) * 100,
+                2
+            )
+        else:
+            context["leave_percentage"] = 0
+
         return context
+
+
+
 
 
 @login_required
