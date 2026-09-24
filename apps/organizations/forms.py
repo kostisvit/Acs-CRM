@@ -2,8 +2,7 @@
 from django import forms
 from django.contrib.auth import get_user_model
 
-from .models import Organization, Employee, Task
-
+from .models import Employee, Organization, Task
 
 User = get_user_model()
 
@@ -140,17 +139,25 @@ class TaskForm(forms.ModelForm):
         }
 
     def __init__(self, *args, **kwargs):
+        user = kwargs.pop("user", None)
         super().__init__(*args, **kwargs)
+
         self.fields["importdate"].initial = None
+
         self.fields["acs_employee"].queryset = User.objects.filter(
-            is_active=True, groups__name="employee")
+            is_active=True,
+            groups__name="employee",
+        )
+
+        if user:
+            self.fields["acs_employee"].initial = user
+
         self.fields["org_employee"].queryset = Employee.objects.none()
 
         if self.data.get("organization"):
             self.fields["org_employee"].queryset = Employee.objects.filter(
                 organization_id=self.data.get("organization")
             )
-
         elif self.instance.pk:
             try:
                 self.fields["org_employee"].queryset = Employee.objects.filter(

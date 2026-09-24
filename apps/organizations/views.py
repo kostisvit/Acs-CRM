@@ -315,6 +315,11 @@ class TaskCreateView(LoginRequiredMixin, SuccessMessageMixin, CreateView):
     success_url = reverse_lazy("organizations:task_list")
     success_message = "Η εργασία δημιουργήθηκε με επιτυχία."
 
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs["user"] = self.request.user
+        return kwargs
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["title"] = "Δημιουργία Εργασίας"
