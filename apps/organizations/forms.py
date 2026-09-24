@@ -144,6 +144,10 @@ class TaskForm(forms.ModelForm):
 
         self.fields["importdate"].initial = None
 
+        self.fields["organization"].queryset = Organization.objects.filter(
+        is_active=True
+    )
+
         self.fields["acs_employee"].queryset = User.objects.filter(
             is_active=True,
             groups__name="employee",

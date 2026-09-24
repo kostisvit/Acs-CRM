@@ -29,7 +29,9 @@
             />
             <!-- Export -->
 
-            <a href="#" class="rounded-lg border border-teal-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-teal-50">Export</a>
+            <a href="#"                 class="inline-flex items-center justify-center rounded-lg
+                       border border-green-500 bg-white px-4 py-2
+                       text-sm font-medium text-gray-700 hover:bg-green-300">Export</a>
 
         </form>
 
@@ -104,75 +106,80 @@
           hx-target="#employee-list"
           hx-swap="innerHTML"
           hx-push-url="true"
-          class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-
+          >
+        <div class="mb-6">
           <input
               type="text"
               name="q"
               value="{{ search }}"
               placeholder="Αναζήτηση επαφής..."
-              class="w-full rounded-lg border px-4 py-3 focus:outline-none focus:border-teal-400 focus:ring-2 focus:ring-teal-300">
+            class="w-full rounded-xl border border-gray-300
+                            px-5 py-4 text-lg shadow-sm
+                            focus:border-teal-500 focus:outline-none
+                            focus:ring-2 focus:ring-teal-500/20">
+        </div>
+            <div class="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4">
 
-              <select name="organization"
-                    class="rounded-lg border px-4 py-3">
+                <select name="organization"
+                                class="rounded-lg border px-4 py-3">
 
-                <option value="">Όλοι οι οργανισμοί</option>
+                            <option value="">Όλοι οι οργανισμοί</option>
 
-                {% for org in organizations %}
-                    <option value="{{ org.pk }}"
-                        {% if organization_id == org.pk|stringformat:"s" %}
-                            selected
-                        {% endif %}>
-                        {{ org }}
-                    </option>
-                {% endfor %}
+                            {% for org in organizations %}
+                                <option value="{{ org.pk }}"
+                                    {% if organization_id == org.pk|stringformat:"s" %}
+                                        selected
+                                    {% endif %}>
+                                    {{ org }}
+                                </option>
+                            {% endfor %}
 
-            </select>
+                </select>
 
-            <select name="org_department"
-                    hx-get="{% url 'organizations:employee_list' %}"
-                    hx-trigger="change"
-                    hx-target="#employee-list"
-                    hx-include="this"
-                    class="rounded-lg border px-4 py-3">
+                        <select name="org_department"
+                                hx-get="{% url 'organizations:employee_list' %}"
+                                hx-trigger="change"
+                                hx-target="#employee-list"
+                                hx-include="this"
+                                class="rounded-lg border px-4 py-3">
 
-                <option value="">Όλα τα τμήματα</option>
+                            <option value="">Όλα τα τμήματα</option>
 
-                {% for dept in departments %}
-                    <option value="{{ dept.pk }}"
-                        {% if department_id == dept.pk|stringformat:"s" %}
-                            selected
-                        {% endif %}>
-                        {{ dept }}
-                    </option>
-                {% endfor %}
+                            {% for dept in departments %}
+                                <option value="{{ dept.pk }}"
+                                    {% if department_id == dept.pk|stringformat:"s" %}
+                                        selected
+                                    {% endif %}>
+                                    {{ dept }}
+                                </option>
+                            {% endfor %}
 
-            </select>
+                        </select>
 
-          <select name="is_active"
-              class="w-full rounded-lg border px-4 py-3">
+                    <select name="is_active"
+                        class="w-full rounded-lg border px-4 py-3">
 
-              <option value="">
-                  All
-              </option>
+                        <option value="">
+                            Όλοι οι οργανισμοί
+                        </option>
 
-              <option value="true"
-                  {% if is_active == "true" %}selected{% endif %}>
-                  Active
-              </option>
+                        <option value="true"
+                            {% if is_active == "true" %}selected{% endif %}>
+                            Ενεργός
+                        </option>
 
-              <option value="false"
-                  {% if is_active == "false" %}selected{% endif %}>
-                  Inactive
-              </option>
+                        <option value="false"
+                            {% if is_active == "false" %}selected{% endif %}>
+                            Ανενεργός
+                        </option>
 
-          </select>
+                    </select>
 
 
-          <button type="submit" class="w-full rounded-lg bg-teal-600 py-3 text-white hover:bg-teal-700">
-              Αναζήτηση
-          </button>
-
+                    <button type="submit" class="w-full rounded-lg bg-teal-600 py-3 text-white hover:bg-teal-700">
+                        Αναζήτηση
+                    </button>
+            </div>
       </form>
 
 

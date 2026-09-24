@@ -155,7 +155,7 @@ def employee_list(request):
         "department_id": department_id,
         "is_active": is_active,
         # Filter dropdowns
-        "organizations": Organization.objects.all(),
+        "organizations": Organization.objects.filter(is_active=True),
         "departments": OrgDepartment.objects.all(),
         "is_htmx": request.headers.get("HX-Request"),
     }
