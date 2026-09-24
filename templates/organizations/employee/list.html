@@ -4,42 +4,173 @@
 
 {% block content %}
 <!-- Toolbar -->
-  <div class="rounded-xl border border-gray-200 bg-white p-4 shadow-sm">
-    <div class="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-      <div>
-        <h2 class="text-lg font-semibold text-gray-900">Επαφές</h2>
-        <p class="text-sm text-gray-500">Λίστα επαφών Οργανισμών</p>
-      </div>
+<div class="rounded-2xl border border-slate-200 bg-white shadow-sm">
 
-      <div class="flex flex-wrap items-center justify-end gap-3">
-          <!-- Search -->
-        <form
-            hx-get="{% url 'organizations:employee_list' %}"
-            hx-target="#employee-list"
-            hx-swap="innerHTML"
-            hx-push-url="true"
-            hx-trigger="keyup changed delay:500ms">
+    <div class="flex flex-col gap-5 p-5 lg:flex-row lg:items-center lg:justify-between">
 
-            <input
-                type="text"
-                name="q"
-                value="{{ search }}"
-                placeholder="Αναζήτηση..."
-                class="w-64 rounded-lg border border-gray-300 px-4 py-2 focus:outline-none focus:border-teal-400 focus:ring-2 focus:ring-teal-300 mr-3"
-            />
+        <!-- Header -->
+        <div class="min-w-0">
+            <div class="flex items-center gap-3">
+                <div
+                    class="flex h-10 w-10 shrink-0 items-center justify-center
+                           rounded-xl bg-teal-50 text-teal-600"
+                >
+                    <svg
+                        class="h-5 w-5"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                        aria-hidden="true"
+                    >
+                        <path
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            stroke-width="1.8"
+                            d="M17 20a4 4 0 00-8 0
+                               M13 11a4 4 0 100-8 4 4 0 000 8z
+                               M21 20a4 4 0 00-3-3.87
+                               M19 3.13a4 4 0 010 7.75"
+                        />
+                    </svg>
+                </div>
+
+                <div>
+                    <h2 class="text-lg font-semibold tracking-tight text-slate-900">
+                        Επαφές
+                    </h2>
+
+                    <p class="mt-0.5 text-sm text-slate-500">
+                        Λίστα επαφών Οργανισμών
+                    </p>
+                </div>
+            </div>
+        </div>
+
+
+        <!-- Actions -->
+        <div class="flex flex-col gap-2.5 sm:flex-row sm:items-center">
+
+            <!-- Search -->
+            <form
+                hx-get="{% url 'organizations:employee_list' %}"
+                hx-target="#employee-list"
+                hx-swap="innerHTML"
+                hx-push-url="true"
+                hx-trigger="keyup changed delay:500ms"
+                class="relative"
+            >
+                <svg
+                    class="pointer-events-none absolute left-3.5 top-1/2
+                           h-4 w-4 -translate-y-1/2 text-slate-400"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                    aria-hidden="true"
+                >
+                    <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="m21 21-4.35-4.35
+                           M19 11a8 8 0 11-16 0 8 8 0 0116 0z"
+                    />
+                </svg>
+
+                <input
+                    type="text"
+                    name="q"
+                    value="{{ search }}"
+                    placeholder="Αναζήτηση επαφών..."
+                    autocomplete="off"
+                    class="h-10 w-full rounded-xl border border-slate-200
+                           bg-slate-50 pl-10 pr-4 text-sm text-slate-700
+                           placeholder:text-slate-400
+                           transition-all duration-200
+                           hover:border-slate-300
+                           focus:border-teal-500
+                           focus:bg-white
+                           focus:outline-none
+                           focus:ring-2 focus:ring-teal-500/10
+                           sm:w-64"
+                />
+            </form>
+
+
+            <!-- Divider -->
+            <div class="hidden h-7 w-px bg-slate-200 sm:block"></div>
+
+
             <!-- Export -->
+            <a
+                href="#"
+                class="inline-flex h-10 items-center justify-center gap-2
+                       rounded-xl border border-slate-200
+                       bg-white px-4
+                       text-sm font-semibold text-slate-600
+                       shadow-sm transition-all duration-200
+                       hover:border-slate-300
+                       hover:bg-slate-50
+                       hover:text-slate-900
+                       hover:shadow-md
+                       focus:outline-none
+                       focus:ring-2 focus:ring-slate-300/40
+                       active:scale-[0.98]"
+            >
+                <svg
+                    class="h-4 w-4 text-slate-400"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                    aria-hidden="true"
+                >
+                    <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="1.8"
+                        d="M12 3v12m0 0l-4-4m4 4l4-4
+                           M5 21h14"
+                    />
+                </svg>
 
-            <a href="#"                 class="inline-flex items-center justify-center rounded-lg
-                       border border-green-500 bg-white px-4 py-2
-                       text-sm font-medium text-gray-700 hover:bg-green-300">Export</a>
+                <span>Export</span>
+            </a>
 
-        </form>
 
-        <!-- New -->
-        <a href="{% url 'organizations:employee_create' %}" class="rounded-lg bg-teal-300 px-5 py-2 text-sm font-semibold text-gray-900 hover:bg-teal-400">+ Νέα εγγραφή</a>
-      </div>
+            <!-- New Contact -->
+            <a
+                href="{% url 'organizations:employee_create' %}"
+                class="group inline-flex h-10 items-center justify-center
+                       gap-2 rounded-xl
+                       bg-teal-600 px-4
+                       text-sm font-semibold text-white
+                       shadow-sm transition-all duration-200
+                       hover:bg-teal-700 hover:shadow-md
+                       focus:outline-none
+                       focus:ring-2 focus:ring-teal-500/30
+                       active:scale-[0.98]"
+            >
+                <svg
+                    class="h-4 w-4 transition-transform duration-200
+                           group-hover:rotate-90"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                    aria-hidden="true"
+                >
+                    <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M12 5v14M5 12h14"
+                    />
+                </svg>
+
+                <span>Νέα εγγραφή</span>
+            </a>
+
+        </div>
     </div>
-  </div>
+</div>
 
   <!-- Space between toolbar and table -->
   <div class="mt-6"></div>
@@ -53,13 +184,33 @@
       <div class="mb-6 flex items-center justify-between">
 
 
-          <button
-              @click="openFilter=true"
-              class="rounded-xl bg-teal-600 px-6 py-3 text-white hover:bg-teal-700 text-sm font-semibold">
+        <button
+                type="button"
+                @click="openFilter = true"
+                class="inline-flex items-center gap-2 rounded-xl
+                    border border-teal-600 bg-teal-600 px-5 py-2.5
+                    text-sm font-semibold text-white shadow-sm
+                    transition-all duration-200
+                    hover:border-teal-700 hover:bg-teal-700
+                    hover:shadow-md
+                    focus:outline-none focus:ring-2 focus:ring-teal-500/30"
+            >
+                <svg
+                    class="h-4 w-4"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                >
+                    <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M3 4h18M6 10h12M10 16h4M11 21h2"
+                    />
+                </svg>
 
-              Φίλτρα
-
-          </button>
+                <span>Φίλτρα</span>
+            </button>
 
       </div>
 
