@@ -1,6 +1,9 @@
 # forms.py
+from pathlib import Path
+
 from django import forms
 from django.contrib.auth import get_user_model
+from django.core.exceptions import ValidationError
 
 from .models import Employee, Organization, Task
 
@@ -20,7 +23,45 @@ TEXTAREA_CLASS = (
 
 
 class CSVUploadForm(forms.Form):
-    csv_file = forms.FileField()
+    MAX_FILE_SIZE = 10 * 1024 * 1024 # 10 MB
+    ALLOWED_EXTENSIONS = {".xlsx", ".xls"}
+    csv_file = forms.FileField(
+        label="Excel file",
+        required=True,
+        allow_empty_file=False,
+        widget=forms.ClearableFileInput(
+            attrs={ "accept": ".xlsx,.xls", "class": "sr-only",
+                   }
+            ),
+            help_text="Upload an Excel file (.xlsx or .xls), maximum 10 MB.",
+            )
+    def clean_csv_file(self):
+        uploaded_file = self.cleaned_data["csv_file"]
+
+        # 1. Check file size
+        if uploaded_file.size > self.MAX_FILE_SIZE:
+            raise ValidationError(
+                "The file is too large. Maximum allowed size is 10 MB."
+                )
+        # 2. Check file extension
+        extension = Path(uploaded_file.name).suffix.lower()
+
+        if extension not in self.ALLOWED_EXTENSIONS:
+            raise ValidationError(
+                "Invalid file type. Please upload an .xlsx or .xls file."
+                )
+        # 3. Basic filename validation
+        filename = Path(uploaded_file.name).name
+
+        if not filename or filename in {".", ".."}:
+
+            raise ValidationError("Invalid filename.")
+        # 4. Reject suspiciously long filenames
+        #
+        if len(filename) > 255:
+            raise ValidationError("The filename is too long.")
+
+        return uploaded_file
 
 
 class OrganizationForm(forms.ModelForm):

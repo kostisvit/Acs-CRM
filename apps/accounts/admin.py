@@ -82,3 +82,4 @@ class CustomUserAdmin(UserAdmin):
         list_display = ["acs_employee", "acs_adeiatype", "startdate", "enddate", "source_id"]
         search_fields = ["acs_employee"]
         list_filter = ["acs_employee", "created"]
+        date_hierarchy = "created"
