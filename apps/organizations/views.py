@@ -248,34 +248,64 @@ def task_list(request):
             request.session["task_view"] = mode
 
     queryset = (
-        Task.objects .select_related( "organization", "org_app", "job_type_acs", "acs_employee", "org_employee",
-                                     )
-                                     .order_by("-importdate", "-pk") )
+        Task.objects
+        .select_related(
+            "organization",
+            "org_app",
+            "job_type_acs",
+            "acs_employee",
+            "org_employee",
+        )
+        .order_by("-importdate", "-pk")
+    )
 
     task_filter = ErgasiaFilter(
-        request.GET, queryset=queryset,
-        )
+        request.GET,
+        queryset=queryset,
+    )
+
     tasks = task_filter.qs
 
     paginator = Paginator(tasks, 12)
+
     page_number = request.GET.get("page", 1)
     page_obj = paginator.get_page(page_number)
+
     query_params = request.GET.copy()
     query_params.pop("page", None)
+
     query_string = query_params.urlencode()
 
-    context = { "filter": task_filter,
-               "tasks": page_obj,
-               "page_obj": page_obj,
-               "query_string": query_string,
-               "is_htmx": request.headers.get("HX-Request"),
-               }
-    if request.headers.get("HX-Request"):
-        if request.GET.get("page"):
-            return render( request, "organizations/task/_task_items.html", context, )
+    context = {
+        "filter": task_filter,
+        "tasks": page_obj,
+        "page_obj": page_obj,
+        "query_string": query_string,
+        "is_htmx": request.headers.get("HX-Request"),
+    }
 
-        return render( request, "organizations/task/_task_results.html", context, )
-    return render( request, "organizations/task/list.html", context, )
+    if request.headers.get("HX-Request"):
+
+        # "Περισσότερα"
+        if request.GET.get("page"):
+            return render(
+                request,
+                "organizations/task/_task_load_more_response.html",
+                context,
+            )
+
+        # Filter / search
+        return render(
+            request,
+            "organizations/task/_task_results.html",
+            context,
+        )
+
+    return render(
+        request,
+        "organizations/task/list.html",
+        context,
+    )
 
 
 class TaskCreateView(LoginRequiredMixin, SuccessMessageMixin, CreateView):
