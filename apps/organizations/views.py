@@ -1,4 +1,5 @@
 import os
+from decimal import Decimal
 
 from django.contrib import messages
 from django.contrib.auth import get_user_model
@@ -6,7 +7,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.messages.views import SuccessMessageMixin
 from django.core.paginator import Paginator
-from django.db.models import Q
+from django.db.models import Q, Sum
 from django.http import FileResponse, JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse_lazy
@@ -264,7 +265,27 @@ def task_list(request):
         queryset=queryset,
     )
 
+    # All records / filtered records
     tasks = task_filter.qs
+
+    # Check whether at least one actual filter was selected
+    has_filters = any(
+        value.strip()
+        for key, value in request.GET.items()
+        if key != "page" and value.strip()
+    )
+
+    if has_filters:
+        task_count_by_organization = tasks.count()
+
+        task_time_by_organization = (
+            tasks.aggregate(
+                total=Sum("task_time")
+            )["total"] or Decimal("0")
+        )
+    else:
+        task_count_by_organization = 0
+        task_time_by_organization = Decimal("0")
 
     paginator = Paginator(tasks, 12)
 
@@ -275,12 +296,13 @@ def task_list(request):
     query_params.pop("page", None)
 
     query_string = query_params.urlencode()
-
     context = {
         "filter": task_filter,
         "tasks": page_obj,
         "page_obj": page_obj,
         "query_string": query_string,
+        "task_count_by_organization": task_count_by_organization,
+         "task_time_by_organization": task_time_by_organization,
         "is_htmx": request.headers.get("HX-Request"),
     }
 

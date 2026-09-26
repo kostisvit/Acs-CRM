@@ -1,5 +1,32 @@
 {% if request.session.task_view != 'table' %}
+<!-- Small centered summary -->
+<div class="mb-5 flex justify-center">
+    <div
+        id="task-summary"
+        class="flex h-10 items-center gap-6 rounded-full border border-slate-200 bg-white px-5 shadow-sm"
+    >
+        <div class="flex items-center gap-2">
+            <span class="h-2 w-2 rounded-full bg-teal-500"></span>
+            <span class="text-sm font-semibold text-slate-700">
+                Εργασίες
+            </span>
+            <span class="text-xs text-slate-400">
+                ({{ task_count_by_organization }})
+            </span>
+        </div>
 
+        <div class="h-4 w-px bg-slate-200"></div>
+
+        <div class="flex items-center gap-2">
+            <span class="text-xs text-slate-400">
+                Συνολικός χρόνος
+            </span>
+            <span class="text-sm font-bold text-teal-600">
+                {{ task_time_by_organization|floatformat:2 }}
+            </span>
+        </div>
+    </div>
+</div>
     <div
         id="task-items"
         class="grid w-full grid-cols-1 gap-5 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4"
