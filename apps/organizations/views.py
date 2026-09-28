@@ -202,18 +202,30 @@ class EmployeeUpdateView(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
 
 def soft_delete_organization(request, pk):
     obj = get_object_or_404(Organization, pk=pk)
-    obj.is_active = not obj.is_active
+
+    obj.is_active = False
     obj.save(update_fields=["is_active"])
+
+    obj.employees.update(is_active=False)
+
     messages.success(
-        request, f'Ο Οργανισμός "{obj.org_name}" απενεργοποιήθηκε.')
+        request,
+        f'Ο Οργανισμός "{obj.org_name}" και οι εργαζόμενοι του απενεργοποιήθηκαν.'
+    )
+
     return redirect("organizations:organization_list")
 
 
 def restore_organization(request, pk):
     obj = get_object_or_404(Organization, pk=pk)
+
     obj.is_active = True
     obj.save(update_fields=["is_active"])
-    messages.success(request, f'Ο Οργανισμός "{obj.org_name}" ενεργοποιήθηκε.')
+
+    messages.success(
+        request,
+        f'Ο Οργανισμός "{obj.org_name}" και οι εργαζόμοι ενεργοποιήθηκαν'
+    )
     return redirect("organizations:organization_list")
 
 

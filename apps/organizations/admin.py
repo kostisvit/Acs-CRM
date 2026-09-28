@@ -8,14 +8,15 @@ from .models import Employee, Organization, Task, Training
 @admin.register(Organization)
 class OrganizationAdmin(admin.ModelAdmin):
     list_display = ["org_name", "org_address",
-                    "org_city", "org_phone", "source_id"]
+                    "org_city", "org_phone", "source_id","created","modified"]
     search_fields = ["org_name", "org_address", "org_city"]
+    list_filter = ["is_active"]
 
 
 @admin.register(Employee)
 class EmployeeAdmin(admin.ModelAdmin):
     list_display = ["organization", "firstname", "lastname", "phone", "mobile",
-                    "email", "secondary_email", "is_active", "org_department", "source_id"]
+                    "email", "secondary_email", "is_active", "org_department", "source_id","created","modified"]
     search_fields = ["organization", "lastname"]
     list_filter = ["is_active", "org_department", "organization"]
 

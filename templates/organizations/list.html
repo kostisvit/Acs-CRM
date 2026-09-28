@@ -259,46 +259,46 @@
 
 
 
-<form
-    hx-get="{% url 'organizations:organization_list' %}"
-    hx-target="#organization-list"
-    hx-swap="innerHTML"
-    hx-push-url="true"
-    class="space-y-5">
+        <form
+            hx-get="{% url 'organizations:organization_list' %}"
+            hx-target="#organization-list"
+            hx-swap="innerHTML"
+            hx-push-url="true"
+            class="space-y-5">
 
-    <input
-        type="text"
-        name="q"
-        value="{{ search }}"
-        placeholder="Αναζήτηση οργανισμού..."
-        class="w-full rounded-lg border px-4 py-3 focus:outline-none focus:border-teal-400 focus:ring-2 focus:ring-teal-300">
-
-
-    <select name="is_active"
-        class="w-full rounded-lg border px-4 py-3 focus:outline-none focus:border-teal-400 focus:ring-2 focus:ring-teal-300">
-
-        <option value="">
-            Όλοι οι οργανισμοί
-        </option>
-
-        <option value="true"
-            {% if is_active == "true" %}selected{% endif %}>
-            Ενεργός
-        </option>
-
-        <option value="false"
-            {% if is_active == "false" %}selected{% endif %}>
-            Ανενεργός
-        </option>
-
-    </select>
+            <input
+                type="text"
+                name="q"
+                value="{{ search }}"
+                placeholder="Αναζήτηση οργανισμού..."
+                class="w-full rounded-lg border px-4 py-3 focus:outline-none focus:border-teal-400 focus:ring-2 focus:ring-teal-300">
 
 
-    <button type="submit" class="w-full rounded-lg bg-teal-600 py-3 text-white hover:bg-teal-700 text-sm font-semibold">
-        Αναζήτηση
-    </button>
+            <select name="is_active"
+                class="w-full rounded-lg border px-4 py-3 focus:outline-none focus:border-teal-400 focus:ring-2 focus:ring-teal-300">
 
-</form>
+                <option value="">
+                    Όλοι οι οργανισμοί
+                </option>
+
+                <option value="true"
+                    {% if is_active == "true" %}selected{% endif %}>
+                    Ενεργός
+                </option>
+
+                <option value="false"
+                    {% if is_active == "false" %}selected{% endif %}>
+                    Ανενεργός
+                </option>
+
+            </select>
+
+
+            <button type="submit" class="w-full rounded-lg bg-teal-600 py-3 text-white hover:bg-teal-700 text-sm font-semibold">
+                Αναζήτηση
+            </button>
+
+        </form>
 
 
         </div>
