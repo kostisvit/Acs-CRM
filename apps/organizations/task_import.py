@@ -8,6 +8,7 @@ import xlwt
 from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth import get_user_model
+from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse
 from django.shortcuts import redirect, render
 
@@ -21,7 +22,7 @@ User = get_user_model()
 
 
 
-
+@login_required
 def download_task_import_template(request):
     response = HttpResponse(
         content_type="application/vnd.ms-excel"
@@ -41,12 +42,6 @@ def download_task_import_template(request):
     # ============================================================
     # STYLES
     # ============================================================
-
-    title_style = xlwt.easyxf(
-        "font: bold on, color white, height 240; "
-        "pattern: pattern solid, fore_colour dark_blue; "
-        "align: horiz center, vert center"
-    )
 
     header_style = xlwt.easyxf(
         "font: bold on, color white; "
@@ -154,6 +149,7 @@ def download_task_import_template(request):
     return response
 
 
+@login_required
 def task_excel_import(request):
     form = CSVUploadForm()
 
