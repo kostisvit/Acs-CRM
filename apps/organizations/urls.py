@@ -2,7 +2,7 @@ from django.urls import path
 
 from . import views
 from .export import export_ergasies
-from .task_import import task_excel_import
+from .task_import import download_task_import_template, task_excel_import
 from .views import (
     EmployeeCreateView,
     EmployeeUpdateView,
@@ -46,6 +46,11 @@ urlpatterns = [
     path("import/tasks", task_excel_import, name="task_excel_import"),
     path("download_skipped_rows/", views.download_skipped_rows, name="download_skipped_rows",),
     path("export/tasks", export_ergasies, name="export_ergasies"),
+    path(
+    "tasks/import/template/",
+    download_task_import_template,
+    name="download_task_import_template",
+),
 
 
 ]

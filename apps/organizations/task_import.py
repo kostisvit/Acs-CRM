@@ -1,10 +1,14 @@
+import datetime
 import json
 import os
+from decimal import Decimal, InvalidOperation
 
 import pandas as pd
+import xlwt
 from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth import get_user_model
+from django.http import HttpResponse
 from django.shortcuts import redirect, render
 
 from apps.parameters.models import JobType, OtsSoftware
@@ -13,6 +17,142 @@ from .forms import CSVUploadForm
 from .models import Employee, Organization, Task
 
 User = get_user_model()
+
+
+
+
+
+def download_task_import_template(request):
+    response = HttpResponse(
+        content_type="application/vnd.ms-excel"
+    )
+
+    filename = (
+        f"task_import_template_{datetime.date.today()}.xls"
+    )
+
+    response["Content-Disposition"] = (
+        f'attachment; filename="{filename}"'
+    )
+
+    wb = xlwt.Workbook(encoding="utf-8")
+    ws = wb.add_sheet("Tasks")
+
+    # ============================================================
+    # STYLES
+    # ============================================================
+
+    title_style = xlwt.easyxf(
+        "font: bold on, color white, height 240; "
+        "pattern: pattern solid, fore_colour dark_blue; "
+        "align: horiz center, vert center"
+    )
+
+    header_style = xlwt.easyxf(
+        "font: bold on, color white; "
+        "pattern: pattern solid, fore_colour blue; "
+        "align: horiz center, vert center; "
+        "borders: "
+        "left thin, right thin, top thin, bottom thin"
+    )
+
+    cell_style = xlwt.easyxf(
+        "align: vert center; "
+        "borders: "
+        "left thin, right thin, top thin, bottom thin"
+    )
+
+    # ============================================================
+    # COLUMNS
+    # ============================================================
+
+    columns = [
+        "organization",
+        "org_app",
+        "job_type_acs",
+        "employee",
+        "org_employee",
+        "importdate",
+        "time",
+        "info",
+        "text",
+        "ticketid",
+    ]
+
+    for col, name in enumerate(columns):
+        ws.write(
+            0,
+            col,
+            name,
+            header_style,
+        )
+
+    # ============================================================
+    # EXAMPLE ROW
+    # ============================================================
+
+    example_row = [
+        "Δήμος Νεμέας",
+        "Μισθοδοσία",
+        "Remote",
+        "kostasvit@acsservices.gr",
+        "Αγραφιώτη Αθανασία",
+        "29/09/2026",
+        "1.50",
+        "Περιγραφή εργασίας",
+        "Σημειώσεις",
+        "12345",
+    ]
+
+    for col, value in enumerate(example_row):
+        ws.write(
+            1,
+            col,
+            value,
+            cell_style,
+        )
+
+    # ============================================================
+    # EMPTY ROWS
+    # ============================================================
+
+    for row in range(3, 103):
+        for col in range(len(columns)):
+            ws.write(
+                row,
+                col,
+                "",
+                cell_style,
+            )
+
+    # ============================================================
+    # COLUMN WIDTHS
+    # ============================================================
+
+    widths = [
+        7500,   # organization
+        6500,   # org_app
+        7000,   # job_type_acs
+        8000,   # employee
+        8000,   # org_employee
+        4500,   # importdate
+        4000,   # time
+        12000,  # info
+        12000,  # text
+        6000,   # ticketid
+    ]
+
+    for col, width in enumerate(widths):
+        ws.col(col).width = width
+
+    # Freeze title + header
+    ws.panes_frozen = True
+    ws.horz_split_pos = 2
+
+    wb.save(response)
+
+    return response
+
 
 def task_excel_import(request):
     form = CSVUploadForm()
@@ -98,7 +238,7 @@ def task_excel_import(request):
 
             messages.error(
                 request,
-                "❌ Δεν βρέθηκαν δεδομένα για εισαγωγή. "
+                "❌ Δεν βρέθηκαν δεδομένα για εισαγωγή. " # noqa: RUF001
                 "Κάντε πρώτα Preview του Excel."
             )
 
@@ -112,6 +252,17 @@ def task_excel_import(request):
                 import_errors = []
 
                 for row_number, row in enumerate(data, start=2):
+                # ==================================================
+                # SKIP EMPTY ROW
+                # ==================================================
+
+                    if not any(
+                        str(value).strip()
+                        for value in row.values()
+                        if value is not None
+                    ):
+                        continue
+
 
                     try:
 
@@ -136,7 +287,7 @@ def task_excel_import(request):
 
                             import_errors.append(
                                 f"Γραμμή {row_number}: "
-                                f"Ο οργανισμός '{organization_name}' "
+                                f"Ο οργανισμός '{organization_name}' " # noqa: RUF001
                                 f"δεν βρέθηκε."
                             )
 
@@ -202,7 +353,7 @@ def task_excel_import(request):
 
                             import_errors.append(
                                 f"❌ Γραμμή {row_number}: "
-                                f"Το πεδίο employee είναι κενό."
+                                f"Το πεδίο employee είναι κενό." # noqa: RUF001
                             )
 
                             continue
@@ -306,28 +457,14 @@ def task_excel_import(request):
                         # ==================================================
                         # TASK TIME
                         # ==================================================
-                        task_time_raw = row.get(
-                            "time",
-                            ""
-                        )
+                        task_time_raw = row.get("time", "")
 
                         if task_time_raw in ("", None):
-
                             task_time = None
-
                         else:
-
                             try:
-
-                                task_time = float(
-                                    task_time_raw
-                                )
-
-                            except (
-                                ValueError,
-                                TypeError
-                            ):
-
+                                task_time = Decimal(str(task_time_raw))
+                            except (InvalidOperation, ValueError, TypeError):
                                 task_time = None
 
                         # ==================================================
@@ -438,10 +575,10 @@ def task_excel_import(request):
                     messages.warning(
                         request,
                         (
-                            f"Η εισαγωγή ολοκληρώθηκε με "
+                            f"Η εισαγωγή ολοκληρώθηκε με " # noqa: RUF001
                             f"{skipped_rows} προβληματικές γραμμές. "
-                            f"Οι προβληματικές γραμμές μπορούν "
-                            f"να κατέβουν από το αρχείο skipped_rows.xlsx."
+                            f"Οι προβληματικές γραμμές μπορούν " # noqa: RUF001
+                            f"να κατέβουν από το αρχείο skipped_rows.xlsx." # noqa: RUF001
                         )
                     )
 
@@ -449,7 +586,7 @@ def task_excel_import(request):
 
                     messages.success(
                         request,
-                        "Η εισαγωγή ολοκληρώθηκε με επιτυχία."
+                        "Η εισαγωγή ολοκληρώθηκε με επιτυχία." # noqa: RUF001
                     )
 
                 return redirect(
