@@ -77,7 +77,7 @@ class OrganizationCreateView(LoginRequiredMixin, SuccessMessageMixin, CreateView
     form_class = OrganizationForm
     template_name = "organizations/create.html"
     success_url = reverse_lazy("organizations:organization_list")
-    success_message = "Ο Οργανισμός δημιουργήθηκε με επιτυχία."
+    success_message = "Ο Οργανισμός δημιουργήθηκε με επιτυχία." # noqa: RUF001
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -95,7 +95,7 @@ class OrganizationUpdateView(LoginRequiredMixin, SuccessMessageMixin, UpdateView
     form_class = OrganizationForm
     template_name = "organizations/detail.html"
     success_url = reverse_lazy("organizations:organization_list")
-    success_message = "Ο Οργανισμός ενημερώθηκε με επιτυχία."
+    success_message = "Ο Οργανισμός ενημερώθηκε με επιτυχία." # noqa: RUF001
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -172,7 +172,7 @@ class EmployeeCreateView(LoginRequiredMixin, SuccessMessageMixin, CreateView):
     form_class = EmployeeForm
     template_name = "organizations/employee/create.html"
     success_url = reverse_lazy("organizations:employee_list")
-    success_message = "Η επαφή δημιουργήθηκε με επιτυχία."
+    success_message = "Η επαφή δημιουργήθηκε με επιτυχία." # noqa: RUF001
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -189,7 +189,7 @@ class EmployeeUpdateView(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
     form_class = EmployeeForm
     template_name = "organizations/employee/detail.html"
     success_url = reverse_lazy("organizations:employee_list")
-    success_message = "Η επαφή ενημερώθηκε με επιτυχία."
+    success_message = "Η επαφή ενημερώθηκε με επιτυχία." # noqa: RUF001
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -206,11 +206,11 @@ def soft_delete_organization(request, pk):
     obj.is_active = False
     obj.save(update_fields=["is_active"])
 
-    obj.employees.update(is_active=False)
+    Employee.objects.filter(organization=obj).update(is_active=False)
 
     messages.success(
         request,
-        f'Ο Οργανισμός "{obj.org_name}" και οι εργαζόμενοι του απενεργοποιήθηκαν.'
+        f'Ο Οργανισμός «{obj.org_name}» και οι εργαζόμενοι του απενεργοποιήθηκαν.' # noqa: RUF001
     )
 
     return redirect("organizations:organization_list")
@@ -222,9 +222,11 @@ def restore_organization(request, pk):
     obj.is_active = True
     obj.save(update_fields=["is_active"])
 
+    Employee.objects.filter(organization=obj).update(is_active=True)
+
     messages.success(
         request,
-        f'Ο Οργανισμός "{obj.org_name}" και οι εργαζόμοι ενεργοποιήθηκαν'
+        f'Ο Οργανισμός «{obj.org_name}» και οι εργαζόμενοι του ενεργοποιήθηκαν.' # noqa: RUF001
     )
     return redirect("organizations:organization_list")
 
@@ -235,7 +237,7 @@ def soft_delete_employee(request, pk):
     obj.save(update_fields=["is_active"])
     messages.success(
         request,
-        f'Ο/H υπάλληλος "{obj.lastname} {obj.firstname}" του Οργανισμού "{obj.organization}" έχει απενεργοποιηθεί.',
+        f'Ο λογαριασμός του/της υπαλλήλου «{obj.lastname} {obj.firstname}» στον οργανισμό «{obj.organization}» έχει απενεργοποιηθεί.', # noqa: RUF001
     )
     return redirect("organizations:employee_list")
 
@@ -246,7 +248,7 @@ def restore_employee(request, pk):
     obj.save(update_fields=["is_active"])
     messages.success(
         request,
-        f'Ο/H υπάλληλος "{obj.lastname} {obj.firstname}" του Οργανισμού "{obj.organization}" έχει εργοποιηθεί.',
+        f'Ο λογαριασμός του/της υπαλλήλου «{obj.lastname} {obj.firstname}» στον οργανισμό «{obj.organization}» έχει ενεργοποιηθεί.', # noqa: RUF001
     )
     return redirect("organizations:employee_list")
 
@@ -347,7 +349,7 @@ class TaskCreateView(LoginRequiredMixin, SuccessMessageMixin, CreateView):
     form_class = TaskForm
     template_name = "organizations/task/create.html"
     success_url = reverse_lazy("organizations:task_list")
-    success_message = "Η εργασία δημιουργήθηκε με επιτυχία."
+    success_message = "Η εργασία δημιουργήθηκε με επιτυχία." # noqa: RUF001
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
@@ -369,7 +371,7 @@ class TaskListUpdateView(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
     form_class = TaskForm
     template_name = "organizations/task/detail.html"
     success_url = reverse_lazy("organizations:task_list")
-    success_message = "Η εργασία ενημερώθηκε με επιτυχία."
+    success_message = "Η εργασία ενημερώθηκε με επιτυχία." # noqa: RUF001
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
