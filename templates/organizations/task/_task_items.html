@@ -15,12 +15,6 @@
 
                 {{ task.importdate|date:"d/m/Y" }}
 
-                {% if task.ticketid %}
-                    <span class="ml-2 font-medium text-indigo-600">
-                        OTS Ticket: #{{ task.ticketid }}
-                    </span>
-                {% endif %}
-
             </div>
 
         </div>
@@ -83,10 +77,14 @@
 
             {% if task.task_note %}
                 <span class="rounded-full bg-fuchsia-100 px-2 py-1 text-xs text-fuchsia-700">
-                    Περιέχει σχόλια
+                    Υπάρχουν σημειώσεις
                 </span>
             {% endif %}
-
+            {% if task.ticketid %}
+                <span class="rounded-full bg-amber-300 px-2 py-1 text-xs">
+                    OTS Ticket: #{{ task.ticketid }}
+                </span>
+            {% endif %}
         </div>
 
 

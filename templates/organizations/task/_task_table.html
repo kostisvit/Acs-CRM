@@ -111,7 +111,7 @@
                     </td>
 
 
-                    <td class="px-4 py-3 font-bold text-indigo-600">
+                    <td class="px-4 py-3 font-bold text-teal-700">
                         {{ task.task_time }}
                     </td>
 
@@ -122,7 +122,38 @@
 
 
                     <td class="max-w-xs truncate px-4 py-3">
-                        {{ task.task_info }}
+                        <div class="flex items-center gap-2">
+                            <span class="truncate">
+                                {{ task.task_info }}
+                            </span>
+
+                            {% if task.task_note %}
+                                <span
+                                    class="inline-flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-amber-50 text-fuchsia-700"
+                                    title="Υπάρχουν σημειώσεις"
+                                >
+                                    <svg
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        fill="none"
+                                        viewBox="0 0 24 24"
+                                        stroke-width="1.8"
+                                        stroke="currentColor"
+                                        class="h-4 w-4"
+                                    >
+                                        <path
+                                            stroke-linecap="round"
+                                            stroke-linejoin="round"
+                                            d="M8.625 3.75h6.75A2.625 2.625 0 0 1 18 6.375v11.25a2.625 2.625 0 0 1-2.625 2.625h-6.75A2.625 2.625 0 0 1 6 17.625V6.375A2.625 2.625 0 0 1 8.625 3.75Z"
+                                        />
+                                        <path
+                                            stroke-linecap="round"
+                                            stroke-linejoin="round"
+                                            d="M9 8.25h6M9 12h6M9 15.75h3.75"
+                                        />
+                                    </svg>
+                                </span>
+                            {% endif %}
+                        </div>
                     </td>
 
 
@@ -177,3 +208,110 @@
     </table>
 
 </div>
+{% if page_obj.has_other_pages %}
+    <div class="mt-4 flex flex-col items-center justify-center gap-3">
+
+        {% comment %} <div class="text-sm text-slate-500">
+            Σελίδα {{ page_obj.number }} από {{ page_obj.paginator.num_pages }}
+        </div> {% endcomment %}
+
+        <div class="flex items-center justify-center gap-1">
+
+            {# Previous #}
+            {% if page_obj.has_previous %}
+                <a
+                    href="?{% if query_string %}{{ query_string }}&{% endif %}page={{ page_obj.previous_page_number }}"
+                    class="rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-slate-600 hover:bg-slate-50"
+                >
+                    Προηγούμενη
+                </a>
+            {% endif %}
+
+
+            {# Pages #}
+            {% if page_obj.paginator.num_pages <= 10 %}
+
+                {# Show all pages #}
+                {% for num in page_obj.paginator.page_range %}
+                    {% if num == page_obj.number %}
+                        <span
+                            class="rounded-lg bg-teal-600 px-3 py-2 text-sm font-semibold text-white"
+                        >
+                            {{ num }}
+                        </span>
+                    {% else %}
+                        <a
+                            href="?{% if query_string %}{{ query_string }}&{% endif %}page={{ num }}"
+                            class="rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-slate-600 hover:bg-slate-50"
+                        >
+                            {{ num }}
+                        </a>
+                    {% endif %}
+                {% endfor %}
+
+            {% else %}
+
+                {# First page #}
+                {% if page_obj.number > 3 %}
+                    <a
+                        href="?{% if query_string %}{{ query_string }}&{% endif %}page=1"
+                        class="rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-slate-600 hover:bg-slate-50"
+                    >
+                        1
+                    </a>
+
+                    <span class="px-2 text-slate-400">...</span>
+                {% endif %}
+
+
+                {# Pages around current page #}
+                {% for num in page_obj.paginator.page_range %}
+                    {% if num >= page_obj.number|add:"-1" and num <= page_obj.number|add:"1" %}
+
+                        {% if num == page_obj.number %}
+                            <span
+                                class="rounded-lg bg-teal-600 px-3 py-2 text-sm font-semibold text-white"
+                            >
+                                {{ num }}
+                            </span>
+                        {% else %}
+                            <a
+                                href="?{% if query_string %}{{ query_string }}&{% endif %}page={{ num }}"
+                                class="rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-slate-600 hover:bg-slate-50"
+                            >
+                                {{ num }}
+                            </a>
+                        {% endif %}
+
+                    {% endif %}
+                {% endfor %}
+
+
+                {# Last page #}
+                {% if page_obj.number < page_obj.paginator.num_pages|add:"-2" %}
+                    <span class="px-2 text-slate-400">...</span>
+
+                    <a
+                        href="?{% if query_string %}{{ query_string }}&{% endif %}page={{ page_obj.paginator.num_pages }}"
+                        class="rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-slate-600 hover:bg-slate-50"
+                    >
+                        {{ page_obj.paginator.num_pages }}
+                    </a>
+                {% endif %}
+
+            {% endif %}
+
+
+            {# Next #}
+            {% if page_obj.has_next %}
+                <a
+                    href="?{% if query_string %}{{ query_string }}&{% endif %}page={{ page_obj.next_page_number }}"
+                    class="rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-slate-600 hover:bg-slate-50"
+                >
+                    Επόμενη
+                </a>
+            {% endif %}
+
+        </div>
+    </div>
+{% endif %}

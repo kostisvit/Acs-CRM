@@ -171,6 +171,9 @@ class TaskForm(forms.ModelForm):
             "task_time": forms.TextInput(
                 attrs={"class": INPUT_CLASS}
             ),
+            "ticketid": forms.TextInput(
+                attrs={"class": INPUT_CLASS}
+            ),
             "task_info": forms.Textarea(
                 attrs={
                     "class": TEXTAREA_CLASS,
