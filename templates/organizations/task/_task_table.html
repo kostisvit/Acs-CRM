@@ -1,0 +1,317 @@
+<div class="mb-5 flex justify-center">
+    <div
+        id="task-summary"
+        class="flex h-10 items-center gap-6 rounded-full border border-slate-200 bg-white px-5 shadow-sm"
+    >
+        <div class="flex items-center gap-2">
+            <span class="h-2 w-2 rounded-full bg-teal-500"></span>
+            <span class="text-sm font-semibold text-slate-700">
+                Εργασίες
+            </span>
+            <span class="text-xs text-slate-400">
+                ({{ task_count_by_organization }})
+            </span>
+        </div>
+
+        <div class="h-4 w-px bg-slate-200"></div>
+
+        <div class="flex items-center gap-2">
+            <span class="text-xs text-slate-400">
+                Συνολικός χρόνος
+            </span>
+            <span class="text-sm font-bold text-teal-600">
+                {{ task_time_by_organization|floatformat:2 }}
+            </span>
+        </div>
+    </div>
+</div>
+<div class="overflow-x-auto rounded-lg border bg-white shadow-sm">
+
+    <table class="min-w-full text-sm">
+
+        <thead class="border-b bg-slate-50">
+
+            <tr>
+
+                <th class="px-4 py-3 text-left">
+                    Οργανισμός
+                </th>
+
+                <th class="px-4 py-3 text-left">
+                    Ημερομηνία
+                </th>
+
+                <th class="px-4 py-3 text-left">
+                    Ticket
+                </th>
+
+                <th class="px-4 py-3 text-left">
+                    Εφαρμογή
+                </th>
+
+                <th class="px-4 py-3 text-left">
+                    Εργασία
+                </th>
+
+                <th class="px-4 py-3 text-left">
+                    Διάρκεια
+                </th>
+
+                <th class="px-4 py-3 text-left">
+                    ACS
+                </th>
+
+                <th class="px-4 py-3 text-left">
+                    Περιγραφή
+                </th>
+
+                <th class="px-4 py-3 text-left">
+                    Ενέργειες
+                </th>
+
+            </tr>
+
+        </thead>
+
+
+        <tbody class="divide-y">
+
+            {% for task in tasks %}
+
+                <tr class="hover:bg-slate-50">
+
+                    <td class="px-4 py-3 font-medium">
+                        {{ task.organization }}
+                    </td>
+
+
+                    <td class="px-4 py-3">
+                        {{ task.importdate|date:"d/m/Y" }}
+                    </td>
+
+
+                    <td class="px-4 py-3 text-indigo-600">
+
+                        {% if task.ticketid %}
+                            #{{ task.ticketid }}
+                        {% else %}
+                            -
+                        {% endif %}
+
+                    </td>
+
+
+                    <td class="px-4 py-3">
+                        {{ task.org_app|default:"-" }}
+                    </td>
+
+
+                    <td class="px-4 py-3">
+                        {{ task.job_type_acs|default:"-" }}
+                    </td>
+
+
+                    <td class="px-4 py-3 font-bold text-teal-700">
+                        {{ task.task_time }}
+                    </td>
+
+
+                    <td class="px-4 py-3">
+                        {{ task.acs_employee }}
+                    </td>
+
+
+                    <td class="max-w-xs truncate px-4 py-3">
+                        <div class="flex items-center gap-2">
+                            <span class="truncate">
+                                {{ task.task_info }}
+                            </span>
+
+                            {% if task.task_note %}
+                                <span
+                                    class="inline-flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-amber-50 text-fuchsia-700"
+                                    title="Υπάρχουν σημειώσεις"
+                                >
+                                    <svg
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        fill="none"
+                                        viewBox="0 0 24 24"
+                                        stroke-width="1.8"
+                                        stroke="currentColor"
+                                        class="h-4 w-4"
+                                    >
+                                        <path
+                                            stroke-linecap="round"
+                                            stroke-linejoin="round"
+                                            d="M8.625 3.75h6.75A2.625 2.625 0 0 1 18 6.375v11.25a2.625 2.625 0 0 1-2.625 2.625h-6.75A2.625 2.625 0 0 1 6 17.625V6.375A2.625 2.625 0 0 1 8.625 3.75Z"
+                                        />
+                                        <path
+                                            stroke-linecap="round"
+                                            stroke-linejoin="round"
+                                            d="M9 8.25h6M9 12h6M9 15.75h3.75"
+                                        />
+                                    </svg>
+                                </span>
+                            {% endif %}
+                        </div>
+                    </td>
+
+
+                    <td class="px-4 py-3">
+
+                        <a
+                            href="{% url 'organizations:task_update' task.pk %}"
+                            class="text-slate-400 hover:text-teal-600"
+                            title="Edit task"
+                        >
+
+                            <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                fill="none"
+                                viewBox="0 0 24 24"
+                                stroke-width="1.8"
+                                stroke="currentColor"
+                                class="h-5 w-5"
+                            >
+
+                                <path
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                    d="M16.862 4.487a2.25 2.25 0 0 1 3.182 3.182L7.5 20.213 3 21l.787-4.5 13.075-12.013Z"
+                                />
+
+                            </svg>
+
+                        </a>
+
+                    </td>
+
+                </tr>
+
+            {% empty %}
+
+                <tr>
+
+                    <td
+                        colspan="9"
+                        class="px-4 py-10 text-center text-slate-500"
+                    >
+                        Δεν βρέθηκαν εργασίες με τα συγκεκριμένα φίλτρα.
+                    </td>
+
+                </tr>
+
+            {% endfor %}
+
+        </tbody>
+
+    </table>
+
+</div>
+{% if page_obj.has_other_pages %}
+    <div class="mt-4 flex flex-col items-center justify-center gap-3">
+
+        {% comment %} <div class="text-sm text-slate-500">
+            Σελίδα {{ page_obj.number }} από {{ page_obj.paginator.num_pages }}
+        </div> {% endcomment %}
+
+        <div class="flex items-center justify-center gap-1">
+
+            {# Previous #}
+            {% if page_obj.has_previous %}
+                <a
+                    href="?{% if query_string %}{{ query_string }}&{% endif %}page={{ page_obj.previous_page_number }}"
+                    class="rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-slate-600 hover:bg-slate-50"
+                >
+                    Προηγούμενη
+                </a>
+            {% endif %}
+
+
+            {# Pages #}
+            {% if page_obj.paginator.num_pages <= 10 %}
+
+                {# Show all pages #}
+                {% for num in page_obj.paginator.page_range %}
+                    {% if num == page_obj.number %}
+                        <span
+                            class="rounded-lg bg-teal-600 px-3 py-2 text-sm font-semibold text-white"
+                        >
+                            {{ num }}
+                        </span>
+                    {% else %}
+                        <a
+                            href="?{% if query_string %}{{ query_string }}&{% endif %}page={{ num }}"
+                            class="rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-slate-600 hover:bg-slate-50"
+                        >
+                            {{ num }}
+                        </a>
+                    {% endif %}
+                {% endfor %}
+
+            {% else %}
+
+                {# First page #}
+                {% if page_obj.number > 3 %}
+                    <a
+                        href="?{% if query_string %}{{ query_string }}&{% endif %}page=1"
+                        class="rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-slate-600 hover:bg-slate-50"
+                    >
+                        1
+                    </a>
+
+                    <span class="px-2 text-slate-400">...</span>
+                {% endif %}
+
+
+                {# Pages around current page #}
+                {% for num in page_obj.paginator.page_range %}
+                    {% if num >= page_obj.number|add:"-1" and num <= page_obj.number|add:"1" %}
+
+                        {% if num == page_obj.number %}
+                            <span
+                                class="rounded-lg bg-teal-600 px-3 py-2 text-sm font-semibold text-white"
+                            >
+                                {{ num }}
+                            </span>
+                        {% else %}
+                            <a
+                                href="?{% if query_string %}{{ query_string }}&{% endif %}page={{ num }}"
+                                class="rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-slate-600 hover:bg-slate-50"
+                            >
+                                {{ num }}
+                            </a>
+                        {% endif %}
+
+                    {% endif %}
+                {% endfor %}
+
+
+                {# Last page #}
+                {% if page_obj.number < page_obj.paginator.num_pages|add:"-2" %}
+                    <span class="px-2 text-slate-400">...</span>
+
+                    <a
+                        href="?{% if query_string %}{{ query_string }}&{% endif %}page={{ page_obj.paginator.num_pages }}"
+                        class="rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-slate-600 hover:bg-slate-50"
+                    >
+                        {{ page_obj.paginator.num_pages }}
+                    </a>
+                {% endif %}
+
+            {% endif %}
+
+
+            {# Next #}
+            {% if page_obj.has_next %}
+                <a
+                    href="?{% if query_string %}{{ query_string }}&{% endif %}page={{ page_obj.next_page_number }}"
+                    class="rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-slate-600 hover:bg-slate-50"
+                >
+                    Επόμενη
+                </a>
+            {% endif %}
+
+        </div>
+    </div>
+{% endif %}

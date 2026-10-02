@@ -1,27 +1,27 @@
-<div class="mt-8 flex justify-center">
+{% if page_obj.has_next %}
 
-    {% if tasks.has_next %}
+<button
+    type="button"
+    hx-get="{% url 'organizations:task_list' %}?{% if query_string %}{{ query_string }}&{% endif %}page={{ page_obj.next_page_number }}"
+    hx-target="#task-items"
+    hx-swap="beforeend"
+    class="rounded-xl bg-teal-600 px-6 py-3
+           text-sm font-semibold text-white
+           hover:bg-teal-700"
+>
+    Περισσότερα
+</button>
 
-        <button
-            hx-get="?page={{ tasks.next_page_number }}&q={{ search|urlencode }}&organization={{ organization_id|urlencode }}&org_app={{ org_app_id|urlencode }}&job_type_acs={{ job_type_id|urlencode }}&acs_employee={{ acs_employee_id|urlencode }}&org_employee={{ org_employee_id|urlencode }}&ticketid={{ ticket_id|urlencode }}&importdate={{ importdate|urlencode }}"
-            hx-target="#task-list"
-            hx-swap="beforeend"
-            class="rounded-xl bg-teal-600 px-6 py-3 text-white text-sm font-semibold hover:bg-teal-700">
+{% else %}
 
-            Περισσότερα
+<button
+    type="button"
+    disabled
+    class="cursor-not-allowed rounded-xl
+           bg-gray-300 px-6 py-3
+           text-sm font-semibold text-gray-500"
+>
+    Τέλος αποτελεσμάτων
+</button>
 
-        </button>
-
-    {% else %}
-
-        <button
-            disabled
-            class="cursor-not-allowed rounded-xl bg-gray-300 px-6 py-3 text-gray-500 text-sm font-semibold">
-
-            Τέλος αποτελεσμάτων
-
-        </button>
-
-    {% endif %}
-
-</div>
+{% endif %}

@@ -8,23 +8,92 @@
 <div class="max-w-6xl mx-auto px-6 py-8">
 
     <!-- Header -->
-    <div class="flex items-center justify-between mb-8">
-        <div>
-            <h1 class="flex flex-wrap items-center gap-3 text-3xl font-bold text-gray-900">
-                Επεξεργασία Οργανισμού
-                <span class="max-w-full truncate rounded-full bg-blue-100 px-3 py-1 text-base font-medium text-blue-700">
-                    {{ organization.org_name }}
-                </span>
-            </h1>
-            <p class="mt-1 text-sm text-gray-500">
-                Ενημερώστε τα στοιχεία του οργανισμού.
-            </p>
+    <div class="max-w-6xl mx-auto px-6 py-8">
+
+        <!-- Header -->
+        <div class="mb-8 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+
+        <!-- Page Header -->
+        <div class="flex items-start gap-3">
+
+            <!-- Icon -->
+            <div
+                class="hidden h-11 w-11 shrink-0 items-center justify-center
+                    rounded-xl bg-teal-50 text-teal-600 sm:flex"
+            >
+                <svg
+                    class="h-5 w-5"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                    aria-hidden="true"
+                >
+                    <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="1.8"
+                        d="M3 21h18
+                        M5 21V7l7-4 7 4v14
+                        M9 21v-6h6v6
+                        M8 10h.01
+                        M12 10h.01
+                        M16 10h.01
+                        M8 13h.01
+                        M16 13h.01"
+                    />
+                </svg>
+            </div>
+
+            <div>
+                <h1 class="text-2xl font-bold tracking-tight text-slate-900 sm:text-3xl">
+                    Επεξεργασία Οργανισμού
+                </h1>
+
+                <p class="mt-1 text-sm text-slate-500">
+                    Ενημερώστε τα στοιχεία του οργανισμού.
+                </p>
+            </div>
+
         </div>
 
-        <a href="{% url 'organizations:organization_list' %}"
-           class="rounded-lg border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50">
-            ← Επιστροφή
+
+        <!-- Back -->
+        <a
+            href="{% url 'organizations:organization_list' %}"
+            class="group inline-flex h-10 items-center justify-center
+                gap-2 self-start rounded-xl
+                border border-slate-200 bg-white
+                px-4 text-sm font-semibold text-slate-600
+                shadow-sm transition-all duration-200
+                hover:border-slate-300
+                hover:bg-slate-50
+                hover:text-slate-900
+                hover:shadow-md
+                focus:outline-none
+                focus:ring-2 focus:ring-slate-300/40
+                active:scale-[0.98]
+                sm:self-auto"
+        >
+            <svg
+                class="h-4 w-4 transition-transform duration-200
+                    group-hover:-translate-x-0.5"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+                aria-hidden="true"
+            >
+                <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M19 12H5
+                    m7-7-7 7 7 7"
+                />
+            </svg>
+
+            <span>Επιστροφή</span>
         </a>
+
     </div>
 
     <form method="post">

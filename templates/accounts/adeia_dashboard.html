@@ -92,7 +92,7 @@
                 </span>
             </div>
 
-            <p class="mt-4 text-4xl font-bold 
+            <p class="mt-4 text-4xl font-bold
                 {% if days_left > 0 %}
                     text-green-600
                 {% else %}
@@ -112,6 +112,7 @@
 
 
     <!-- Progress Bar -->
+<!-- Progress Bar -->
 
 <div class="bg-white shadow rounded-xl p-6 mb-8 border">
 
@@ -121,7 +122,8 @@
             Χρήση ετήσιας άδειας
         </span>
 
-        <span class="text-sm 
+        <span
+            class="text-sm
             {% if leave_exceeded %}
                 text-red-600 font-bold
             {% else %}
@@ -133,35 +135,33 @@
 
     </div>
 
-
     <div class="w-full bg-gray-200 rounded-full h-4 overflow-hidden">
 
         <div
             class="
                 h-4 rounded-full transition-all duration-500
-
                 {% if leave_exceeded %}
                     bg-red-600
                 {% else %}
                     bg-blue-600
                 {% endif %}
             "
-            style="width: {{ leave_percentage }}%;">
+            style="width: {% if leave_percentage > 100 %}100{% else %}{{ leave_percentage }}{% endif %}%;">
         </div>
 
     </div>
-
 
     {% if leave_exceeded %}
 
         <p class="mt-3 text-sm text-red-600 font-medium">
             Έχετε ξεπεράσει το δικαιούμενο όριο κατά
-            {{ days_used|add:"-"|add:days_sum }} ημέρες.
+            <strong>{{ leave_exceeded_days }}</strong> ημέρες.
         </p>
 
     {% endif %}
 
 </div>
+
 
 
 
