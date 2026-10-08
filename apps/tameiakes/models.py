@@ -14,8 +14,8 @@ class Customer(TimeStampedModel):
     company_address = models.CharField(max_length=150,  blank=True)
     company_email = models.EmailField(blank=True)
     company_afm = EncryptedCharField(max_length=150,  blank=True)
-    phone_number = models.CharField(max_length=150, blank=True)
-    status = models.BooleanField(default=True, blank=True, null=True)
+    phone = models.CharField(max_length=150, blank=True)
+    is_active = models.BooleanField(default=True, blank=True, null=True)
 
     class Meta:
         verbose_name = "Πελάτες Ταμειακών Μηχανών"
@@ -25,3 +25,29 @@ class Customer(TimeStampedModel):
 
     def __str__(self):
         return (self.lastname or "") + " " + (self.firstname or "")
+
+
+class Cash(TimeStampedModel):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    customer = models.ForeignKey(Customer, on_delete=models.CASCADE, related_name="customers")
+    cash_model = models.CharField(max_length=50, null=False, blank=False)
+    cash_number = models.CharField(max_length=50, null=False, blank=False)
+    register_date = models.DateField(null=True, blank=True)
+    current_os = models.CharField(max_length=50, blank=True)
+    aes_key = EncryptedCharField(max_length=150, null=True, blank=True)
+    is_active = models.BooleanField(default=True, blank=True, null=True)
+    voucher = models.BooleanField(default=False, blank=True, null=True)
+    iris_connect = models.BooleanField(default=False, blank=True, null=True)
+    pos_connect = models.BooleanField(default=False, blank=True, null=True)
+    cash_estiasi = models.BooleanField(default=False, blank=True, null=True)
+    info = models.TextField(blank=True)
+
+
+    class Meta:
+        verbose_name = "Ταμειακές"
+        verbose_name_plural = "Ταμειακές"
+        ordering = ["customer"]
+        db_table = "acs_tameiakes"
+
+    def __str__(self):
+        return f"{self.customer} | {self.cash_model} | {self.cash_number}"
