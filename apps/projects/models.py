@@ -280,7 +280,7 @@ class ProjectDocument(TimeStampedModel):
             update_fields=[
                 "submitted",
                 "submitted_at",
-                "updated_at",
+                "modified",
             ]
         )
 

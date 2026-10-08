@@ -254,6 +254,7 @@ def document_create(request, project_pk):
         {
             "form": form,
             "project": project,
+            "title": "Ανέβασμα εγγράφου",
         },
     )
 

@@ -1,0 +1,332 @@
+
+{% extends "_base.html" %}
+
+{% block content %}
+<div class="mx-auto max-w-5xl px-4 py-8 sm:px-6 lg:px-8">
+
+    <!-- Header -->
+    <div class="mb-8 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+        <div>
+            <h1 class="text-2xl font-bold text-gray-900">
+                {% if document %}
+                    Επεξεργασία εγγράφου
+                {% else %}
+                    Ανέβασμα νέου εγγράφου
+                {% endif %}
+            </h1>
+
+            <p class="mt-1 text-sm text-gray-500">
+                Έργο: {{ project }}
+            </p>
+        </div>
+
+        <a
+            href="{% url 'projects:project_detail' project.pk %}"
+            class="inline-flex items-center justify-center rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500"
+        >
+            ← Ακύρωση
+        </a>
+    </div>
+
+
+    <!-- Form -->
+    <form
+        method="post"
+        enctype="multipart/form-data"
+        novalidate
+    >
+        {% csrf_token %}
+
+
+        <!-- Non field errors -->
+        {% if form.non_field_errors %}
+            <div class="mb-6 rounded-lg border border-red-200 bg-red-50 p-4">
+                <div class="text-sm text-red-700">
+                    {% for error in form.non_field_errors %}
+                        <p>{{ error }}</p>
+                    {% endfor %}
+                </div>
+            </div>
+        {% endif %}
+
+
+        <!-- Basic information -->
+        <div class="mb-6 rounded-xl border border-gray-200 bg-white shadow-sm">
+
+            <div class="border-b border-gray-200 px-6 py-5">
+                <h2 class="text-lg font-semibold text-gray-900">
+                    Στοιχεία εγγράφου
+                </h2>
+
+                <p class="mt-1 text-sm text-gray-500">
+                    Συμπληρώστε τα βασικά στοιχεία του εγγράφου.
+                </p>
+            </div>
+
+
+            <div class="space-y-6 p-6">
+
+                <!-- Title -->
+                <div>
+                    <label
+                        for="{{ form.title.id_for_label }}"
+                        class="mb-2 block text-sm font-medium text-gray-900"
+                    >
+                        {{ form.title.label }}
+                    </label>
+
+                    <input
+                        type="text"
+                        name="{{ form.title.name }}"
+                        id="{{ form.title.id_for_label }}"
+                        value="{{ form.title.value|default_if_none:'' }}"
+                        maxlength="255"
+                        placeholder="π.χ. Τεχνική περιγραφή έργου"
+                        class="w-full rounded-lg border border-gray-300 bg-gray-50 px-4 py-2.5 text-sm text-gray-900 placeholder-gray-400 focus:border-blue-500 focus:ring-blue-500"
+                    >
+
+                    {% if form.title.errors %}
+                        <div class="mt-2 text-sm text-red-600">
+                            {% for error in form.title.errors %}
+                                <p>{{ error }}</p>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                </div>
+
+
+                <!-- Description -->
+                <div>
+                    <label
+                        for="{{ form.description.id_for_label }}"
+                        class="mb-2 block text-sm font-medium text-gray-900"
+                    >
+                        {{ form.description.label }}
+                    </label>
+
+                    <textarea
+                        name="{{ form.description.name }}"
+                        id="{{ form.description.id_for_label }}"
+                        rows="5"
+                        maxlength="2000"
+                        placeholder="Περιγράψτε σύντομα το περιεχόμενο του εγγράφου..."
+                        class="w-full rounded-lg border border-gray-300 bg-gray-50 px-4 py-2.5 text-sm text-gray-900 placeholder-gray-400 focus:border-blue-500 focus:ring-blue-500"
+                    >{{ form.description.value|default_if_none:'' }}</textarea>
+
+                    {% if form.description.errors %}
+                        <div class="mt-2 text-sm text-red-600">
+                            {% for error in form.description.errors %}
+                                <p>{{ error }}</p>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                </div>
+
+
+                <!-- Due date -->
+                <div>
+                    <label
+                        for="{{ form.due_date.id_for_label }}"
+                        class="mb-2 block text-sm font-medium text-gray-900"
+                    >
+                        {{ form.due_date.label }}
+                    </label>
+
+                    {{ form.due_date }}
+
+                    {% if form.due_date.errors %}
+                        <div class="mt-2 text-sm text-red-600">
+                            {% for error in form.due_date.errors %}
+                                <p>{{ error }}</p>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                </div>
+
+
+                <!-- Responsible -->
+                <div>
+                    <label
+                        for="{{ form.responsible.id_for_label }}"
+                        class="mb-2 block text-sm font-medium text-gray-900"
+                    >
+                        {{ form.responsible.label }}
+                    </label>
+
+                    {{ form.responsible }}
+
+                    {% if form.responsible.errors %}
+                        <div class="mt-2 text-sm text-red-600">
+                            {% for error in form.responsible.errors %}
+                                <p>{{ error }}</p>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                </div>
+
+
+                <!-- Notes -->
+                <div>
+                    <label
+                        for="{{ form.notes.id_for_label }}"
+                        class="mb-2 block text-sm font-medium text-gray-900"
+                    >
+                        {{ form.notes.label }}
+                    </label>
+
+                    <textarea
+                        name="{{ form.notes.name }}"
+                        id="{{ form.notes.id_for_label }}"
+                        rows="4"
+                        maxlength="2000"
+                        placeholder="Πρόσθετες σημειώσεις..."
+                        class="w-full rounded-lg border border-gray-300 bg-gray-50 px-4 py-2.5 text-sm text-gray-900 placeholder-gray-400 focus:border-blue-500 focus:ring-blue-500"
+                    >{{ form.notes.value|default_if_none:'' }}</textarea>
+
+                    {% if form.notes.errors %}
+                        <div class="mt-2 text-sm text-red-600">
+                            {% for error in form.notes.errors %}
+                                <p>{{ error }}</p>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                </div>
+
+            </div>
+        </div>
+
+
+        <!-- File upload -->
+        <div class="mb-6 rounded-xl border border-gray-200 bg-white shadow-sm">
+
+            <div class="border-b border-gray-200 px-6 py-5">
+                <h2 class="text-lg font-semibold text-gray-900">
+                    Αρχείο
+                </h2>
+
+                <p class="mt-1 text-sm text-gray-500">
+                    Επιλέξτε το αρχείο που θέλετε να συνδέσετε με το έντυπο.
+                </p>
+            </div>
+
+
+            <div class="p-6">
+
+                <!-- Existing file -->
+                {% if document and document.file %}
+                    <div class="mb-5 rounded-lg border border-gray-200 bg-gray-50 p-4">
+
+                        <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+
+                            <div>
+                                <p class="text-sm font-medium text-gray-900">
+                                    Υπάρχον αρχείο
+                                </p>
+
+                                <p class="mt-1 break-all text-sm text-gray-500">
+                                    {{ document.file.name }}
+                                </p>
+                            </div>
+
+                            <a
+                                href="{{ document.file.url }}"
+                                target="_blank"
+                                class="inline-flex items-center justify-center rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"
+                            >
+                                Προβολή αρχείου
+                            </a>
+
+                        </div>
+                    </div>
+                {% endif %}
+
+
+                <!-- File field -->
+                <div>
+
+                    <label
+                        for="{{ form.file.id_for_label }}"
+                        class="mb-2 block text-sm font-medium text-gray-900"
+                    >
+                        {{ form.file.label }}
+                    </label>
+
+
+                    <div class="rounded-xl border-2 border-dashed border-gray-300 bg-gray-50 p-8 text-center">
+
+                        <div class="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-white shadow-sm">
+                            <svg
+                                class="h-6 w-6 text-gray-500"
+                                fill="none"
+                                stroke="currentColor"
+                                viewBox="0 0 24 24"
+                            >
+                                <path
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                    stroke-width="2"
+                                    d="M7 16a4 4 0 01-.88-7.903A5 5 0 0115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v9"
+                                />
+                            </svg>
+                        </div>
+
+
+                        <p class="mt-4 text-sm text-gray-600">
+                            Επιλέξτε το αρχείο από τον υπολογιστή σας.
+                        </p>
+
+
+                        <div class="mt-4">
+                            {{ form.file }}
+                        </div>
+
+
+                        <p class="mt-3 text-xs text-gray-500">
+                            PDF, Word, Excel, εικόνες και άλλα υποστηριζόμενα αρχεία.
+                        </p>
+
+                    </div>
+
+
+                    {% if form.file.errors %}
+                        <div class="mt-2 text-sm text-red-600">
+                            {% for error in form.file.errors %}
+                                <p>{{ error }}</p>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+
+                </div>
+
+            </div>
+        </div>
+
+
+        <!-- Actions -->
+        <div class="flex flex-col-reverse gap-3 sm:flex-row sm:justify-end">
+
+            <a
+                href="{% url 'projects:project_detail' project.pk %}"
+                class="inline-flex items-center justify-center rounded-lg border border-gray-300 bg-white px-5 py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            >
+                Ακύρωση
+            </a>
+
+
+            <button
+                type="submit"
+                class="inline-flex items-center justify-center rounded-lg bg-blue-600 px-5 py-2.5 text-sm font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-4 focus:ring-blue-300"
+            >
+                {% if document %}
+                    Αποθήκευση αλλαγών
+                {% else %}
+                    Ανέβασμα εγγράφου
+                {% endif %}
+            </button>
+
+        </div>
+
+    </form>
+
+</div>
+{% endblock %}
