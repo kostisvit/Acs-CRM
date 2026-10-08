@@ -158,12 +158,12 @@
                     </label>
 
                     <input
-                        type="date"
-                        name="{{ form.start_date.name }}"
-                        id="{{ form.start_date.id_for_label }}"
-                        value="{{ form.start_date.value|default_if_none:'' }}"
-                        class="w-full rounded-lg border border-gray-300 bg-gray-50 px-4 py-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500"
-                    >
+                    type="date"
+                    name="{{ form.start_date.html_name }}"
+                    id="{{ form.start_date.id_for_label }}"
+                    value="{{ form.start_date.value|date:'Y-m-d'|default_if_none:'' }}"
+                    class="w-full rounded-lg border border-gray-300 bg-gray-50 px-4 py-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500"
+                >
 
                     {% if form.start_date.errors %}
                         <div class="mt-2 text-sm text-red-600">
@@ -185,9 +185,9 @@
 
                     <input
                         type="date"
-                        name="{{ form.end_date.name }}"
+                        name="{{ form.end_date.html_name }}"
                         id="{{ form.end_date.id_for_label }}"
-                        value="{{ form.end_date.value|default_if_none:'' }}"
+                        value="{{ form.end_date.value|date:'Y-m-d'|default_if_none:'' }}"
                         class="w-full rounded-lg border border-gray-300 bg-gray-50 px-4 py-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500"
                     >
 

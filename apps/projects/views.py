@@ -4,7 +4,7 @@ from django.db.models import Count, Q
 from django.shortcuts import get_object_or_404, redirect, render
 from django.utils import timezone
 
-from .forms import ProjectDocumentForm, ProjectForm
+from .forms import ProjectDocumentForm, ProjectDocumentSubmitForm, ProjectForm
 from .models import Project, ProjectDocument
 
 
@@ -232,8 +232,15 @@ def document_create(request, project_pk):
 
         if form.is_valid():
             document = form.save(commit=False)
+
             document.project = project
+
+            document.submitted = False
+            document.submitted_at = None
+
             document.save()
+
+            document.create_default_reminders()
 
             messages.success(
                 request,
@@ -267,16 +274,61 @@ def document_submit(request, pk):
         pk=pk,
     )
 
-    if request.method == "POST":
-        document.mark_as_submitted()
-
-        messages.success(
+    if document.submitted:
+        messages.info(
             request,
-            f"Το έντυπο «{document.title}» "
-            "σημειώθηκε ως υποβληθέν.",
+            "Το έντυπο έχει ήδη υποβληθεί.",
         )
 
-    return redirect(
-        "projects:project_detail",
-        pk=document.project.pk,
+        return redirect(
+            "projects:project_detail",
+            pk=document.project.pk,
+        )
+
+    if request.method == "POST":
+
+        form = ProjectDocumentSubmitForm(
+            request.POST,
+            request.FILES,
+            instance=document,
+        )
+
+        if form.is_valid():
+
+            document.file = form.cleaned_data["file"]
+            document.submitted = True
+            document.submitted_at = timezone.now()
+
+            document.save(
+                update_fields=[
+                    "file",
+                    "submitted",
+                    "submitted_at",
+                    "modified",
+                ]
+            )
+
+            messages.success(
+                request,
+                "Το έντυπο υποβλήθηκε επιτυχώς.",
+            )
+
+            return redirect(
+                "projects:project_detail",
+                pk=document.project.pk,
+            )
+
+    else:
+        form = ProjectDocumentSubmitForm(
+            instance=document,
+        )
+
+    return render(
+        request,
+        "projects/document_submit.html",
+        {
+            "form": form,
+            "document": document,
+            "project": document.project,
+        },
     )

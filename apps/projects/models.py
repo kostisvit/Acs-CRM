@@ -299,6 +299,20 @@ class ProjectDocument(TimeStampedModel):
             ]
         )
 
+    def create_default_reminders(self):
+        """
+        Δημιουργεί τις default υπενθυμίσεις
+        για το συγκεκριμένο έντυπο.
+        """
+
+        default_days = [7, 3, 1, 0]
+
+        for days in default_days:
+            ProjectReminder.objects.get_or_create(
+                document=self,
+                days_before=days,
+            )
+
 
 class ProjectReminder(TimeStampedModel):
     """
@@ -397,7 +411,7 @@ class ProjectReminder(TimeStampedModel):
         if self.document.submitted:
             return False
 
-        return timezone.localdate() >= self.reminder_date
+        return timezone.localdate() == self.reminder_date
 
     def mark_as_sent(self):
         """
@@ -408,6 +422,6 @@ class ProjectReminder(TimeStampedModel):
         self.save(
             update_fields=[
                 "sent_at",
-                "updated_at",
+                "modified",
             ]
         )
