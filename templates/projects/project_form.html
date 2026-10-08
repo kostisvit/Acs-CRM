@@ -1,0 +1,373 @@
+{% extends "_base.html" %}
+
+{% block content %}
+<div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+
+    <!-- Header -->
+    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8">
+        <div>
+            <h1 class="text-2xl font-bold text-gray-900 dark:text-white">
+                {{ title }}
+            </h1>
+
+            <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">
+                {% if project %}
+                    Επεξεργασία στοιχείων έργου
+                {% else %}
+                    Δημιουργία νέου έργου
+                {% endif %}
+            </p>
+        </div>
+
+        <a
+            href="{% if project %}{% url 'projects:project_detail' project.pk %}{% else %}{% url 'projects:project_list' %}{% endif %}"
+            class="inline-flex items-center justify-center px-4 py-2 text-sm font-medium
+                   text-gray-700 bg-white border border-gray-300 rounded-lg
+                   hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500
+                   dark:bg-gray-800 dark:text-gray-200 dark:border-gray-600
+                   dark:hover:bg-gray-700"
+        >
+            ← Ακύρωση
+        </a>
+    </div>
+
+
+    <!-- Form -->
+    <form method="post" novalidate>
+        {% csrf_token %}
+
+        {% if form.non_field_errors %}
+            <div class="mb-6 rounded-lg border border-red-200 bg-red-50 p-4
+                        dark:border-red-800 dark:bg-red-900/20">
+                <div class="flex">
+                    <div class="text-sm text-red-700 dark:text-red-300">
+                        {% for error in form.non_field_errors %}
+                            <p>{{ error }}</p>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+
+
+        <!-- Basic information -->
+        <div class="bg-white dark:bg-gray-800 shadow-sm rounded-xl border border-gray-200 dark:border-gray-700 mb-6">
+
+            <div class="px-6 py-5 border-b border-gray-200 dark:border-gray-700">
+                <h2 class="text-lg font-semibold text-gray-900 dark:text-white">
+                    Βασικές πληροφορίες
+                </h2>
+
+                <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">
+                    Στοιχεία και περιγραφή του έργου.
+                </p>
+            </div>
+
+            <div class="p-6 space-y-6">
+
+                <!-- Organization -->
+                <div>
+                    <label
+                        for="{{ form.organization.id_for_label }}"
+                        class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                    >
+                        {{ form.organization.label }}
+                    </label>
+
+                    {{ form.organization }}
+
+                    {% if form.organization.errors %}
+                        <div class="mt-2 text-sm text-red-600 dark:text-red-400">
+                            {% for error in form.organization.errors %}
+                                <p>{{ error }}</p>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                </div>
+
+
+                <!-- Title -->
+                <div>
+                    <label
+                        for="{{ form.title.id_for_label }}"
+                        class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                    >
+                        {{ form.title.label }}
+                    </label>
+
+                    <input
+                        type="text"
+                        name="{{ form.title.name }}"
+                        id="{{ form.title.id_for_label }}"
+                        value="{{ form.title.value|default_if_none:'' }}"
+                        maxlength="255"
+                        placeholder="π.χ. Ψηφιοποίηση αρχείου οργανισμού"
+                        class="w-full rounded-lg border border-gray-300 bg-gray-50 px-4 py-2.5
+                               text-sm text-gray-900
+                               focus:border-blue-500 focus:ring-blue-500
+                               dark:border-gray-600 dark:bg-gray-700
+                               dark:text-white dark:placeholder-gray-400"
+                    >
+
+                    {% if form.title.errors %}
+                        <div class="mt-2 text-sm text-red-600 dark:text-red-400">
+                            {% for error in form.title.errors %}
+                                <p>{{ error }}</p>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                </div>
+
+
+                <!-- Description -->
+                <div>
+                    <label
+                        for="{{ form.description.id_for_label }}"
+                        class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                    >
+                        {{ form.description.label }}
+                    </label>
+
+                    <textarea
+                        name="{{ form.description.name }}"
+                        id="{{ form.description.id_for_label }}"
+                        rows="5"
+                        maxlength="2000"
+                        placeholder="Περιγράψτε το αντικείμενο και τους στόχους του έργου..."
+                        class="w-full rounded-lg border border-gray-300 bg-gray-50 px-4 py-2.5
+                               text-sm text-gray-900
+                               focus:border-blue-500 focus:ring-blue-500
+                               dark:border-gray-600 dark:bg-gray-700
+                               dark:text-white dark:placeholder-gray-400"
+                    >{{ form.description.value|default_if_none:'' }}</textarea>
+
+                    {% if form.description.errors %}
+                        <div class="mt-2 text-sm text-red-600 dark:text-red-400">
+                            {% for error in form.description.errors %}
+                                <p>{{ error }}</p>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                </div>
+
+            </div>
+        </div>
+
+
+        <!-- Dates -->
+        <div class="bg-white dark:bg-gray-800 shadow-sm rounded-xl border border-gray-200 dark:border-gray-700 mb-6">
+
+            <div class="px-6 py-5 border-b border-gray-200 dark:border-gray-700">
+                <h2 class="text-lg font-semibold text-gray-900 dark:text-white">
+                    Χρονοδιάγραμμα
+                </h2>
+
+                <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">
+                    Ορίστε την περίοδο υλοποίησης του έργου.
+                </p>
+            </div>
+
+            <div class="p-6 grid grid-cols-1 md:grid-cols-2 gap-6">
+
+                <!-- Start date -->
+                <div>
+                    <label
+                        for="{{ form.start_date.id_for_label }}"
+                        class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                    >
+                        {{ form.start_date.label }}
+                    </label>
+
+                    <input
+                        type="date"
+                        name="{{ form.start_date.name }}"
+                        id="{{ form.start_date.id_for_label }}"
+                        value="{{ form.start_date.value|default_if_none:'' }}"
+                        class="w-full rounded-lg border border-gray-300 bg-gray-50 px-4 py-2.5
+                               text-sm text-gray-900
+                               focus:border-blue-500 focus:ring-blue-500
+                               dark:border-gray-600 dark:bg-gray-700
+                               dark:text-white"
+                    >
+
+                    {% if form.start_date.errors %}
+                        <div class="mt-2 text-sm text-red-600 dark:text-red-400">
+                            {% for error in form.start_date.errors %}
+                                <p>{{ error }}</p>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                </div>
+
+
+                <!-- End date -->
+                <div>
+                    <label
+                        for="{{ form.end_date.id_for_label }}"
+                        class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                    >
+                        {{ form.end_date.label }}
+                    </label>
+
+                    <input
+                        type="date"
+                        name="{{ form.end_date.name }}"
+                        id="{{ form.end_date.id_for_label }}"
+                        value="{{ form.end_date.value|default_if_none:'' }}"
+                        class="w-full rounded-lg border border-gray-300 bg-gray-50 px-4 py-2.5
+                               text-sm text-gray-900
+                               focus:border-blue-500 focus:ring-blue-500
+                               dark:border-gray-600 dark:bg-gray-700
+                               dark:text-white"
+                    >
+
+                    {% if form.end_date.errors %}
+                        <div class="mt-2 text-sm text-red-600 dark:text-red-400">
+                            {% for error in form.end_date.errors %}
+                                <p>{{ error }}</p>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                </div>
+
+            </div>
+        </div>
+
+
+        <!-- Responsibility -->
+        <div class="bg-white dark:bg-gray-800 shadow-sm rounded-xl border border-gray-200 dark:border-gray-700 mb-6">
+
+            <div class="px-6 py-5 border-b border-gray-200 dark:border-gray-700">
+                <h2 class="text-lg font-semibold text-gray-900 dark:text-white">
+                    Υπεύθυνος έργου
+                </h2>
+            </div>
+
+            <div class="p-6">
+
+                <label
+                    for="{{ form.responsible.id_for_label }}"
+                    class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                >
+                    {{ form.responsible.label }}
+                </label>
+
+                {{ form.responsible }}
+
+                {% if form.responsible.errors %}
+                    <div class="mt-2 text-sm text-red-600 dark:text-red-400">
+                        {% for error in form.responsible.errors %}
+                            <p>{{ error }}</p>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+
+            </div>
+        </div>
+
+
+        <!-- Status & information -->
+        <div class="bg-white dark:bg-gray-800 shadow-sm rounded-xl border border-gray-200 dark:border-gray-700 mb-6">
+
+            <div class="px-6 py-5 border-b border-gray-200 dark:border-gray-700">
+                <h2 class="text-lg font-semibold text-gray-900 dark:text-white">
+                    Κατάσταση & πληροφορίες
+                </h2>
+            </div>
+
+            <div class="p-6 space-y-6">
+
+                <!-- Active -->
+                <div class="flex items-center">
+                    {{ form.is_active }}
+
+                    <label
+                        for="{{ form.is_active.id_for_label }}"
+                        class="ml-3 text-sm font-medium text-gray-900 dark:text-gray-200"
+                    >
+                        {{ form.is_active.label }}
+                    </label>
+                </div>
+
+                {% if form.is_active.errors %}
+                    <div class="text-sm text-red-600 dark:text-red-400">
+                        {% for error in form.is_active.errors %}
+                            <p>{{ error }}</p>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+
+
+                <!-- Info -->
+                <div>
+                    <label
+                        for="{{ form.info.id_for_label }}"
+                        class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                    >
+                        {{ form.info.label }}
+                    </label>
+
+                    <textarea
+                        name="{{ form.info.name }}"
+                        id="{{ form.info.id_for_label }}"
+                        rows="5"
+                        maxlength="2000"
+                        placeholder="Πρόσθετες πληροφορίες για το έργο..."
+                        class="w-full rounded-lg border border-gray-300 bg-gray-50 px-4 py-2.5
+                               text-sm text-gray-900
+                               focus:border-blue-500 focus:ring-blue-500
+                               dark:border-gray-600 dark:bg-gray-700
+                               dark:text-white dark:placeholder-gray-400"
+                    >{{ form.info.value|default_if_none:'' }}</textarea>
+
+                    {% if form.info.errors %}
+                        <div class="mt-2 text-sm text-red-600 dark:text-red-400">
+                            {% for error in form.info.errors %}
+                                <p>{{ error }}</p>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                </div>
+
+            </div>
+        </div>
+
+
+        <!-- Actions -->
+        <div class="flex flex-col-reverse sm:flex-row sm:justify-end gap-3">
+
+            <a
+                href="{% if project %}{% url 'projects:project_detail' project.pk %}{% else %}{% url 'projects:project_list' %}{% endif %}"
+                class="inline-flex items-center justify-center px-5 py-2.5
+                       text-sm font-medium text-gray-700 bg-white
+                       border border-gray-300 rounded-lg
+                       hover:bg-gray-50
+                       focus:outline-none focus:ring-2 focus:ring-blue-500
+                       dark:bg-gray-800 dark:text-gray-200
+                       dark:border-gray-600 dark:hover:bg-gray-700"
+            >
+                Ακύρωση
+            </a>
+
+            <button
+                type="submit"
+                class="inline-flex items-center justify-center px-5 py-2.5
+                       text-sm font-medium text-white bg-blue-600 rounded-lg
+                       hover:bg-blue-700
+                       focus:outline-none focus:ring-4 focus:ring-blue-300
+                       dark:bg-blue-600 dark:hover:bg-blue-700
+                       dark:focus:ring-blue-800"
+            >
+                {% if project %}
+                    Αποθήκευση αλλαγών
+                {% else %}
+                    Δημιουργία έργου
+                {% endif %}
+            </button>
+
+        </div>
+
+    </form>
+
+</div>
+{% endblock %}
