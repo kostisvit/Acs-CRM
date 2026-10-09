@@ -269,13 +269,13 @@
     <!-- Due Today -->
     {% if due_today %}
 
-    <div class="mb-8 overflow-hidden rounded-xl border border-orange-200 bg-white shadow-sm dark:border-orange-900/50 dark:bg-gray-800">
+    <div class="mb-8 overflow-hidden rounded-xl border border-red-200 bg-white shadow-sm">
 
-        <div class="flex items-center border-b border-orange-100 bg-orange-50 px-5 py-4 dark:border-orange-900/50 dark:bg-orange-900/20">
+        <div class="flex items-center border-b border-red-800 bg-red-100 px-5 py-4">
 
             <span class="mr-2 text-lg">🔴</span>
 
-            <h2 class="font-semibold text-orange-800 dark:text-orange-300">
+            <h2 class="font-semibold text-red-800">
                 Λήγουν σήμερα
             </h2>
 
@@ -288,7 +288,7 @@
             <div class="flex flex-col gap-2 px-5 py-4 sm:flex-row sm:items-center sm:justify-between">
 
                 <div>
-                    <p class="font-semibold text-gray-900 dark:text-white">
+                    <p class="font-semibold text-gray-700">
                         {{ document.title }}
                     </p>
 
@@ -297,7 +297,7 @@
                     </p>
                 </div>
 
-                <div class="text-sm text-gray-600 dark:text-gray-300">
+                <div class="text-sm text-gray-700">
                     {{ document.responsible|default:"-" }}
                 </div>
 
