@@ -1,9 +1,11 @@
+import os
 import uuid
 
 from django.conf import settings
 from django.core.validators import MinValueValidator
 from django.db import models
 from django.utils import timezone
+from django.utils.text import slugify
 from django_extensions.db.models import TimeStampedModel
 from simple_history.models import HistoricalRecords
 
@@ -134,6 +136,22 @@ class Project(TimeStampedModel):
         return (self.end_date - timezone.localdate()).days
 
 
+
+def project_document_upload_path(instance, filename):
+    organization = instance.project.organization
+    organization_name = slugify(str(organization))
+    document_title = slugify(instance.title)
+
+    extension = os.path.splitext(filename)[1].lower()
+
+    return (
+        f"organizations/{organization_name}/"
+        f"projects/documents/{document_title}-"
+        f"{uuid.uuid4().hex}{extension}"
+    )
+
+
+
 class ProjectDocument(TimeStampedModel):
     """
     Έντυπο / παραδοτέο ενός έργου.
@@ -180,7 +198,8 @@ class ProjectDocument(TimeStampedModel):
     )
 
     file = models.FileField(
-        upload_to="projects/documents/",
+        upload_to=project_document_upload_path,
+        max_length=500,
         null=True,
         blank=True,
         verbose_name="Αρχείο",
