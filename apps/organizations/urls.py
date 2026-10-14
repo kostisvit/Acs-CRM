@@ -41,6 +41,7 @@ urlpatterns = [
          views.TaskCreateView.as_view(), name="task_create"),
     path("task/detail/<uuid:pk>/",
          views.TaskListUpdateView.as_view(), name="task_update"),
+     path("tasks/<uuid:pk>/copy/", views.copy_task, name="task_copy"),
     path("load-employees/",
          views.load_employees, name="load_employees"),
     path("import/tasks", task_excel_import, name="task_excel_import"),
