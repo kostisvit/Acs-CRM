@@ -67,7 +67,8 @@ class CSVUploadForm(forms.Form):
 class OrganizationForm(forms.ModelForm):
     class Meta:
         model = Organization
-        fields = "__all__"
+        fields = ("org_name", "org_address", "org_city", "org_phone", "org_remote",
+                  "org_email", "org_site", "org_info", "is_active")
 
         widgets = {
             "org_name": forms.TextInput(attrs={"class": INPUT_CLASS}),
@@ -94,7 +95,7 @@ class OrganizationForm(forms.ModelForm):
 class EmployeeForm(forms.ModelForm):
     class Meta:
         model = Employee
-        fields = "__all__"
+        fields = ("organization", "firstname", "lastname", "phone", "mobile", "email", "secondary_email", "org_department", "info", "is_active")
 
         widgets = {
             "organization": forms.Select(
@@ -138,7 +139,7 @@ class EmployeeForm(forms.ModelForm):
 class TaskForm(forms.ModelForm):
     class Meta:
         model = Task
-        fields = "__all__"
+        fields = ("organization", "importdate", "org_app", "job_type_acs", "task_note", "acs_employee", "org_employee", "task_time", "ticketid", "task_info")
 
         widgets = {
             "organization": forms.Select(
@@ -202,9 +203,15 @@ class TaskForm(forms.ModelForm):
 
         self.fields["org_employee"].queryset = Employee.objects.none()
 
-        if self.data.get("organization"):
+        organization_id = (
+            self.data.get("organization")
+            or self.initial.get("organization")
+            or getattr(self.instance, "organization_id", None)
+        )
+
+        if organization_id:
             self.fields["org_employee"].queryset = Employee.objects.filter(
-                organization_id=self.data.get("organization")
+                organization_id=organization_id
             )
         elif self.instance.pk:
             try:

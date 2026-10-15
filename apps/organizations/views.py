@@ -271,7 +271,7 @@ def task_list(request):
             "acs_employee",
             "org_employee",
         )
-        .order_by("-importdate", "-pk")
+        .order_by("-created", "-pk")
     )
 
     task_filter = ErgasiaFilter(
@@ -395,3 +395,44 @@ def download_skipped_rows(request):
         return FileResponse(open(file_path, "rb"), as_attachment=True, filename="skipped_rows.xlsx")
     messages.error(request, "No skipped rows file available.")
     return redirect("import_task")
+
+
+
+@login_required
+def copy_task(request, pk):
+    original_task = get_object_or_404(Task, pk=pk)
+
+    if request.method == "POST":
+        form = TaskForm(request.POST)
+
+        if form.is_valid():
+            new_task = form.save()
+            return redirect("organizations:task_list")
+
+    else:
+        initial_data = {
+            field.name: getattr(original_task, field.name)
+            for field in Task._meta.fields
+            if field.editable and not field.primary_key
+        }
+
+        # Explicitly preserve the selected employee
+        initial_data["org_employee"] = original_task.org_employee
+
+        form = TaskForm(initial=initial_data)
+
+        # Populate employees for the copied task's organization
+        if original_task.organization:
+            form.fields["org_employee"].queryset = Employee.objects.filter(
+                organization_id=original_task.organization
+            )
+
+    return render(
+        request,
+        "organizations/task/create.html",
+        {
+            "form": form,
+            "is_copy": True,
+            "original_task": original_task,
+        },
+    )
