@@ -262,6 +262,14 @@ def task_list(request):
         if mode in ["cards", "table"]:
             request.session["task_view"] = mode
 
+    sort_by = request.GET.get('sort', '-created')
+
+    sort_options = {
+            'created': '-importdate',  # Newest first
+            'created_oldest': 'created', # Oldest first
+            'organization': 'organization',         # A to Z
+        }
+    order_by = sort_options.get(sort_by, '-importdate')
     queryset = (
         Task.objects
         .select_related(
@@ -271,8 +279,10 @@ def task_list(request):
             "acs_employee",
             "org_employee",
         )
-        .order_by("-created", "-pk")
+        .order_by(order_by)
     )
+
+
 
     task_filter = ErgasiaFilter(
         request.GET,
@@ -318,6 +328,7 @@ def task_list(request):
         "task_count_by_organization": task_count_by_organization,
          "task_time_by_organization": task_time_by_organization,
         "is_htmx": request.headers.get("HX-Request"),
+        'sort_by': sort_by,
     }
 
     if request.headers.get("HX-Request"):

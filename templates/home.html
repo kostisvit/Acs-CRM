@@ -4,14 +4,19 @@
 
 {% block content %}
 
-<div class="space-y-8">
+<div class="space-y-10">
 
     <!-- Welcome -->
-    <section class="bg-white rounded-2xl shadow-sm border border-gray-100 p-8">
+    <section class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
         <h1
             id="welcome"
             class="text-2xl font-bold text-[#0B1F3A]"
         ></h1>
+
+        <div
+            id="current-datetime"
+            class="mt-1 text-sm text-gray-500"
+        ></div>
     </section>
 
 
@@ -106,26 +111,88 @@
         </div>
     </section>
 
-</div>
 
+
+        <!-- Ταμειακές -->
+    <section>
+        <div class="mb-6">
+            <h2 class="text-xl font-semibold text-gray-900">
+                Σύνοψη Ταμειακών
+            </h2>
+            <p class="mt-1 text-sm text-gray-500">
+                Συνοπτικά στοιχεία ταμειακών και πελατών.
+            </p>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+
+            <!-- Πελάτες -->
+            <div class="rounded-xl bg-teal-300 p-6 shadow-sm transition hover:shadow-lg">
+                <h3 class="text-base font-semibold text-gray-900">
+                    Πελάτες
+                </h3>
+
+                <p class="mt-2 text-3xl font-bold text-gray-900">
+
+                </p>
+            </div>
+
+
+            <!-- Ταμειακές -->
+            <div class="rounded-xl bg-teal-600 p-6 shadow-sm transition hover:shadow-lg">
+                <h3 class="text-base font-semibold text-white">
+                    Ταμειακές
+                </h3>
+
+                <p class="mt-2 text-3xl font-bold text-white">
+
+                </p>
+            </div>
+
+        </div>
+    </section>
+</div>
 
 <script>
     (() => {
         const firstName = "{{ first_name|escapejs }}";
-        const hour = new Date().getHours();
 
-        let greeting;
+        function updateDateTime() {
+            const now = new Date();
+            const hour = now.getHours();
 
-        if (hour < 12) {
-            greeting = "Καλημέρα";
-        } else if (hour < 18) {
-            greeting = "Καλό μεσημέρι";
-        } else {
-            greeting = "Καλησπέρα";
+            let greeting;
+
+            if (hour < 12) {
+                greeting = "Καλημέρα";
+            } else if (hour < 18) {
+                greeting = "Καλό μεσημέρι";
+            } else {
+                greeting = "Καλησπέρα";
+            }
+
+            const date = now.toLocaleDateString("el-GR", {
+                weekday: "long",
+                day: "numeric",
+                month: "long",
+                year: "numeric"
+            });
+
+            const time = now.toLocaleTimeString("el-GR", {
+                hour: "2-digit",
+                minute: "2-digit",
+                hour12: false
+            });
+
+            document.getElementById("welcome").textContent =
+                `${greeting} ${firstName}!`;
+
+            document.getElementById("current-datetime").textContent =
+                `${date} • ${time}`;
         }
 
-        document.getElementById("welcome").textContent =
-            `${greeting} ${firstName}!`;
+        updateDateTime();
+        setInterval(updateDateTime, 1000);
     })();
 </script>
 
