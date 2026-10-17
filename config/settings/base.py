@@ -23,7 +23,7 @@ INSTALLED_APPS = [
     "apps.accounts.apps.AccountsConfig",
     "organizations",
     "pages",
-    "parameters"
+    "parameters",
     "apps.cash.apps.CashConfig",
 
     # External apps
