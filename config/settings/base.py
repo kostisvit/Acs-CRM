@@ -18,11 +18,15 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+
+    # Local apps
     "apps.accounts.apps.AccountsConfig",
     "organizations",
     "pages",
-    "parameters",
-    "tameiakes",
+    "parameters"
+    "apps.cash.apps.CashConfig",
+
+    # External apps
     "django_extensions",
     "simple_history",
     "tailwind",
