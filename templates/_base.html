@@ -89,12 +89,13 @@
             border border-gray-100
             overflow-hidden">
 
-            <a href="#"
-               class="
-               block px-4 py-3
-               text-sm text-gray-700
-               hover:bg-teal-300">
-                Ρυθμίσεις χρήστη
+            <a href="{% url 'admin:index' %}"
+                target="_blank"
+                class="
+                block px-4 py-3
+                text-sm text-gray-700
+                hover:bg-teal-300">
+                Ρυθμίσεις
             </a>
 
             <a href="{% url 'accounts:profile' %}"
