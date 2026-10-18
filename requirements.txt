@@ -8,6 +8,8 @@ binaryornot==0.6.0
     # via cookiecutter
 certifi==2026.6.17
     # via requests
+cffi==2.1.1 ; platform_python_implementation != 'PyPy'
+    # via cryptography
 charset-normalizer==3.4.9
     # via requests
 click==8.4.2
@@ -16,16 +18,21 @@ colorama==0.4.6 ; sys_platform == 'win32'
     # via click
 cookiecutter==2.7.1
     # via acs-crm
+cryptography==50.0.1
+    # via django-encrypted-model-fields
 diff-match-patch==20241021
     # via django-import-export
 django==5.2
     # via
     #   acs-crm
+    #   django-encrypted-model-fields
     #   django-extensions
     #   django-filter
     #   django-import-export
     #   django-simple-history
     #   django-tailwind
+django-encrypted-model-fields==0.6.5
+    # via acs-crm
 django-environ==0.14.0
     # via acs-crm
 django-extensions==4.1
@@ -52,6 +59,8 @@ markupsafe==3.0.3
     # via jinja2
 mdurl==0.1.2
     # via markdown-it-py
+openpyxl==3.1.5
+    # via acs-crm
 numpy==2.5.3
     # via pandas
 openpyxl==3.1.5
@@ -64,11 +73,14 @@ psycopg-binary==3.3.4 ; implementation_name != 'pypy'
     # via psycopg
 psycopg2-binary==2.9.12
     # via acs-crm
+pycparser==3.0 ; implementation_name != 'PyPy' and platform_python_implementation != 'PyPy'
+    # via cffi
 pygments==2.20.0
     # via rich
 pytailwindcss==0.3.1
     # via django-tailwind
 python-dateutil==2.9.0.post0
+    # via arrow
     # via
     #   arrow
     #   pandas
@@ -96,6 +108,9 @@ tzdata==2026.3
     # via
     #   arrow
     #   django
+    #   psycopg
+urllib3==2.7.0
+    # via requests
     #   pandas
     #   psycopg
 urllib3==2.7.0

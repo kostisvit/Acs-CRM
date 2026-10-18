@@ -6,6 +6,7 @@ from decimal import Decimal, InvalidOperation
 from django.contrib.auth import get_user_model
 
 from apps.accounts.models import Adeia
+from apps.cash.models import Customer
 from apps.organizations.models import Employee, Organization, Task
 from apps.parameters.models import AcsAdeia, JobType, OrgDepartment, OtsSoftware
 
@@ -402,6 +403,24 @@ class AdeiaImporter(BaseImporter):
         )
 
 
+
+class CashCustomerImporter(BaseImporter):
+    model = Customer
+
+    def import_row(self, row):
+        self.model.objects.update_or_create(
+            source_id=row["id"],
+            defaults={
+                "email": row["email"],
+                "is_active": str_to_bool(row["is_active"]),
+                "created": row["created"],
+                "modified": row["modified"],
+            },
+        )
+
+
+
+
 IMPORTERS = {
     "users": {
         "class": UserImporter,
@@ -427,7 +446,20 @@ IMPORTERS = {
         "class": OrgDepartmentImporter,
         "label": "6-Διευθύνσεις - Τμήματα Οργανισμού",
     },
-    "acsadeiatype": {"class": AcsAdeiaTypeImporter, "label": "2-Τύπος αδειών ACS"},
-    "tasks": {"class": TaskImporter, "label": "9-Εργασίες Οργανισμών"},
-    "adeia": {"class": AdeiaImporter, "label": "3-Άδειες εργαζομένων ACS"},
+    "acsadeiatype": {
+        "class": AcsAdeiaTypeImporter,
+        "label": "2-Τύπος αδειών ACS"
+    },
+    "tasks": {
+        "class": TaskImporter,
+        "label": "9-Εργασίες Οργανισμών"
+    },
+    "adeia": {
+        "class": AdeiaImporter,
+        "label": "3-Άδειες εργαζομένων ACS"
+    },
+    "cash_customer": {
+        "class": CashCustomerImporter,
+        "label": "10-Πελάτες ταμειακών μηχανών"
+    }
 }

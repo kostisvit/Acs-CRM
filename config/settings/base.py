@@ -2,6 +2,10 @@ import os
 import sys
 from pathlib import Path
 
+from dotenv import load_dotenv
+
+load_dotenv()
+
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
 sys.path.insert(0, os.path.join(BASE_DIR, "apps"))
 
@@ -14,10 +18,15 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+
+    # Local apps
     "apps.accounts.apps.AccountsConfig",
     "organizations",
     "pages",
     "parameters",
+    "apps.cash.apps.CashConfig",
+
+    # External apps
     "django_extensions",
     "simple_history",
     "tailwind",
@@ -87,3 +96,6 @@ STATIC_ROOT = BASE_DIR / "staticfiles"
 
 MEDIA_URL = "/media/"
 MEDIA_ROOT = BASE_DIR / "media"
+
+
+FIELD_ENCRYPTION_KEY=os.environ.get("FIELD_ENCRYPTION_KEY")
