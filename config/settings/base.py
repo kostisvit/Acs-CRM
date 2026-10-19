@@ -64,6 +64,7 @@ TEMPLATES = [
                 "apps.organizations.context_processor.user_work_time",
                 "apps.organizations.context_processor.org_tasks_count",
                 "apps.cash.context_processor.customers_online_count",
+                "apps.cash.context_processor.cash_register_online_count",
             ],
         },
     },

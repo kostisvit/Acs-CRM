@@ -1,12 +1,15 @@
 import csv
 import datetime
 from abc import ABC, abstractmethod
+from datetime import datetime
 from decimal import Decimal, InvalidOperation
 
 from django.contrib.auth import get_user_model
+from django.db.models import Value
+from django.db.models.functions import Replace
 
 from apps.accounts.models import Adeia
-from apps.cash.models import Customer
+from apps.cash.models import CashRegister, CashRegisterModel, Customer, SoftwareVersion
 from apps.organizations.models import Employee, Organization, Task
 from apps.parameters.models import AcsAdeia, JobType, OrgDepartment, OtsSoftware
 
@@ -423,6 +426,101 @@ class CashCustomerImporter(BaseImporter):
         )
 
 
+class CashRegisterImporter(BaseImporter):
+    model = CashRegister
+
+    def import_row(self, row):
+        customer = None
+        if row.get("customer"):
+            customer = Customer.objects.filter(
+                source_id=row["customer"].strip()
+            ).first()
+
+            if not customer:
+                raise ValueError(
+                    f"Missing customer source id: {row['customer']}"
+
+                )
+
+        register_model_name = (
+            row["cash_model"]
+            .strip()
+            .replace("-", "")
+            .replace(" ", "")
+        )
+
+        register_model = (
+            CashRegisterModel.objects
+            .annotate(
+                normalized_name=Replace("name", Value("-"), Value(""))
+            )
+            .annotate(
+                normalized_name=Replace("normalized_name", Value(" "), Value(""))
+            )
+            .filter(normalized_name=register_model_name)
+            .first()
+        )
+
+        if not register_model:
+            raise ValueError(
+                f"Missing cash register model: {row['cash_model']}"
+            )
+
+        def parse_date(value):
+            if not value:
+                return None
+
+            value = value.strip().strip('"').strip("'").strip("“”")
+
+            if not value:
+                return None
+
+            for fmt in (
+                "%Y-%m-%d",
+                "%d/%m/%Y",
+                "%Y-%m-%d %H:%M:%S",
+                "%d-%m-%Y",
+            ):
+                try:
+                    return datetime.strptime(value, fmt).date()
+                except ValueError:
+                    continue
+
+            raise ValueError(f"Invalid date format: {value!r}")
+
+        version_number = row.get("current_os", "").strip()
+
+        current_os = None
+
+        if version_number:
+            current_os, _ = SoftwareVersion.objects.get_or_create(
+                version_number=version_number
+            )
+
+        def parse_status(value):
+            value = (value or "").strip()
+
+            if value == "1":
+                return CashRegister.Status.ACTIVE
+            if value == "0":
+                return CashRegister.Status.INACTIVE
+
+            raise ValueError(f"Invalid status value: {value!r}")
+
+        cashregister, created = self.model.objects.update_or_create(
+            source_id=row["id"],
+            defaults={
+                "customer": customer,
+                "model": register_model,
+                "serial_number": row["cash_number"].strip(),
+                "installation_date":parse_date(row.get("register_date")),
+                "current_version": current_os,
+                "status": parse_status(row.get("status", "")),
+                "created": row["created"],
+                "modified": row["modified"],
+            },
+        )
+
 
 
 IMPORTERS = {
@@ -465,5 +563,9 @@ IMPORTERS = {
     "cash_customer": {
         "class": CashCustomerImporter,
         "label": "10-Πελάτες ταμειακών μηχανών"
+    },
+    "cash_register":{
+        "class": CashRegisterImporter,
+        "label": "11-Εισαγωγή Ταμειακών"
     }
 }
