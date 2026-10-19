@@ -1,7 +1,7 @@
 from django.contrib import admin
 from import_export.admin import ImportExportModelAdmin
 
-from .models import Customer
+from .models import CashRegisterModel, Customer
 
 
 @admin.register(Customer)
@@ -12,3 +12,8 @@ class CustomerAdmin(ImportExportModelAdmin):
 
 
 
+@admin.register(CashRegisterModel)
+class CashRegisterAdmin(ImportExportModelAdmin):
+    list_display = ["manufacturer","name","description","created","modified"]
+    search_fields = ["manufacturer","name"]
+    list_filter = ["manufacturer","name"]

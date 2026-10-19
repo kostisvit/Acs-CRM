@@ -53,3 +53,27 @@ class Customer(TimeStampedModel):
             return words[0][0].upper()
 
         return (words[0][0] + words[-1][0]).upper()
+
+
+
+class CashRegisterModel(TimeStampedModel):
+    manufacturer = models.CharField(
+        "Κατασκευαστής", max_length=100
+    )
+    name = models.CharField(
+        "Μοντέλο", max_length=100
+    )
+    description = models.TextField(blank=True)
+
+    class Meta:
+        verbose_name = "Μοντέλο ταμειακής"
+        verbose_name_plural = "Μοντέλα ταμειακών"
+        constraints = [
+            models.UniqueConstraint(
+                fields=["manufacturer", "name"],
+                name="unique_cash_register_model",
+            )
+        ]
+
+    def __str__(self):
+        return f"{self.manufacturer} {self.name}"
