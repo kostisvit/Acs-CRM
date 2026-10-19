@@ -1,3 +1,4 @@
+import re
 import uuid
 
 from django.db import models
@@ -36,3 +37,19 @@ class Customer(TimeStampedModel):
 
     def __str__(self):
         return f"{self.name} ({self.vat_number})"
+
+
+    @property
+    def initials(self):
+        # Remove symbols and keep only letters/spaces
+        clean_name = re.sub(r'[^\w\s]', '', self.name)
+
+        words = clean_name.split()
+
+        if not words:
+            return ""
+
+        if len(words) == 1:
+            return words[0][0].upper()
+
+        return (words[0][0] + words[-1][0]).upper()

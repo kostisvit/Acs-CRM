@@ -43,10 +43,10 @@ def customer_list(request):
         "search": search,
         "is_active": is_active,
         "customer_id": customer_id,
-        "is_htmx": request.header.get("HX-Request")
+        "is_htmx": request.headers.get("HX-Request")
     }
 
-    if request.header.get("HX-Request"):
+    if request.headers.get("HX-Request"):
         return render(request, "cash/customers/_cards.html", context)
 
     return render(request, "cash/customers/list.html", context)

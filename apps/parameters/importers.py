@@ -411,10 +411,7 @@ class CashCustomerImporter(BaseImporter):
         customer, created = self.model.objects.update_or_create(
             source_id=row["id"],
             defaults={
-                "name": " ".join(filter(None, [
-                    (row.get("firstname") or "").strip(),
-                    (row.get("lastname") or "").strip(),
-                ])),
+                "name": f'{row["last_name"]} {row["first_name"]}'.strip(),
                 "email": row["company_email"],
                 "is_active": str_to_bool(row["status"]),
             },
