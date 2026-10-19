@@ -633,6 +633,15 @@
 <!-- ========================================================= -->
 
 <div id="task-wrapper">
+    {% if messages %}
+    <div id="messages" class="max-w-5xl mx-auto mt-6">
+        {% for message in messages %}
+            <div class="mb-4 rounded-lg border border-green-300 bg-green-100 px-4 py-3 text-green-800">
+                {{ message }}
+            </div>
+        {% endfor %}
+    </div>
+    {% endif %}
 
     {% include "organizations/task/_task_results.html" %}
 

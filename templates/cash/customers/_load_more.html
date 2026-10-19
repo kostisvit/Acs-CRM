@@ -1,27 +1,24 @@
 <div class="mt-8 flex justify-center">
 
     {% if customers.has_next %}
-
-        <button
-            hx-get="?page={{ customers.next_page_number }}&q={{ search }}&is_visible={{ is_visible }}"
-            hx-target="#customer-list"
-            hx-swap="beforeend"
-            class="rounded-xl bg-teal-600 px-6 py-3 text-white text-sm font-semibold hover:bg-teal-700">
-
-            Περισσότερα
-
-        </button>
-
-    {% else %}
-
-        <button
-            disabled
-            class="cursor-not-allowed rounded-xl bg-gray-300 px-6 py-3 text-gray-500 text-sm font-semibold">
-
-            Τέλος αποτελεσμάτων
-
-        </button>
-
-    {% endif %}
+    <button
+        type="button"
+        hx-get="?{% if query_string %}{{ query_string }}&{% endif %}page={{ customers.next_page_number }}"
+        hx-target="#customer-list"
+        hx-swap="beforeend"
+        hx-on::after-request="if(event.detail.successful) this.remove()"
+        class="rounded-xl bg-teal-600 px-6 py-3 text-sm font-semibold text-white hover:bg-teal-700"
+    >
+        Περισσότερα
+    </button>
+{% else %}
+    <button
+        type="button"
+        disabled
+        class="cursor-not-allowed rounded-xl bg-gray-300 px-6 py-3 text-sm font-semibold text-gray-500"
+    >
+        Τέλος αποτελεσμάτων
+    </button>
+{% endif %}
 
 </div>

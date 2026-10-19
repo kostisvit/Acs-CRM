@@ -1,6 +1,6 @@
 {% extends '_base.html' %}
 
-{% block title %}Οργανισμοί{% endblock %}
+{% block title %}Πελάτες{% endblock %}
 
 {% block content %}
   <!-- Toolbar -->
@@ -228,7 +228,7 @@
                 <button
                     type="submit"
                     name="view_mode"
-                    value="#"
+                    value="{% if request.session.customer_view == 'cards' or not request.session.customer_view %}table{% else %}cards{% endif %}"
                     aria-label="Αλλαγή προβολής"
                     title="Αλλαγή προβολής"
                     class="inline-flex h-[42px] w-[42px]
@@ -244,7 +244,7 @@
                         focus:ring-2 focus:ring-indigo-500/20"
                 >
 
-                    {% if request.session.task_view == 'cards' or not request.session.task_view %}
+                    {% if request.session.customer_view == 'cards' or not request.session.customer_view %}
 
                         <!-- Cards icon -->
                         <svg
@@ -369,23 +369,9 @@
     </div>
   <!-- Table Card -->
 <div id="customer-wrapper">
-  {% if messages %}
-    <div id="messages" class="max-w-5xl mx-auto mt-6">
-        {% for message in messages %}
-            <div class="mb-4 rounded-lg border border-green-300 bg-green-100 px-4 py-3 text-green-800">
-                {{ message }}
-            </div>
-        {% endfor %}
-    </div>
-  {% endif %}
 
-  <div id="customer-list" class="grid grid-cols-1 gap-5 md:grid-cols-3">
-    {% include 'cash/customers/_cards.html' %}
-  </div>
+    {% include 'cash/customers/_customer_results.html' %}
 
-  <div id="load-more-container">
-    {% include 'cash/customers/_load_more.html' %}
-  </div>
 </div>
 
 <script>

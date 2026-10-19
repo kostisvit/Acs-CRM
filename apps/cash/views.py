@@ -8,6 +8,11 @@ from .models import Customer
 
 @login_required
 def customer_list(request):
+    if request.method == "POST":
+        mode = request.POST.get("view_mode")
+
+        if mode in ["cards", "table"]:
+            request.session["customer_view"] = mode
 
     search = request.GET.get("q","")
     customer_id = request.GET.get("name", "")
@@ -18,7 +23,7 @@ def customer_list(request):
     # Active Filter
     if is_active == "true":
         customers = customers.filter(is_active=True)
-    elif is_active == "fasle":
+    elif is_active == "false":
         customers = customers.filter(is_active=False)
     else:
         customers = customers.filter(is_active=True)
@@ -36,17 +41,43 @@ def customer_list(request):
 
     paginator = Paginator(customers, 12)
 
-    page_obj = paginator.get_page(request.GET.get("page", 1))
+    page_number = request.GET.get("page", 1)
+    page_obj = paginator.get_page(page_number)
+
+    query_params = request.GET.copy()
+    query_params.pop("page", None)
+
+    query_string = query_params.urlencode()
 
     context = {
         "customers": page_obj,
+        "page_obj": page_obj,
         "search": search,
         "is_active": is_active,
+        "query_string": query_string,
         "customer_id": customer_id,
         "is_htmx": request.headers.get("HX-Request")
     }
 
     if request.headers.get("HX-Request"):
-        return render(request, "cash/customers/_cards.html", context)
 
-    return render(request, "cash/customers/list.html", context)
+            # "Περισσότερα"
+            if request.GET.get("page"):
+                return render(
+                    request,
+                    "cash/customers/_customer_load_more_response.html",
+                    context,
+                )
+
+            # Filter / search
+            return render(
+                request,
+                "cash/customers/_customer_results.html",
+                context,
+            )
+
+    return render(
+            request,
+            "cash/customers/list.html",
+            context,
+        )
