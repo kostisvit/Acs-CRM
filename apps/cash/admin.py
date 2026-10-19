@@ -1,7 +1,7 @@
 from django.contrib import admin
 from import_export.admin import ImportExportModelAdmin
 
-from .models import CashRegisterModel, Customer
+from .models import CashRegisterModel, Customer, SoftwareVersion
 
 
 @admin.register(Customer)
@@ -17,3 +17,17 @@ class CashRegisterAdmin(ImportExportModelAdmin):
     list_display = ["manufacturer","name","description","created","modified"]
     search_fields = ["manufacturer","name"]
     list_filter = ["manufacturer","name"]
+
+
+@admin.register(SoftwareVersion)
+class SoftwareVersionAdmin(ImportExportModelAdmin):
+    list_display = ["version_number","release_date","display_compatible_models","release_notes","is_active","created","modified"]
+    search_fields = ["version_number","display_compatible_models"]
+    list_filter = ["version_number","is_active"]
+
+    @admin.display(description="Συμβατά μοντέλα")
+    def display_compatible_models(self, obj):
+        return ", ".join(
+            str(model)
+            for model in obj.compatible_models.all()
+        )

@@ -77,3 +77,36 @@ class CashRegisterModel(TimeStampedModel):
 
     def __str__(self):
         return f"{self.manufacturer} {self.name}"
+
+
+class SoftwareVersion(TimeStampedModel):
+    version_number = models.CharField(
+        "Αριθμός έκδοσης", max_length=50
+    )
+    release_date = models.DateField(
+        "Ημερομηνία κυκλοφορίας", null=True, blank=True
+    )
+    compatible_models = models.ManyToManyField(
+        CashRegisterModel,
+        blank=True,
+        related_name="software_versions",
+        verbose_name="Συμβατά μοντέλα",
+    )
+    release_notes = models.TextField(
+        "Σημειώσεις έκδοσης", blank=True
+    )
+    is_active = models.BooleanField(default=True)
+
+    class Meta:
+        verbose_name = "Έκδοση λογισμικού"
+        verbose_name_plural = "Εκδόσεις λογισμικού"
+        ordering = ["-created"]
+        constraints = [
+            models.UniqueConstraint(
+                fields=["version_number"],
+                name="unique_software_version_number",
+            )
+        ]
+
+    def __str__(self):
+        return self.version_number
