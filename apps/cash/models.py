@@ -24,7 +24,9 @@ class Customer(TimeStampedModel):
     )
     notes = models.TextField(blank=True)
     is_active = models.BooleanField(default=True)
-    source_id = models.IntegerField(null=True, unique=True)
+    source_id = models.UUIDField(
+            default=uuid.uuid4,
+            editable=False)
 
     class Meta:
         verbose_name = "Πελάτης"

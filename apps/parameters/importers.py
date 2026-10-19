@@ -411,8 +411,8 @@ class CashCustomerImporter(BaseImporter):
         self.model.objects.update_or_create(
             source_id=row["id"],
             defaults={
-                "email": row["email"],
-                "is_active": str_to_bool(row["is_active"]),
+                "email": row["company_email"],
+                "is_active": str_to_bool(row["status"]),
                 "created": row["created"],
                 "modified": row["modified"],
             },
