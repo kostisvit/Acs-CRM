@@ -110,3 +110,58 @@ class SoftwareVersion(TimeStampedModel):
 
     def __str__(self):
         return self.version_number
+
+
+
+class CashRegister(TimeStampedModel):
+    class Status(models.TextChoices):
+        ACTIVE = "active", "Σε λειτουργία"
+        INACTIVE = "inactive", "Ανενεργή"
+        REPAIR = "repair", "Σε επισκευή"
+        RETIRED = "retired", "Αποσυρμένη"
+
+    customer = models.ForeignKey(
+        Customer,
+        on_delete=models.PROTECT,
+        related_name="cash_registers",
+        verbose_name="Πελάτης",
+    )
+    model = models.ForeignKey(
+        CashRegisterModel,
+        on_delete=models.PROTECT,
+        related_name="cash_registers",
+        verbose_name="Μοντέλο",
+    )
+    serial_number = models.CharField(
+        "Σειριακός αριθμός",
+        max_length=100,
+        unique=True,
+    )
+    current_version = models.ForeignKey(
+        SoftwareVersion,
+        on_delete=models.PROTECT,
+        related_name="installed_registers",
+        null=True,
+        blank=True,
+        verbose_name="Τρέχουσα έκδοση",
+    )
+    installation_date = models.DateField(
+        "Ημερομηνία εγκατάστασης",
+        null=True,
+        blank=True,
+    )
+    status = models.CharField(
+        max_length=20,
+        choices=Status.choices,
+        default=Status.ACTIVE,
+    )
+    notes = models.TextField(blank=True)
+
+
+    class Meta:
+        verbose_name = "Ταμειακή μηχανή"
+        verbose_name_plural = "Ταμειακές μηχανές"
+        ordering = ["customer__name", "serial_number"]
+
+    def __str__(self):
+        return f"{self.serial_number} - {self.customer.name}"
