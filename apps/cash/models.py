@@ -156,7 +156,9 @@ class CashRegister(TimeStampedModel):
         default=Status.ACTIVE,
     )
     notes = models.TextField(blank=True)
-
+    source_id = models.UUIDField(
+            default=uuid.uuid4,
+            editable=False)
 
     class Meta:
         verbose_name = "Ταμειακή μηχανή"
