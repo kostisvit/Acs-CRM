@@ -16,6 +16,9 @@ class Customer(TimeStampedModel):
     vat_number = EncryptedCharField(
         "ΑΦΜ", max_length=9, unique=True
     )
+    company_title = models.CharField(
+        "Τίτλος εταιρίας", max_length=255, blank=True
+    )
     phone = models.CharField(
         "Τηλέφωνο", max_length=30, blank=True
     )

@@ -6,7 +6,7 @@ from .models import CashRegister, CashRegisterModel, Customer, SoftwareVersion
 
 @admin.register(Customer)
 class CustomerAdmin(ImportExportModelAdmin):
-    list_display = ["name","vat_number","phone","email","address","notes","is_active","created","modified"]
+    list_display = ["name","vat_number","company_title","phone","email","address","notes","is_active","created","modified"]
     search_fields = ["name","vat_number"]
     list_filter = ["is_active"]
 

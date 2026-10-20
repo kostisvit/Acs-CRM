@@ -438,7 +438,11 @@ class CashCustomerImporter(BaseImporter):
             source_id=row["id"],
             defaults={
                 "name": f'{row["last_name"]} {row["first_name"]}'.strip(),
+                "address": row["company_address"],
+                "vat_number": row["company_afm"],
+                "company_title": row["company_name"],
                 "email": row["company_email"],
+                "phone": row["phone_number"],
                 "is_active": str_to_bool(row["status"]),
             },
         )
