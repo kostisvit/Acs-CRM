@@ -57,6 +57,11 @@ class Customer(TimeStampedModel):
 
 
 class CashRegisterModel(TimeStampedModel):
+    id = models.UUIDField(
+        primary_key=True,
+        default=uuid.uuid4,
+        editable=False,
+    )
     manufacturer = models.CharField(
         "Κατασκευαστής", max_length=100
     )
@@ -80,6 +85,11 @@ class CashRegisterModel(TimeStampedModel):
 
 
 class SoftwareVersion(TimeStampedModel):
+    id = models.UUIDField(
+        primary_key=True,
+        default=uuid.uuid4,
+        editable=False,
+    )
     version_number = models.CharField(
         "Αριθμός έκδοσης", max_length=50
     )
@@ -119,7 +129,11 @@ class CashRegister(TimeStampedModel):
         INACTIVE = "inactive", "Ανενεργή"
         REPAIR = "repair", "Σε επισκευή"
         RETIRED = "retired", "Αποσυρμένη"
-
+    id = models.UUIDField(
+        primary_key=True,
+        default=uuid.uuid4,
+        editable=False,
+    )
     customer = models.ForeignKey(
         Customer,
         on_delete=models.PROTECT,
