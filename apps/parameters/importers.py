@@ -1,13 +1,12 @@
 import csv
 import datetime
 import io
+import uuid
 from abc import ABC, abstractmethod
 from datetime import datetime
 from decimal import Decimal, InvalidOperation
 
 from django.contrib.auth import get_user_model
-from django.db.models import Value
-from django.db.models.functions import Replace
 
 from apps.accounts.models import Adeia
 from apps.cash.models import CashRegister, CashRegisterModel, Customer, SoftwareVersion
@@ -469,28 +468,23 @@ class CashRegisterImporter(BaseImporter):
 
                 )
 
-        register_model_name = (
-            row["cash_model"]
-            .strip()
-            .replace("-", "")
-            .replace(" ", "")
-        )
+        def normalize_name(value):
+            return value.strip().replace("-", "").replace(" ", "")
 
-        register_model = (
-            CashRegisterModel.objects
-            .annotate(
-                normalized_name=Replace("name", Value("-"), Value(""))
-            )
-            .annotate(
-                normalized_name=Replace("normalized_name", Value(" "), Value(""))
-            )
-            .filter(normalized_name=register_model_name)
-            .first()
+        register_model_name = normalize_name(row["cash_model"])
+
+        register_model = next(
+            (
+                item for item in CashRegisterModel.objects.all()
+                if normalize_name(item.name) == register_model_name
+            ),
+            None,
         )
 
         if not register_model:
-            raise ValueError(
-                f"Missing cash register model: {row['cash_model']}"
+            register_model = CashRegisterModel.objects.update_or_create(
+                id=uuid.uuid4(),
+                name=row["cash_model"].strip(),
             )
 
         def parse_date(value):
