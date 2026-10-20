@@ -1,5 +1,6 @@
 import csv
 import datetime
+import io
 from abc import ABC, abstractmethod
 from datetime import datetime
 from decimal import Decimal, InvalidOperation
@@ -25,10 +26,7 @@ class BaseImporter(ABC):
 
     @abstractmethod
     def import_row(self, row):
-        """
-        Import a single CSV row.
-        Must be implemented by subclasses.
-        """
+        pass
 
     def import_file(self, csv_file):
         imported = 0
@@ -36,9 +34,36 @@ class BaseImporter(ABC):
         csv_records = 0
 
         csv_file.seek(0)
-
         decoded = csv_file.read().decode("utf-8-sig")
-        reader = csv.DictReader(decoded.splitlines())
+
+        # Remove an extra pair of quotes around malformed records.
+        normalized_lines = []
+
+        for line in decoded.splitlines():
+            stripped = line.strip()
+
+            if (
+                stripped.startswith('"')
+                and stripped.endswith('"')
+                and stripped.count('","') == 0
+            ):
+                stripped = stripped[1:-1]
+                stripped = stripped.replace('""', '"')
+
+            normalized_lines.append(stripped)
+
+        normalized_csv = "\n".join(normalized_lines)
+
+        reader = csv.DictReader(
+            io.StringIO(normalized_csv, newline=""),
+            delimiter=",",
+        )
+
+        if reader.fieldnames:
+            reader.fieldnames = [
+                name.strip().strip('"')
+                for name in reader.fieldnames
+            ]
 
         for row_number, row in enumerate(reader, start=2):
             csv_records += 1
@@ -48,13 +73,11 @@ class BaseImporter(ABC):
                 imported += 1
 
             except Exception as e:
-                errors.append(
-                    {
-                        "row": row_number,
-                        "error": str(e),
-                        "data": row,
-                    }
-                )
+                errors.append({
+                    "row": row_number,
+                    "error": str(e),
+                    "data": row,
+                })
 
         return {
             "imported": imported,
@@ -389,7 +412,7 @@ class AdeiaImporter(BaseImporter):
 
             for fmt in ("%Y-%m-%d", "%d/%m/%Y", "%d-%m-%Y"):
                 try:
-                    return datetime.datetime.strptime(value, fmt).date()
+                    return datetime.strptime(value, fmt).date()
                 except ValueError:
                     continue
 
