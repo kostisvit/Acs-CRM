@@ -35,6 +35,6 @@ class SoftwareVersionAdmin(ImportExportModelAdmin):
 
 @admin.register(CashRegister)
 class CashRegisterAdmin(ImportExportModelAdmin):
-    list_display = ["customer","model","serial_number","current_version","installation_date","status","created","modified"]
+    list_display = ["customer","model","serial_number","current_version","installation_date","cash_estiasi","status","created","modified"]
     search_fields = ["customer","serial_number","model"]
-    list_filter = ["model","status"]
+    list_filter = ["model","cash_estiasi","status"]

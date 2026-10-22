@@ -537,6 +537,7 @@ class CashRegisterImporter(BaseImporter):
                 "installation_date":parse_date(row.get("register_date")),
                 "current_version": current_os,
                 "status": parse_status(row.get("status", "")),
+                "cash_estiasi": row["cash_estiasi"],
                 "created": row["created"],
                 "modified": row["modified"],
             },

@@ -167,10 +167,12 @@ class CashRegister(TimeStampedModel):
         null=True,
         blank=True,
     )
+    cash_estiasi = models.BooleanField(verbose_name="Ταμειακή Εστίασης",default=False)
     status = models.CharField(
         max_length=20,
         choices=Status.choices,
         default=Status.ACTIVE,
+        verbose_name="Κατάσταση",
     )
     notes = models.TextField(blank=True)
     source_id = models.UUIDField(
