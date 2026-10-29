@@ -131,7 +131,6 @@ class CashRegister(TimeStampedModel):
         ACTIVE = "active", "Σε λειτουργία"
         INACTIVE = "inactive", "Ανενεργή"
         REPAIR = "repair", "Σε επισκευή"
-        RETIRED = "retired", "Αποσυρμένη"
     id = models.UUIDField(
         primary_key=True,
         default=uuid.uuid4,
