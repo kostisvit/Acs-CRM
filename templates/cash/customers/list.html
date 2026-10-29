@@ -191,34 +191,63 @@
     <div class="mb-6 flex items-center justify-between">
 
 
-        <button
-        type="button"
-        @click="openFilter = true"
-        class="inline-flex items-center gap-2 rounded-xl
-               border border-teal-600 bg-teal-600 px-5 py-2.5
-               text-sm font-semibold text-white shadow-sm
-               transition-all duration-200
-               hover:border-teal-700 hover:bg-teal-700
-               hover:shadow-md
-               focus:outline-none focus:ring-2 focus:ring-teal-500/30"
-    >
-        <svg
-            class="h-4 w-4"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-        >
-            <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M3 4h18M6 10h12M10 16h4M11 21h2"
-            />
-        </svg>
+        <div class="flex items-center gap-3">
+            <!-- Filter button -->
+            <button
+                type="button"
+                @click="openFilter = true"
+                class="inline-flex items-center gap-2 rounded-xl
+                    border border-teal-600 bg-teal-600 px-5 py-2.5
+                    text-sm font-semibold text-white shadow-sm
+                    transition-all duration-200
+                    hover:border-teal-700 hover:bg-teal-700
+                    hover:shadow-md
+                    focus:outline-none focus:ring-2 focus:ring-teal-500/30"
+            >
+                <svg
+                    class="h-4 w-4"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                >
+                    <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M3 4h18M6 10h12M10 16h4M11 21h2"
+                    />
+                </svg>
+                <span>Φίλτρα</span>
+            </button>
 
-        <span>Φίλτρα</span>
-    </button>
-    <!-- Right: Actions -->
+            <!-- Second link button -->
+            <a
+                href="#"
+                class="inline-flex items-center gap-2 rounded-xl
+                    border border-slate-300 bg-white px-5 py-2.5
+                    text-sm font-semibold text-slate-700 shadow-sm
+                    transition-all duration-200
+                    hover:border-teal-600 hover:bg-teal-50
+                    hover:text-teal-700 hover:shadow-md
+                    focus:outline-none focus:ring-2 focus:ring-teal-500/30"
+            >
+                <span>Ταμειακές</span>
+                <svg
+                    class="h-4 w-4"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                >
+                    <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M9 5l7 7-7 7"
+                    />
+                </svg>
+            </a>
+        </div>
+        <!-- Right: Actions -->
         <div class="flex items-center gap-2">
 
             <!-- View Mode -->
